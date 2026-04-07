@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3307
--- Tiempo de generación: 16-03-2026 a las 13:12:45
+-- Tiempo de generación: 19-03-2026 a las 08:45:31
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -31,7 +31,7 @@ CREATE TABLE `asiento` (
   `id_asiento` int(100) NOT NULL,
   `id_mesa` int(100) NOT NULL,
   `numero_asiento` int(100) NOT NULL,
-  `id_invitado` int(100) NOT NULL
+  `id_invitado` int(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -59,7 +59,6 @@ CREATE TABLE `eventos` (
 
 CREATE TABLE `invitados` (
   `id_invitado` int(100) NOT NULL,
-  `id_asiento` int(100) NOT NULL,
   `nombre` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `confirmacion` enum('pendiente','confirmado','rechazado') NOT NULL
@@ -180,23 +179,23 @@ CREATE TABLE `usuarios` (
 --
 ALTER TABLE `asiento`
   ADD PRIMARY KEY (`id_asiento`),
-  ADD KEY `fk_asiento_mesa` (`id_mesa`);
+  ADD KEY `fk_asiento_mesa` (`id_mesa`),
+  ADD KEY `id_invitado` (`id_invitado`);
 
 --
 -- Indices de la tabla `eventos`
 --
 ALTER TABLE `eventos`
   ADD PRIMARY KEY (`id_evento`),
-  ADD KEY `fk_usuario_evento` (`id_usuario`),
-  ADD KEY `fk_usuario_local` (`id_local`),
-  ADD KEY `fk_usuario_tipo` (`id_tipo`);
+  ADD KEY `fk_usuario_tipo` (`id_tipo`),
+  ADD KEY `fk_evento_usuario` (`id_usuario`),
+  ADD KEY `fk_evento_local` (`id_local`);
 
 --
 -- Indices de la tabla `invitados`
 --
 ALTER TABLE `invitados`
-  ADD PRIMARY KEY (`id_invitado`),
-  ADD KEY `fk_invitado_asiento` (`id_asiento`);
+  ADD PRIMARY KEY (`id_invitado`);
 
 --
 -- Indices de la tabla `locales`
@@ -214,7 +213,7 @@ ALTER TABLE `menu`
 -- Indices de la tabla `menu_evento`
 --
 ALTER TABLE `menu_evento`
-  ADD KEY `fk_evento_menu` (`id_evento`),
+  ADD PRIMARY KEY (`id_evento`,`id_menu`),
   ADD KEY `fk_menu_evento` (`id_menu`);
 
 --
@@ -235,8 +234,8 @@ ALTER TABLE `servicios`
 --
 ALTER TABLE `servicios_contratados`
   ADD PRIMARY KEY (`id_contratacion`),
-  ADD KEY `fk_evento_servicio` (`id_evento`),
-  ADD KEY `fk_servicio_evento` (`id_servicio`);
+  ADD KEY `fk_servicio_evento` (`id_servicio`),
+  ADD KEY `id_evento` (`id_evento`);
 
 --
 -- Indices de la tabla `tipo_evento`
@@ -322,24 +321,22 @@ ALTER TABLE `usuarios`
 -- Filtros para la tabla `asiento`
 --
 ALTER TABLE `asiento`
+  ADD CONSTRAINT `asiento_ibfk_1` FOREIGN KEY (`id_invitado`) REFERENCES `invitados` (`id_invitado`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_asiento_mesa` FOREIGN KEY (`id_mesa`) REFERENCES `mesas` (`id_mesa`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `eventos`
 --
 ALTER TABLE `eventos`
+  ADD CONSTRAINT `fk_evento_local` FOREIGN KEY (`id_local`) REFERENCES `locales` (`id_local`),
+  ADD CONSTRAINT `fk_evento_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`),
   ADD CONSTRAINT `fk_usuario_tipo` FOREIGN KEY (`id_tipo`) REFERENCES `tipo_evento` (`id_tipo`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `invitados`
---
-ALTER TABLE `invitados`
-  ADD CONSTRAINT `fk_invitado_asiento` FOREIGN KEY (`id_asiento`) REFERENCES `asiento` (`id_asiento`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `menu_evento`
 --
 ALTER TABLE `menu_evento`
+  ADD CONSTRAINT `fk_evento_menu` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id_evento`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_menu_evento` FOREIGN KEY (`id_menu`) REFERENCES `menu` (`id_menu`) ON DELETE CASCADE;
 
 --
@@ -352,7 +349,8 @@ ALTER TABLE `mesas`
 -- Filtros para la tabla `servicios_contratados`
 --
 ALTER TABLE `servicios_contratados`
-  ADD CONSTRAINT `fk_servicio_evento` FOREIGN KEY (`id_servicio`) REFERENCES `servicios` (`id_servicio`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_servicio_evento` FOREIGN KEY (`id_servicio`) REFERENCES `servicios` (`id_servicio`) ON DELETE CASCADE,
+  ADD CONSTRAINT `servicios_contratados_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id_evento`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
