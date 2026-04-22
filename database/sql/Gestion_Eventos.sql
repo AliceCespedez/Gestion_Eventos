@@ -166,8 +166,10 @@ CREATE TABLE `tipo_evento` (
 CREATE TABLE `usuarios` (
   `id_usuario` int(100) NOT NULL,
   `nombre` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `rol` enum('admin','empleado','cliente') NOT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
   `fecha_alta` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -248,7 +250,8 @@ ALTER TABLE `tipo_evento`
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id_usuario`);
+  ADD PRIMARY KEY (`id_usuario`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas

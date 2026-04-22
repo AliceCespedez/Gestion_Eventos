@@ -6,17 +6,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class Invitado extends Model
 {
-    protected $table = 'invitados';
     protected $primaryKey = 'id_invitado';
-    public $timestamps = false;
+
+    protected $fillable = [
+        'nombre',
+        'email',
+        'confirmacion',
+        'id_evento'
+        // ❌ quitamos id_asiento
+    ];
+
+    /* RELACIONES */
 
     public function evento()
     {
-        return $this->belongsTo(Evento::class,'id_evento');
+        return $this->belongsTo(Evento::class, 'id_evento');
     }
+
+    // ✅ CORRECTO: el FK está en asientos
     public function asiento()
     {
-        return $this->belongsTo(Asiento::class, 'id_asiento');
-
+        return $this->hasOne(Asiento::class, 'id_invitado', 'id_invitado');
     }
 }

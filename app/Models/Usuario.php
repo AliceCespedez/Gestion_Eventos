@@ -7,10 +7,11 @@ use Illuminate\Notifications\Notifiable;
 
 class Usuario extends Authenticatable
 {
-    use Notifiable;
-
     protected $table = 'usuarios';
     protected $primaryKey = 'id_usuario';
+
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     public $timestamps = false;
 
@@ -18,20 +19,11 @@ class Usuario extends Authenticatable
         'nombre',
         'email',
         'password',
-        'rol',
+        'rol'
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
-
-    protected $casts = [
-        'password' => 'hashed',
-    ];
-
-  public function getAuthIdentifier()
-{
-    return $this->id_usuario;
-}
 }

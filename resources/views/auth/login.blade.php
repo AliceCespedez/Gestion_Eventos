@@ -3,6 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -42,12 +45,6 @@
                             <div class="alert alert-success text-center">
                                 {{ session('success') }}
                             </div>
-
-                            <script>
-                                setTimeout(() => {
-                                    window.location.href = "/login";
-                                }, 2000); // 2 segundos
-                            </script>
                         @endif
 
                         {{-- FORMULARIO --}}
@@ -80,6 +77,14 @@
         </div>
 
     </div>
+
+    <script>
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>
 
 </body>
 

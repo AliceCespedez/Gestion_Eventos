@@ -12,9 +12,11 @@ class Mesa extends Model
 
     public function evento()
     {
-        return $this->belongsTo(Evento::class, 'id_evento');
+        return $this->belongsTo(Evento::class, 'id_evento', 'id_evento');
     }
-    public function asientos(){
-        return $this->hasMany(Asiento::class, 'id_mesa');
+
+    public function asientos()
+    {
+        return $this->hasMany(Asiento::class, 'id_mesa', 'id_mesa');
     }
 }

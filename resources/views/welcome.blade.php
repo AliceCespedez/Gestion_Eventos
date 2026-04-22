@@ -27,6 +27,7 @@
             width: 100%;
             height: 100%;
             background: rgba(255,255,255,0.75);
+            z-index: 0;
         }
 
         .content {
@@ -34,6 +35,7 @@
             text-align: center;
             max-width: 700px;
             padding: 40px;
+            z-index: 1;
         }
 
         .title-small {
@@ -82,15 +84,28 @@
             Bienvenido al portal de eventos de EvenTea
         </p>
 
-        <a href="/login" class="btn btn-custom">
-            INICIAR SESIÓN
-        </a>
-
-        <div class="mt-2">
-            <a href="/register" class="text-secondary small">
-                Registrarse
+        @auth
+            @if(auth()->user()->rol === 'admin')
+                <a href="{{ route('admin') }}" class="btn btn-custom">
+                    IR A PERFIL
+                </a>
+            @else
+                <a href="{{ route('dashboard') }}" class="btn btn-custom">
+                    IR A PERFIL
+                </a>
+            @endif
+            <br>
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn btn-link text-white mt-2 p-0">
+                    Cerrar Sesión
+                </button>
+            </form>
+        @else
+            <a href="/login" class="btn btn-custom">
+                INICIAR SESIÓN
             </a>
-        </div>
+        @endauth
 
     </div>
 

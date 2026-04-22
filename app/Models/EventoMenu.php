@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class EventoMenu extends Model
 {
     protected $table = 'menu_evento';
-   // protected $primaryKey = 'id_evento';
+   
     public $timestamps = false;
 }
