@@ -1,75 +1,95 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Eventos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
+@php
+    $user = auth()->user();
+    $rol = $user->rol;
+@endphp
+
 <body class="bg-dark text-white">
 
-<div class="container mt-5">
+    <div class="container mt-5">
 
-    <h2 class="mb-4">📅 Mis Eventos</h2>
+        <h2 class="mb-4">📅 Eventos</h2>
 
-    {{-- Mensaje --}}
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+        {{-- Mensaje --}}
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
-    <table class="table table-dark table-striped">
+        <table class="table table-dark table-striped">
 
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Tipo</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-
-                @if(auth()->user()->rol === 'empleado')
-                    <th>Cliente</th>
-                @endif
-
-                {{-- NUEVA COLUMNA --}}
-                <th>Acciones</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach($eventos as $evento)
+            <thead>
                 <tr>
-                    <td>{{ $evento->id_evento }}</td>
-                    <td>{{ $evento->nombre_evento }}</td>
-                    <td>{{ $evento->tipo->nombre_tipo ?? 'Sin tipo' }}</td>
-                    <td>{{ $evento->fecha }}</td>
-                    <td>{{ $evento->estado }}</td>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
 
-                    @if(auth()->user()->rol === 'empleado')
-                        <td>{{ $evento->usuario->nombre ?? 'Sin cliente' }}</td>
+                    {{-- Cliente solo lo ve empleado o admin --}}
+                    @if (in_array($rol, ['empleado', 'admin']))
+                        <th>Cliente</th>
                     @endif
 
-                    {{-- BOTÓN GESTIONAR --}}
-                    <td>
-                        <a href="{{ route('eventos.show', $evento->id_evento) }}" 
-                           class="btn btn-outline-light btn-sm">
-                            Gestionar
-                        </a>
-                    </td>
+                    <th>Acciones</th>
                 </tr>
-            @endforeach
-        </tbody>
+            </thead>
 
-    </table>
+            <tbody>
+                @foreach ($eventos as $evento)
+                    <tr>
+                        <td>{{ $evento->id_evento }}</td>
+                        <td>{{ $evento->nombre_evento }}</td>
+                        <td>{{ $evento->tipo->nombre_tipo ?? 'Sin tipo' }}</td>
+                        <td>{{ $evento->fecha }}</td>
+                        <td>{{ $evento->estado }}</td>
 
-    {{-- Botón volver --}}
-    <a href="{{ route('dashboard') }}" class="btn btn-outline-light mt-3">
-        ⬅ Volver al dashboard
-    </a>
+                        {{--  Cliente visible para admin y empleado --}}
+                        @if (in_array($rol, ['empleado', 'admin']))
+                            <td>{{ $evento->usuario->nombre ?? 'Sin cliente' }}</td>
+                        @endif
 
-</div>
+                        <td>
+                            <a href="{{ route('eventos.show', $evento->id_evento) }}"
+                                class="btn btn-outline-light btn-sm">
+                                Gestionar
+                            </a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+
+        </table>
+
+        @php
+            $user = auth()->user();
+        @endphp
+
+        @if ($user->rol === 'admin')
+            <a href="{{ route('admin') }}" class="btn btn-outline-light mt-3">
+                ⬅ Volver al panel admin
+            </a>
+        @elseif($user->rol === 'empleado')
+            <a href="{{ route('dashboard') }}" class="btn btn-outline-light mt-3">
+                ⬅ Volver al dashboard
+            </a>
+        @else
+            <a href="{{ route('dashboard') }}" class="btn btn-outline-light mt-3">
+                ⬅ Volver
+            </a>
+        @endif
+
+    </div>
 
 </body>
+
 </html>

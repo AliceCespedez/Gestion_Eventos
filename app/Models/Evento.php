@@ -35,10 +35,32 @@ class Evento extends Model
         return $this->belongsToMany(
             Servicio::class,
             'servicios_contratados',
-            'id_evento',   // FK en pivot
-            'id_servicio', // FK relacionada
-            'id_evento',   // local key
-            'id_servicio'  // related key
-        )->withPivot('cantidad','precio_total');
+            'id_evento',
+            'id_servicio',
+            'id_evento',
+            'id_servicio'
+        )->withPivot('cantidad', 'precio_total');
+    }
+
+    public function local()
+    {
+        return $this->belongsTo(\App\Models\Local::class, 'id_local', 'id_local');
+    }
+
+    public function admin()
+    {
+
+        $eventos = Evento::with(['tipo', 'usuario'])->get();
+
+        return view('admin', compact('eventos'));
+    }
+    public function menus()
+    {
+        return $this->belongsToMany(
+            Menu::class,
+            'menu_evento',
+            'id_evento',
+            'id_menu'
+        )->withPivot('cantidad');
     }
 }

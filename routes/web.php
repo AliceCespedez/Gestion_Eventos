@@ -4,14 +4,14 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventoController;
 use App\Http\Controllers\AsientoController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\MesaController;
+use App\Http\Controllers\InvitadoController;
 
+//Públicas
 
 Route::get('/', fn() => view('welcome'));
 
-
-// AUTH
+//Auth
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 
 Route::post('/login', [AuthController::class, 'login'])
@@ -26,33 +26,29 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
+//Protegidas
 
-// PROTEGIDAS
 Route::middleware(['auth', 'nocache'])->group(function () {
 
-    // DASHBOARD
-    Route::get('/dashboard', function () {
-
-        if (Auth::user()->rol === 'empleado') {
-            $eventos = \App\Models\Evento::with(['tipo', 'usuario'])->get();
-        } else {
-            $eventos = \App\Models\Evento::with(['tipo'])
-                ->where('id_usuario', Auth::user()->id_usuario)
-                ->get();
-        }
-
-        return view('dashboard', compact('eventos'));
-    })->middleware('role:cliente,empleado')
+    // DASHBOARD (ÚNICO)
+    Route::get('/dashboard', [EventoController::class, 'dashboard'])
         ->name('dashboard');
 
+    // Dashboard admin
+    Route::get('/admin/dashboard', [EventoController::class, 'dashboardAdmin'])
+        ->name('eventos.dashboardAdmin')
+        ->middleware('auth');
 
-    Route::get('/admin', fn() => view('admin'))
-        ->middleware('role:admin')
-        ->name('admin');
+    // ADMIN 
+    Route::get('/admin', function () {
+
+        $eventos = \App\Models\Evento::with(['tipo', 'usuario'])->get();
+
+        return view('admin', compact('eventos'));
+    })->middleware(['role:admin'])->name('admin');
 });
 
-
-// CLIENTES
+//Clientes
 Route::get('/clientes', function () {
     return view('clientes.index', [
         'clientes' => \App\Models\Usuario::where('rol', 'cliente')->get()
@@ -60,8 +56,7 @@ Route::get('/clientes', function () {
 })->middleware(['auth', 'role:empleado,admin'])
     ->name('clientes.index');
 
-
-// EMPLEADOS
+//Empleados
 Route::get('/empleados', function () {
     return view('empleados.index', [
         'empleados' => \App\Models\Usuario::where('rol', 'empleado')->get()
@@ -69,33 +64,26 @@ Route::get('/empleados', function () {
 })->middleware(['auth', 'role:admin'])
     ->name('empleados.index');
 
-
-// CREAR USUARIOS
+//Usuarios
 Route::post('/users/create', [AuthController::class, 'createUserByRole'])
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('users.store');
 
-
-// ============================
-// EVENTOS (MEJORADO)
-// ============================
-
-// LISTADO (ahora con controller)
+//Eventos
 Route::get('/eventos', [EventoController::class, 'index'])
     ->middleware('auth')
     ->name('eventos.index');
 
-
-// DETALLE EVENTO + SEATING PLAN
 Route::get('/eventos/{evento}', [EventoController::class, 'show'])
     ->middleware('auth')
     ->name('eventos.show');
 
+// Resumen del evento
+Route::get('/eventos/{evento}/resumen', [EventoController::class, 'summary'])
+    ->middleware('auth')
+    ->name('eventos.summary');
 
-// ============================
-// SEATING PLAN (ASIGNACIÓN)
-// ============================
-
+//Asientos
 Route::post('/asientos/asignar', [AsientoController::class, 'asignar'])
     ->middleware('auth')
     ->name('asientos.asignar');
@@ -104,12 +92,26 @@ Route::post('/asientos/desasignar', [AsientoController::class, 'desasignar'])
     ->middleware('auth')
     ->name('asientos.desasignar');
 
-//Mesas
+
+// Mesas
 Route::get('/eventos/{evento}/mesas', [MesaController::class, 'porEvento'])
     ->middleware('auth')
     ->name('mesas.porEvento');
-    
-// ACCESO DENEGADO
+
+//Invitados
+Route::get('/eventos/{evento}/invitados', function ($evento) {
+
+    $evento = \App\Models\Evento::with('invitados')->findOrFail($evento);
+
+    return view('invitados.index', compact('evento'));
+})->middleware('auth')->name('invitados.lista');
+
+// Cambiar estado del invitado 
+Route::post('/invitados/{inv}/estado', [InvitadoController::class, 'cambiarEstado'])
+    ->middleware('auth')
+    ->name('invitados.estado');
+
+//Acceso denegado
 Route::get('/acceso-denegado', function () {
     return redirect('/');
 })->name('access.denied');
