@@ -5,7 +5,46 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+/* CSS Global */
+:root {
+    --font-primary: 'BeVietnam', sans-serif;
+    --font-secondary: 'PlayfairDisplay', serif;
+
+    --color-chocolate: #574E49;
+    --color-beige-medio: #D8D5CF;
+    --color-beige-claro: #E9E5DF;
+    --color-blanco: #ffffff;
+    --color-negro: #000000;
+}
+
+body {
+    font-family: var(--font-primary);
+    font-weight: 400;
+    color: var(--color-chocolate);
+}
+h1, h2, h3, .titulo-lujoso {
+    font-family: var(--font-secondary);
+    font-weight: 400;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+
+    font-family: var(--font-primary);
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 8;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+
+    cursor: pointer;
+    border: none;
+    border-radius: none;
+    transition: all 0.2s ease-in-out;
 }

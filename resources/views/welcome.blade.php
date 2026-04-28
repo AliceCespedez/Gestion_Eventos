@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Bienvenido</title>
+    <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         body {
+            font-family: 'BeVietnam', sans-serif;
+            font-weight: 400;
             margin: 0;
             padding: 0;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'PlayfairDisplay', serif;
         }
 
         .hero {
