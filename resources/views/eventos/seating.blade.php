@@ -7,6 +7,9 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <!-- ✅ SORTABLE CORRECTO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
     <style>
         .container {
             display: flex;
@@ -17,7 +20,7 @@
             width: 30%;
             border: 1px solid #ddd;
             padding: 10px;
-            min-height: 500px;
+            min-height: 300px;
         }
 
         .invitado {
@@ -27,17 +30,16 @@
             margin-bottom: 5px;
             border-radius: 5px;
             cursor: grab;
+            user-select: none;
             font-size: 13px;
         }
 
-        /* Invitado dentro del asiento */
         .asiento .invitado {
             background: transparent;
             color: black;
             font-size: 10px;
             margin: 0;
             padding: 0;
-            cursor: grab;
         }
 
         .mesas {
@@ -61,7 +63,6 @@
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 12px;
-            pointer-events: none;
         }
 
         .asiento {
@@ -84,135 +85,136 @@
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <!-- INVITADOS -->
-    <div class="invitados" id="invitados">
-        <h3>🎟 Invitados</h3>
+        <!-- INVITADOS -->
+        <div class="invitados" id="invitados">
+            <h3>🎟 Invitados</h3>
 
-        @foreach ($evento->invitados as $inv)
-            @if (!$inv->asiento)
-                <div class="invitado" data-id="{{ $inv->id_invitado }}">
-                    {{ $inv->nombre }}
-                </div>
-            @endif
-        @endforeach
-    </div>
+            @foreach ($evento->invitados as $inv)
+                @if (!$inv->asiento)
+                    <div class="invitado" data-id="{{ $inv->id_invitado }}">
+                        {{ $inv->nombre }}
+                    </div>
+                @endif
+            @endforeach
+        </div>
 
-    <!-- MESAS -->
-    <div class="mesas">
+        <!-- MESAS -->
+        <div class="mesas">
 
-        @foreach ($evento->mesas as $mesa)
-            <div class="mesa">
+            @foreach ($evento->mesas as $mesa)
+                <div class="mesa">
 
-                <div class="mesa-title">
-                    Mesa {{ $mesa->numero_mesa }}
-                </div>
-
-                @foreach ($mesa->asientos as $i => $asiento)
-
-                    @php
-                        $pos = [
-                            'top:-10px;left:50%;transform:translate(-50%,-50%)',
-                            'top:10px;right:-10px',
-                            'top:50%;right:-10px;transform:translateY(-50%)',
-                            'bottom:10px;right:-10px',
-                            'bottom:-10px;left:50%;transform:translate(-50%,50%)',
-                            'bottom:10px;left:-10px',
-                            'top:50%;left:-10px;transform:translateY(-50%)',
-                            'top:10px;left:-10px',
-                        ];
-                    @endphp
-
-                    <div class="asiento {{ $asiento->id_invitado ? 'occupied' : '' }}"
-                         data-id="{{ $asiento->id_asiento }}"
-                         data-invitado="{{ $asiento->id_invitado ?? '' }}"
-                         style="{{ $pos[$i % count($pos)] }}">
-
-                        @if($asiento->invitado)
-                            <div class="invitado" data-id="{{ $asiento->invitado->id_invitado }}">
-                                {{ $asiento->invitado->nombre }}
-                            </div>
-                        @endif
-
+                    <div class="mesa-title">
+                        Mesa {{ $mesa->numero_mesa }}
                     </div>
 
-                @endforeach
+                    @foreach ($mesa->asientos as $i => $asiento)
+                        @php
+                            $count = count($mesa->asientos);
+                            $angle = $count > 1 ? (2 * pi() * $i / $count) : 0;
+                            $radius = 50;
+                            $x = 50 + cos($angle) * $radius;
+                            $y = 50 + sin($angle) * $radius;
+                            $style = "top:{$y}%;left:{$x}%;transform:translate(-50%,-50%)";
+                        @endphp
 
-            </div>
-        @endforeach
+                        <div class="asiento {{ $asiento->id_invitado ? 'occupied' : '' }} dropzone"
+                            data-id="{{ $asiento->id_asiento }}" style="{{ $style }}">
+
+                            @if ($asiento->invitado)
+                                <div class="invitado" data-id="{{ $asiento->invitado->id_invitado }}">
+                                    {{ $asiento->invitado->nombre }}
+                                </div>
+                            @endif
+
+                        </div>
+                    @endforeach
+
+                </div>
+            @endforeach
+
+        </div>
 
     </div>
 
-</div>
+    <!-- ✅ SCRIPT FUNCIONANDO -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
 
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+            const csrf = document.querySelector('meta[name="csrf-token"]').content;
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+            // ======================
+            // INVITADOS (ORIGEN)
+            // ======================
+            new Sortable(document.getElementById('invitados'), {
+                group: 'seating',
+                animation: 150,
+                draggable: ".invitado",
+                sort: false
+            });
 
-    const csrf = document.querySelector('meta[name="csrf-token"]').content;
+            // ======================
+            // ASIENTOS (DROP ZONES)
+            // ======================
+            document.querySelectorAll('.dropzone').forEach(zone => {
 
-    const group = {
-        name: 'seating',
-        pull: true,
-        put: true
-    };
+                new Sortable(zone, {
+                    group: 'seating',
+                    animation: 150,
+                    draggable: ".invitado",
+                    sort: false,
+                    filter: '.occupied', // No permitir drop en ocupados
 
-    /* LISTA INVITADOS */
-    new Sortable(document.getElementById('invitados'), {
-        group: group,
-        animation: 150,
-        sort: false
-    });
+                    onAdd(evt) {
 
-    /* ASIENTOS */
-    document.querySelectorAll('.asiento').forEach(asiento => {
+                        const invitadoId = evt.item.dataset.id;
+                        const destino = evt.to;
 
-        new Sortable(asiento, {
-            group: group,
-            animation: 150,
+                        // Si el destino ya tiene invitado, cancelar
+                        if (destino.classList.contains('occupied')) {
+                            evt.from.appendChild(evt.item);
+                            return;
+                        }
 
-            onAdd(evt) {
+                        // Limpiar asiento anterior
+                        if (evt.from.classList.contains('dropzone')) {
+                            evt.from.classList.remove('occupied');
+                            fetch("{{ route('asientos.desasignar') }}", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": csrf
+                                },
+                                body: JSON.stringify({
+                                    invitado_id: invitadoId
+                                })
+                            });
+                        }
 
-                const invitadoId = evt.item.dataset.id;
-                const destino = evt.to;
+                        // Asignar nuevo
+                        fetch("{{ route('asientos.asignar') }}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": csrf
+                            },
+                            body: JSON.stringify({
+                                invitado_id: invitadoId,
+                                asiento_id: destino.dataset.id
+                            })
+                        });
 
-                // asiento ocupado
-                if (destino.children.length > 1) {
-                    document.getElementById('invitados').appendChild(evt.item);
-                    return;
-                }
-
-                // guardar en BD
-                fetch("{{ route('asientos.asignar') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": csrf
-                    },
-                    body: JSON.stringify({
-                        invitado_id: invitadoId,
-                        asiento_id: destino.dataset.id
-                    })
+                        destino.classList.add('occupied');
+                    }
                 });
 
-                // marcar ocupado
-                destino.dataset.invitado = invitadoId;
-                destino.classList.add('occupied');
+            });
 
-                // limpiar asiento anterior
-                if (evt.from.classList.contains('asiento')) {
-                    evt.from.dataset.invitado = '';
-                    evt.from.classList.remove('occupied');
-                }
-            }
         });
-
-    });
-
-});
-</script>
+    </script>
 
 </body>
+
 </html>

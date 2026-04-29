@@ -20,4 +20,12 @@ class AsientoController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function desasignar(Request $request)
+    {
+        Asiento::where('id_invitado', $request->invitado_id)
+            ->update(['id_invitado' => null]);
+
+        return response()->json(['success' => true]);
+    }
 }

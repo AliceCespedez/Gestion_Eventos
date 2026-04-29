@@ -22,9 +22,7 @@
                 No hay usuario autenticado
             </div>
         @else
-            {{-- =========================
-        👤 CLIENTE
-    ========================= --}}
+            {{-- CLIENTE --}}
             @if ($rol === 'cliente')
 
                 <div class="card bg-light text-dark p-4 text-center">
@@ -37,7 +35,7 @@
                         Desde aquí puedes gestionar todos tus eventos contratados
                     </p>
 
-                    <a href="#" class="btn mt-3" style="background:#6c5f57; color:white;">
+                    <a href="{{ route('eventos.create') }}" class="btn mt-3" style="background:#6c5f57; color:white;">
                         ➕ Solicitar nuevo evento
                     </a>
 
@@ -85,9 +83,7 @@
                     </div>
                 </div>
 
-                {{-- =========================
-        👨‍💼 EMPLEADO
-    ========================= --}}
+                {{-- EMPLEADO --}}
             @elseif ($rol === 'empleado')
                 <div class="card bg-secondary text-white shadow mb-4">
                     <div class="card-body text-center">

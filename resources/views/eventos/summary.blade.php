@@ -164,7 +164,6 @@
 </div>
 
 <script>
-    // 🎨 Invitados (pastel azul / rosa)
     new Chart(document.getElementById('chartInvitados'), {
         type: 'doughnut',
         data: {
@@ -172,16 +171,15 @@
             datasets: [{
                 data: @json($dataInvitados),
                 backgroundColor: [
-                    '#A8D8FF', // azul pastel
-                    '#FFE5A8', // amarillo pastel
-                    '#FFB6C1'  // rosa pastel
+                    '#A8D8FF', 
+                    '#FFE5A8', 
+                    '#FFB6C1'  
                 ],
                 borderWidth: 0
             }]
         }
     });
 
-    // 🎨 Menús (azul + lila + rosa pastel)
     new Chart(document.getElementById('chartMenus'), {
         type: 'bar',
         data: {

@@ -10,6 +10,12 @@ class Mesa extends Model
     protected $primaryKey = 'id_mesa';
     public $timestamps = false;
 
+    protected $fillable = [
+        'id_evento',
+        'numero_mesa',
+        'capacidad'
+    ];
+
     public function evento()
     {
         return $this->belongsTo(Evento::class, 'id_evento', 'id_evento');

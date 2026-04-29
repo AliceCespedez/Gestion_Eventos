@@ -14,7 +14,7 @@
 
     <div class="container mt-5">
 
-        <h1 class="text-center mb-4">📊 Dashboard Admin</h1>
+        <h1 class="text-center mb-4">Dashboard Admin</h1>
 
         <div class="card bg-secondary p-4">
             <canvas id="eventosChart"></canvas>
@@ -29,20 +29,26 @@
     <script>
         const data = @json($eventosPorMes);
 
-        const labels = data.map(e => "Mes " + e.mes);
+        const meses = [
+            "Enero", "Febrero", "Marzo", "Abril",
+            "Mayo", "Junio", "Julio", "Agosto",
+            "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ];
+
+        const labels = data.map(e => meses[e.mes - 1]); 
         const valores = data.map(e => e.total);
 
         const ctx = document.getElementById('eventosChart');
 
         new Chart(ctx, {
-            type: 'line', 
+            type: 'line',
             data: {
                 labels: labels,
                 datasets: [{
                     label: 'Eventos por mes',
                     data: valores,
                     fill: false,
-                    tension: 0.3, 
+                    tension: 0.3,
                     borderWidth: 2
                 }]
             },

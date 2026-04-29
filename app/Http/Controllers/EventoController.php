@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Evento;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use App\Models\Local;
+use App\Models\Menu;
+use App\Models\TipoEvento;
+use App\Models\Invitado;
 
 class EventoController extends Controller
 {
-    //Listado de eventos
     public function index()
     {
         $user = Auth::user();
@@ -22,6 +26,16 @@ class EventoController extends Controller
         $eventos = $query->get();
 
         return view('eventos.index', compact('eventos'));
+    }
+
+    public function create()
+    {
+        return view('eventos.admin_create', [
+            'locales' => Local::all(),
+            'tipos' => TipoEvento::all(),
+            'menus' => Menu::all(),
+            'clientes' => \App\Models\Usuario::where('rol', 'cliente')->get()
+        ]);
     }
 
     public function show(Evento $evento)
@@ -44,7 +58,6 @@ class EventoController extends Controller
         ], $data));
     }
 
-    //Resumen evento 
     public function summary(Evento $evento)
     {
         $this->authorizeEvento($evento);
@@ -64,37 +77,28 @@ class EventoController extends Controller
         ], $data));
     }
 
-    //Protección de acceso a eventos según rol 
     private function authorizeEvento(Evento $evento)
     {
         $user = Auth::user();
 
-        // Admin 
-        if ($user->rol === 'admin') {
+        if (in_array($user->rol, ['admin', 'empleado'])) {
             return true;
         }
 
-        // Empleado 
-        if ($user->rol === 'empleado') {
-            return true;
-        }
-
-        //  Cliente solo puede ver sus propios eventos
         if ($evento->id_usuario !== $user->id_usuario) {
             abort(403, 'No tienes acceso a este evento');
         }
 
         return true;
     }
+
     public function dashboard()
     {
         $user = Auth::user();
 
         if ($user->rol === 'empleado') {
-
             $eventos = Evento::with(['tipo', 'usuario'])->get();
         } else {
-
             $eventos = Evento::with(['tipo', 'invitados'])
                 ->where('id_usuario', $user->id_usuario)
                 ->get();
@@ -111,12 +115,9 @@ class EventoController extends Controller
             'pendientes' => $evento->invitados->where('confirmacion', 'pendiente')->count(),
             'rechazados' => $evento->invitados->where('confirmacion', 'rechazado')->count(),
         ];
-        $eventosMeses = Evento::selectRaw('MONTH(fecha) as mes, COUNT(*) as cantidad')
-            ->groupBy('mes')
-            //->pluck('cantidad', 'mes')
-            ->get();
 
         $labelsInvitados = ['Confirmados', 'Pendientes', 'Rechazados'];
+
         $dataInvitados = [
             $stats['confirmados'],
             $stats['pendientes'],
@@ -140,8 +141,7 @@ class EventoController extends Controller
             'dataInvitados',
             'labelsMenus',
             'dataMenus',
-            'totalCatering',
-            'eventosMeses',
+            'totalCatering'
         );
     }
 
@@ -153,7 +153,6 @@ class EventoController extends Controller
             abort(403);
         }
 
-        // Eventos por mes
         $eventosPorMes = DB::table('eventos')
             ->selectRaw('MONTH(fecha) as mes, COUNT(*) as total')
             ->groupBy('mes')
@@ -161,5 +160,93 @@ class EventoController extends Controller
             ->get();
 
         return view('eventos.dashboardAdmin', compact('eventosPorMes'));
+    }
+
+    public function store(Request $request)
+    {
+        $user = Auth::user();
+
+        $rules = [
+            'nombre_evento' => 'required|string|max:255',
+            'fecha' => ['required', 'date', 'after_or_equal:today'],
+            'presupuesto' => ['required', 'numeric', 'min:1'],
+            'menus' => 'required|array|min:1',
+            'cantidad' => 'required|array',
+            'num_mesas' => 'required|integer|min:1',
+            'asientos_mesa' => 'required|integer|min:1',
+        ];
+
+        if ($user->rol !== 'cliente') {
+            $rules['local_id'] = ['required', 'exists:locales,id_local'];
+            $rules['tipo_id'] = ['required', 'exists:tipo_evento,id_tipo'];
+            $rules['id_usuario'] = ['required', 'exists:usuarios,id_usuario'];
+        }
+
+        $request->validate($rules);
+
+        if ($user->rol === 'cliente') {
+
+            Evento::create([
+                'nombre_evento' => $request->nombre_evento,
+                'fecha' => $request->fecha,
+                'id_usuario' => $user->id_usuario,
+                'presupuesto' => $request->presupuesto,
+                'estado' => 'pendiente'
+            ]);
+
+            return redirect()->route('eventos.index');
+        }
+
+        $evento = Evento::create([
+            'nombre_evento' => $request->nombre_evento,
+            'fecha' => $request->fecha,
+            'id_usuario' => $request->id_usuario,
+            'id_local' => $request->local_id,
+            'id_tipo' => $request->tipo_id,
+            'presupuesto' => $request->presupuesto,
+            'estado' => 'confirmado'
+        ]);
+
+        foreach ($request->menus as $menuId) {
+            if ($menuId) {
+                $evento->menus()->attach($menuId, [
+                    'cantidad' => $request->cantidad[$menuId] ?? 1
+                ]);
+            }
+        }
+
+        if ($request->invitados) {
+            foreach ($request->invitados as $inv) {
+                if (!empty($inv['nombre'])) {
+                    Invitado::create([
+                        'nombre' => $inv['nombre'],
+                        'email' => $inv['email'] ?? null,
+                        'telefono' => $inv['telefono'] ?? null,
+                        'id_evento' => $evento->id_evento
+                    ]);
+                }
+            }
+        }
+
+        //  MESAS + ASIENTOS 
+        for ($i = 1; $i <= $request->num_mesas; $i++) {
+
+            $mesa = \App\Models\Mesa::create([
+                'id_evento' => $evento->id_evento,
+                'numero_mesa' => $i,
+                'capacidad' => $request->asientos_mesa 
+            ]);
+
+            for ($j = 1; $j <= $request->asientos_mesa; $j++) {
+
+                \App\Models\Asiento::create([
+                    'id_mesa' => $mesa->id_mesa,
+                    'numero_asiento' => $j,
+                    'id_invitado' => null
+                ]);
+            }
+        }
+
+        return redirect()->route('eventos.index');
     }
 }

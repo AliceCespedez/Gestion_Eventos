@@ -72,6 +72,9 @@
                     <a href="{{ route('eventos.index') }}" class="btn btn-light w-100">
                         📋 Ir a eventos
                     </a>
+                     <a href="{{ route('eventos.admin_create') }}" class="btn btn-light w-100">
+                        Crear evento
+                    </a>
 
                 </div>
                   <div class="mt-4">
