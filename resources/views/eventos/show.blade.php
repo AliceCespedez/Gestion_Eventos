@@ -76,6 +76,7 @@
 
                     <a href="#general" class="menu-link">🏠 General</a>
                     <a href="#catering" class="menu-link">🍽 Catering</a>
+                    <a href=#servicios class="menu-link">🛎 Servicios</a>
                     <a href="#localizacion" class="menu-link">📍 Localización</a>
                     <a href="#invitados" class="menu-link">👥 Invitados</a>
                     <a href="#sitting" class="menu-link">🪑 Sitting</a>
@@ -182,7 +183,7 @@
                     @endif
                 </div>
 
-                <!-- ================= MODAL AÑADIR MENÚ ================= -->
+                <!-- MODAL AÑADIR MENÚ -->
                 <div class="modal fade" id="addMenuModal" tabindex="-1">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -228,6 +229,124 @@
                         </div>
                     </div>
                 </div>
+                <!-- SERVICIOS -->
+                <div id="servicios" class="section">
+                    <h4>🛎 Servicios</h4>
+
+                    @if ($evento->servicios->count())
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Servicio</th>
+                                    <th>Precio</th>
+                                    <th>Cantidad</th>
+                                    <th>Total</th>
+
+                                    @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
+                                        <th>Acciones</th>
+                                    @endif
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($evento->servicios as $servicio)
+                                    <tr>
+                                        <td>{{ $servicio->nombre }}</td>
+                                        <td>{{ $servicio->precio_unitario }} €</td>
+
+                                        <td>
+                                            @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
+                                                <form method="POST"
+                                                    action="{{ route('eventos.servicio.update', [$evento->id_evento, $servicio->id_servicio]) }}">
+                                                    @csrf
+                                                    @method('PUT')
+
+                                                    <input type="number" name="cantidad"
+                                                        value="{{ $servicio->pivot->cantidad }}" min="1"
+                                                        class="form-control form-control-sm" style="width:80px;">
+                                                @else
+                                                    {{ $servicio->pivot->cantidad }}
+                                            @endif
+                                        </td>
+
+                                        <td>{{ $servicio->pivot->precio_total }} €</td>
+
+                                        @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
+                                            <td class="d-flex gap-2">
+                                                <button class="btn btn-primary btn-sm">Guardar</button>
+                                                </form>
+
+                                                <form method="POST"
+                                                    action="{{ route('eventos.servicio.delete', [$evento->id_evento, $servicio->id_servicio]) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                                                </form>
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @else
+                        <p class="text-muted">No hay servicios contratados</p>
+                    @endif
+
+                    @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
+                        <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#addServicioModal">
+                            ➕ Añadir servicio
+                        </button>
+                    @endif
+                </div>
+                <!-- MODAL AÑADIR SERVICIO -->
+                <div class="modal fade" id="addServicioModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <form method="POST" action="{{ route('eventos.servicio.attach', $evento->id_evento) }}">
+                                @csrf
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Añadir servicio</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <div class="mb-3">
+                                        <label>Servicio</label>
+                                        <select name="servicio_id" class="form-select" required>
+                                            <option value="">Seleccione servicio</option>
+
+                                            @foreach ($servicios as $servicio)
+                                                <option value="{{ $servicio->id_servicio }}">
+                                                    {{ $servicio->nombre }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label>Cantidad</label>
+                                        <input type="number" name="cantidad" min="1" class="form-control"
+                                            required>
+                                    </div>
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button class="btn btn-primary">Añadir</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
                 <!-- LOCALIZACION -->
                 <div id="localizacion" class="section">
                     <h4>📍 Localización</h4>

@@ -134,7 +134,7 @@ Route::get('/admin/eventos/create', function (Request $request) {
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('eventos.admin_create');
 
-    //Menús
+//Menús
 Route::post('/eventos/{evento}/menu', [EventoController::class, 'attachMenu'])
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('eventos.menu.attach');
@@ -146,6 +146,16 @@ Route::put('/eventos/{evento}/menu/{menu}', [EventoController::class, 'updateMen
 Route::delete('/eventos/{evento}/menu/{menu}', [EventoController::class, 'detachMenu'])
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('eventos.menu.delete');
+
+//Servicios
+Route::post('/eventos/{evento}/servicio', [EventoController::class, 'attachServicio'])
+    ->name('eventos.servicio.attach');
+
+Route::put('/eventos/{evento}/servicio/{servicio}', [EventoController::class, 'updateServicio'])
+    ->name('eventos.servicio.update');
+
+Route::delete('/eventos/{evento}/servicio/{servicio}', [EventoController::class, 'detachServicio'])
+    ->name('eventos.servicio.delete');
 
 // ACCESO DENEGADO
 Route::get('/acceso-denegado', function () {

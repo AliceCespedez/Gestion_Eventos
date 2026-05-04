@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -9,6 +10,7 @@ use App\Models\Menu;
 use App\Models\TipoEvento;
 use App\Models\Invitado;
 use App\Models\Evento;
+use App\Models\Servicio;
 
 class EventoController extends Controller
 {
@@ -54,8 +56,8 @@ class EventoController extends Controller
 
         return view('eventos.show', array_merge([
             'evento' => $evento,
-
             'menus' => Menu::all(),
+            'servicios' => Servicio::all(),
         ], $data));
     }
 
@@ -307,5 +309,52 @@ class EventoController extends Controller
         }
 
         return redirect()->route('eventos.index');
+    }
+    //Servicios
+    //Añadir Servicios
+    public function attachServicio(Request $request, Evento $evento)
+    {
+        $request->validate([
+            'servicio_id' => 'required|exists:servicios,id_servicio',
+            'cantidad' => 'required|integer|min:1',
+        ]);
+
+        $servicio = \App\Models\Servicio::findOrFail($request->servicio_id);
+
+        $precioTotal = $servicio->precio_unitario * $request->cantidad;
+
+        $evento->servicios()->syncWithoutDetaching([
+            $servicio->id_servicio => [
+                'cantidad' => $request->cantidad,
+                'precio_total' => $precioTotal
+            ]
+        ]);
+
+        return back();
+    }
+
+    //Editar cantidad
+    public function updateServicio(Request $request, Evento $evento, Servicio $servicio)
+    {
+        $request->validate([
+            'cantidad' => 'required|integer|min:1'
+        ]);
+
+        $precioTotal = $servicio->precio_unitario * $request->cantidad;
+
+        $evento->servicios()->updateExistingPivot($servicio->id_servicio, [
+            'cantidad' => $request->cantidad,
+            'precio_total' => $precioTotal
+        ]);
+
+        return back()->with('success', 'Servicio actualizado');
+    }
+
+    //Eliminar servicio
+    public function detachServicio(Evento $evento, Servicio $servicio)
+    {
+        $evento->servicios()->detach($servicio->id_servicio);
+
+        return back()->with('success', 'Servicio eliminado');
     }
 }

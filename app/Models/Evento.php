@@ -63,4 +63,14 @@ class Evento extends Model
             'id_menu'
         )->withPivot('cantidad');
     }
+
+    public function servicios()
+{
+    return $this->belongsToMany(
+        \App\Models\Servicio::class,
+        'servicios_contratados',   
+        'id_evento',              
+        'id_servicio'         
+    )->withPivot('cantidad', 'precio_total');
+}
 }
