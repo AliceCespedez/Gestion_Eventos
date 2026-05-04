@@ -4,12 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Usuario;
+use App\Models\TipoEvento;
+use App\Models\Invitado;
+use App\Models\Mesa;
+use App\Models\Local;
+use App\Models\Menu;
+
 class Evento extends Model
 {
     protected $table = 'eventos';
     protected $primaryKey = 'id_evento';
     public $timestamps = false;
-
 
     protected $fillable = [
         'nombre_evento',

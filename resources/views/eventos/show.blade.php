@@ -115,6 +115,10 @@
                                     <th>Tipo</th>
                                     <th>Precio</th>
                                     <th>Cantidad</th>
+
+                                    @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
+                                        <th>Acciones</th>
+                                    @endif
                                 </tr>
                             </thead>
 
@@ -125,7 +129,43 @@
                                         <td>{{ $menu->descripcion }}</td>
                                         <td>{{ $menu->tipo_menu }}</td>
                                         <td>{{ $menu->precio_unitario }} €</td>
-                                        <td>{{ $menu->pivot->cantidad }}</td>
+
+                                        <td>
+                                            @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
+                                                <form method="POST"
+                                                    action="{{ route('eventos.menu.update', [$evento->id_evento, $menu->id_menu]) }}">
+                                                    @csrf
+                                                    @method('PUT')
+
+                                                    <input type="number" name="cantidad"
+                                                        value="{{ $menu->pivot->cantidad }}" min="1"
+                                                        class="form-control form-control-sm" style="width: 80px;">
+                                                @else
+                                                    {{ $menu->pivot->cantidad }}
+                                            @endif
+                                        </td>
+
+                                        @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
+                                            <td class="d-flex gap-2">
+
+                                                <button class="btn btn-sm btn-primary" type="submit">
+                                                    Guardar
+                                                </button>
+                                                </form>
+
+                                                <form method="POST"
+                                                    action="{{ route('eventos.menu.delete', [$evento->id_evento, $menu->id_menu]) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button class="btn btn-sm btn-danger">
+                                                        Eliminar
+                                                    </button>
+                                                </form>
+
+                                            </td>
+                                        @endif
+
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -134,8 +174,60 @@
                         <p class="text-muted">No hay menú contratado para este evento</p>
                     @endif
 
+                    {{-- BOTÓN AÑADIR MENÚ --}}
+                    @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
+                        <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#addMenuModal">
+                            ➕ Añadir menú
+                        </button>
+                    @endif
                 </div>
 
+                <!-- ================= MODAL AÑADIR MENÚ ================= -->
+                <div class="modal fade" id="addMenuModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <form method="POST" action="{{ route('eventos.menu.attach', $evento->id_evento) }}">
+                                @csrf
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Añadir menú al evento</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <div class="mb-3">
+                                        <label>Menú</label>
+                                        <select name="menu_id" class="form-select" required>
+                                            <option value="">Seleccione menú</option>
+
+                                            @foreach ($menus as $menu)
+                                                <option value="{{ $menu->id_menu }}">
+                                                    {{ $menu->nombre }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label>Cantidad</label>
+                                        <input type="number" name="cantidad" min="1" class="form-control"
+                                            required>
+                                    </div>
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button class="btn btn-primary">Añadir</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
                 <!-- LOCALIZACION -->
                 <div id="localizacion" class="section">
                     <h4>📍 Localización</h4>
@@ -207,7 +299,7 @@
                 <div id="resumen" class="section">
                     <h4>📊 Resumen</h4>
                     <p>Estado general del evento, presupuesto, etc...</p>
-                    
+
 
                     <a href="{{ route('eventos.summary', $evento->id_evento) }}" class="btn btn-light w-100">
                         Ir a resumen completo
@@ -219,6 +311,7 @@
         </div>
 
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

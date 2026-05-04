@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Evento;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -10,6 +8,7 @@ use App\Models\Local;
 use App\Models\Menu;
 use App\Models\TipoEvento;
 use App\Models\Invitado;
+use App\Models\Evento;
 
 class EventoController extends Controller
 {
@@ -54,7 +53,9 @@ class EventoController extends Controller
         $data = $this->getDashboardData($evento);
 
         return view('eventos.show', array_merge([
-            'evento' => $evento
+            'evento' => $evento,
+
+            'menus' => Menu::all(),
         ], $data));
     }
 
@@ -162,6 +163,64 @@ class EventoController extends Controller
         return view('eventos.dashboardAdmin', compact('eventosPorMes'));
     }
 
+    public function attachMenu(Request $request, Evento $evento)
+    {
+        $user = Auth::user();
+
+        if (!in_array($user->rol, ['admin', 'empleado'])) {
+            abort(403, 'No tienes permiso para añadir menús');
+        }
+
+        $request->validate([
+            'menu_id' => 'required|exists:menu,id_menu',
+            'cantidad' => 'required|integer|min:1',
+        ]);
+
+        if ($evento->menus()->wherePivot('id_menu', $request->menu_id)->exists()) {
+            $evento->menus()->updateExistingPivot($request->menu_id, [
+                'cantidad' => $request->cantidad,
+            ]);
+        } else {
+            $evento->menus()->attach($request->menu_id, [
+                'cantidad' => $request->cantidad,
+            ]);
+        }
+
+        return back()->with('success', 'Menú añadido correctamente al evento');
+    }
+
+    public function updateMenu(Request $request, Evento $evento, Menu $menu)
+    {
+        $user = Auth::user();
+
+        if (!in_array($user->rol, ['admin', 'empleado'])) {
+            abort(403, 'No tienes permiso para actualizar menús');
+        }
+
+        $request->validate([
+            'cantidad' => 'required|integer|min:1',
+        ]);
+
+        $evento->menus()->updateExistingPivot($menu->id_menu, [
+            'cantidad' => $request->cantidad,
+        ]);
+
+        return back()->with('success', 'Cantidad de menú actualizada correctamente');
+    }
+
+    public function detachMenu(Evento $evento, Menu $menu)
+    {
+        $user = Auth::user();
+
+        if (!in_array($user->rol, ['admin', 'empleado'])) {
+            abort(403, 'No tienes permiso para eliminar menús');
+        }
+
+        $evento->menus()->detach($menu->id_menu);
+
+        return back()->with('success', 'Menú eliminado correctamente del evento');
+    }
+
     public function store(Request $request)
     {
         $user = Auth::user();
@@ -234,7 +293,7 @@ class EventoController extends Controller
             $mesa = \App\Models\Mesa::create([
                 'id_evento' => $evento->id_evento,
                 'numero_mesa' => $i,
-                'capacidad' => $request->asientos_mesa 
+                'capacidad' => $request->asientos_mesa
             ]);
 
             for ($j = 1; $j <= $request->asientos_mesa; $j++) {

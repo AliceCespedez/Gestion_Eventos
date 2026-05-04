@@ -8,6 +8,7 @@ use App\Http\Controllers\InvitadoController;
 use Illuminate\Support\Facades\Route;
 use  App\Models\Evento;
 use Illuminate\Http\Request;
+use App\Http\Controllers\MenuController;
 
 // PÚBLICAS
 Route::get('/', fn() => view('welcome'));
@@ -132,6 +133,19 @@ Route::get('/admin/eventos/create', function (Request $request) {
 })
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('eventos.admin_create');
+
+    //Menús
+Route::post('/eventos/{evento}/menu', [EventoController::class, 'attachMenu'])
+    ->middleware(['auth', 'role:admin,empleado'])
+    ->name('eventos.menu.attach');
+
+Route::put('/eventos/{evento}/menu/{menu}', [EventoController::class, 'updateMenu'])
+    ->middleware(['auth', 'role:admin,empleado'])
+    ->name('eventos.menu.update');
+
+Route::delete('/eventos/{evento}/menu/{menu}', [EventoController::class, 'detachMenu'])
+    ->middleware(['auth', 'role:admin,empleado'])
+    ->name('eventos.menu.delete');
 
 // ACCESO DENEGADO
 Route::get('/acceso-denegado', function () {

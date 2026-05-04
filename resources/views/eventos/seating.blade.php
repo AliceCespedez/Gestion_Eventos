@@ -7,8 +7,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- ✅ SORTABLE CORRECTO -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
     <style>
         .container {
@@ -26,7 +25,7 @@
         .invitado {
             padding: 6px;
             background: #2563eb;
-            color: #fff;
+            color: white;
             margin-bottom: 5px;
             border-radius: 5px;
             cursor: grab;
@@ -34,12 +33,9 @@
             font-size: 13px;
         }
 
-        .asiento .invitado {
-            background: transparent;
-            color: black;
-            font-size: 10px;
-            margin: 0;
-            padding: 0;
+        .invitado.assigned {
+            background: #dc2626;
+            opacity: 0.7;
         }
 
         .mesas {
@@ -66,10 +62,10 @@
         }
 
         .asiento {
-            width: 35px;
-            height: 35px;
+            width: 50px;
+            height: 50px;
             border: 1px dashed #aaa;
-            border-radius: 4px;
+            border-radius: 6px;
             background: #f3f4f6;
             position: absolute;
             display: flex;
@@ -80,141 +76,184 @@
         .asiento.occupied {
             background: #22c55e;
         }
+
+        .asiento .invitado {
+            background: transparent;
+            color: black;
+            font-size: 10px;
+            padding: 0;
+            margin: 0;
+        }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <!-- INVITADOS -->
-        <div class="invitados" id="invitados">
-            <h3>🎟 Invitados</h3>
+    <!-- INVITADOS -->
+    <div class="invitados" id="seating-invitados">
+        <h3>🎟 Invitados</h3>
 
-            @foreach ($evento->invitados as $inv)
-                @if (!$inv->asiento)
-                    <div class="invitado" data-id="{{ $inv->id_invitado }}">
-                        {{ $inv->nombre }}
-                    </div>
-                @endif
-            @endforeach
-        </div>
+        @foreach ($evento->invitados as $inv)
+            <div class="invitado {{ $inv->asiento ? 'assigned' : '' }}" data-id="{{ $inv->id_invitado }}">
+                {{ $inv->nombre }}
+            </div>
+        @endforeach
+    </div>
 
-        <!-- MESAS -->
-        <div class="mesas">
+    <!-- MESAS -->
+    <div class="mesas">
 
-            @foreach ($evento->mesas as $mesa)
-                <div class="mesa">
+        @foreach ($evento->mesas as $mesa)
+            <div class="mesa">
 
-                    <div class="mesa-title">
-                        Mesa {{ $mesa->numero_mesa }}
-                    </div>
-
-                    @foreach ($mesa->asientos as $i => $asiento)
-                        @php
-                            $count = count($mesa->asientos);
-                            $angle = $count > 1 ? (2 * pi() * $i / $count) : 0;
-                            $radius = 50;
-                            $x = 50 + cos($angle) * $radius;
-                            $y = 50 + sin($angle) * $radius;
-                            $style = "top:{$y}%;left:{$x}%;transform:translate(-50%,-50%)";
-                        @endphp
-
-                        <div class="asiento {{ $asiento->id_invitado ? 'occupied' : '' }} dropzone"
-                            data-id="{{ $asiento->id_asiento }}" style="{{ $style }}">
-
-                            @if ($asiento->invitado)
-                                <div class="invitado" data-id="{{ $asiento->invitado->id_invitado }}">
-                                    {{ $asiento->invitado->nombre }}
-                                </div>
-                            @endif
-
-                        </div>
-                    @endforeach
-
+                <div class="mesa-title">
+                    Mesa {{ $mesa->numero_mesa }}
                 </div>
-            @endforeach
 
-        </div>
+                @foreach ($mesa->asientos as $i => $asiento)
+                    @php
+                        $count = count($mesa->asientos);
+                        $angle = $count > 1 ? (2 * pi() * $i) / $count : 0;
+                        $radius = 50;
+                        $x = 50 + cos($angle) * $radius;
+                        $y = 50 + sin($angle) * $radius;
+                        $style = "top:{$y}%;left:{$x}%;transform:translate(-50%,-50%)";
+                    @endphp
+
+                    <div class="asiento {{ $asiento->invitado ? 'occupied' : '' }}"
+                         data-id="{{ $asiento->id_asiento }}"
+                         style="{{ $style }}">
+
+                        @if ($asiento->invitado)
+                            <div class="invitado"
+                                 data-id="{{ $asiento->invitado->id_invitado }}">
+                                {{ $asiento->invitado->nombre }}
+                            </div>
+                        @endif
+
+                    </div>
+                @endforeach
+
+            </div>
+        @endforeach
 
     </div>
 
-    <!-- ✅ SCRIPT FUNCIONANDO -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+</div>
 
-            const csrf = document.querySelector('meta[name="csrf-token"]').content;
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-            // ======================
-            // INVITADOS (ORIGEN)
-            // ======================
-            new Sortable(document.getElementById('invitados'), {
+    const csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+    console.log("SEATING OK");
+    console.log('Sortable loaded:', typeof Sortable);
+
+    const invitadosEl = document.getElementById('seating-invitados');
+    console.log('Seating invitados element:', invitadosEl);
+    console.log('Seating invitados children:', invitadosEl ? invitadosEl.children.length : 'null');
+    console.log('Seating invitados with class invitado:', invitadosEl ? invitadosEl.querySelectorAll('.invitado').length : 'null');
+
+    // LISTA DE INVITADOS
+    try {
+        new Sortable(document.getElementById('seating-invitados'), {
+            group: 'seating',
+            animation: 150,
+            draggable: ".invitado",
+            sort: false,
+            onStart: function(evt) {
+                console.log('Drag started from seating invitados', evt.item.dataset.id);
+                console.log('Item:', evt.item);
+            }
+        });
+        console.log(' Sortable invitados initialized');
+    } catch (e) {
+        console.error(' Error initializing Sortable invitados:', e);
+    }
+    // CADA ASIENTO ES DROP TARGET
+    document.querySelectorAll('.asiento').forEach(asiento => {
+        console.log('Initializing asiento:', asiento.dataset.id);
+
+        try {
+            new Sortable(asiento, {
                 group: 'seating',
                 animation: 150,
                 draggable: ".invitado",
-                sort: false
-            });
+                sort: false,
 
-            // ======================
-            // ASIENTOS (DROP ZONES)
-            // ======================
-            document.querySelectorAll('.dropzone').forEach(zone => {
+                onStart: function(evt) {
+                    console.log(' Drag started from asiento', asiento.dataset.id);
+                    console.log('Item:', evt.item);
+                },
 
-                new Sortable(zone, {
-                    group: 'seating',
-                    animation: 150,
-                    draggable: ".invitado",
-                    sort: false,
-                    filter: '.occupied', // No permitir drop en ocupados
+                onAdd(evt) {
 
-                    onAdd(evt) {
+                const item = evt.item;
+                const invitadoId = item.dataset.id;
+                const asientoId = asiento.dataset.id;
 
-                        const invitadoId = evt.item.dataset.id;
-                        const destino = evt.to;
+                console.log(" Drop en asiento:", asientoId);
 
-                        // Si el destino ya tiene invitado, cancelar
-                        if (destino.classList.contains('occupied')) {
-                            evt.from.appendChild(evt.item);
-                            return;
-                        }
+                const invitadosEnAsiento = Array.from(asiento.querySelectorAll('.invitado'))
+                    .filter(el => el !== item);
 
-                        // Limpiar asiento anterior
-                        if (evt.from.classList.contains('dropzone')) {
-                            evt.from.classList.remove('occupied');
-                            fetch("{{ route('asientos.desasignar') }}", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "X-CSRF-TOKEN": csrf
-                                },
-                                body: JSON.stringify({
-                                    invitado_id: invitadoId
-                                })
-                            });
-                        }
+                if (invitadosEnAsiento.length > 0) {
+                    evt.from.appendChild(item);
+                    return;
+                }
+                // Si viene de otro asiento, desasignar primero
+                const desasignarPromise = evt.from.classList.contains('asiento') ? 
+                    fetch("{{ route('asientos.desasignar') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": csrf
+                        },
+                        body: JSON.stringify({
+                            invitado_id: invitadoId
+                        })
+                    }) : Promise.resolve();
 
-                        // Asignar nuevo
-                        fetch("{{ route('asientos.asignar') }}", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "X-CSRF-TOKEN": csrf
-                            },
-                            body: JSON.stringify({
-                                invitado_id: invitadoId,
-                                asiento_id: destino.dataset.id
-                            })
-                        });
+                desasignarPromise
+                    .then(() => fetch("{{ route('asientos.asignar') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": csrf
+                        },
+                        body: JSON.stringify({
+                            invitado_id: invitadoId,
+                            asiento_id: asientoId
+                        })
+                    }))
+                    .then(res => {
+                        if (!res.ok) throw new Error("backend error");
+                        asiento.classList.add('occupied');
+                        console.log(" ASIGNADO");
+                    })
+                    .catch(err => {
+                        console.log(" ERROR", err);
+                        evt.from.appendChild(item);
+                    });
+            },
 
-                        destino.classList.add('occupied');
-                    }
-                });
-
-            });
-
+            onRemove() {
+                if (!asiento.querySelector('.invitado')) {
+                    asiento.classList.remove('occupied');
+                }
+            }
         });
-    </script>
+        console.log(' Sortable asiento initialized for', asiento.dataset.id);
+    } catch (e) {
+        console.error(' Error initializing Sortable for asiento', asiento.dataset.id, e);
+    }
+
+    });
+
+});
+</script>
 
 </body>
-
 </html>
