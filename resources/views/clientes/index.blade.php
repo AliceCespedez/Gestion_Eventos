@@ -4,10 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Clientes</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+    
+    <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"></head>
 
 <body class="bg-dark text-white">
+
+    <!-- Header -->
+    @include('partials.header')
 
     <div class="container mt-5">
 

@@ -7,11 +7,19 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 </head>
 
 <body class="bg-dark text-white">
 
+    <!-- Header -->
+    @include('partials.header')
+
+    <!-- Login form -->
     <div class="container mt-5">
 
         <div class="row justify-content-center">
@@ -77,6 +85,9 @@
         </div>
 
     </div>
+
+    <!-- Footer -->
+    @include('partials.footer')
 
     <script>
         window.addEventListener('pageshow', function(event) {

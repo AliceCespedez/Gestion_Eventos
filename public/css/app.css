@@ -1,14 +1,7 @@
-@import 'tailwindcss';
-
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
-
 /* CSS Global */
 :root {
-    --font-primary: 'BeVietnam', sans-serif;
-    --font-secondary: 'PlayfairDisplay', serif;
+    --font-primary: 'BeVietnam';
+    --font-secondary: 'PlayfairDisplay';
 
     --color-chocolate: #574E49;
     --color-beige-medio: #D8D5CF;
@@ -16,13 +9,24 @@
     --color-blanco: #ffffff;
     --color-negro: #000000;
 }
+.bg-white{ background-color: white; }
+.color-white{ color: white; }
+.bg-claro{ background-color: var(--color-beige-claro); }
+.color-claro{ color: var(--color-beige-claro); }
+.bg-medio{ background-color: var(--color-beige-medio); }
+.color-medio{ color: var(--color-beige-medio); }
+.bg-choco{ background-color: var(--color-chocolate); }
+.color-choco{ color: var(--color-chocolate); }
+.bg-negro{ background-color: black; }
+.color-negro{ color: black; }
+
 
 body {
     font-family: var(--font-primary);
     font-weight: 400;
     color: var(--color-chocolate);
 }
-h1, h2, h3, .titulo-lujoso {
+h1, h2, h3 {
     font-family: var(--font-secondary);
     font-weight: 400;
 }
