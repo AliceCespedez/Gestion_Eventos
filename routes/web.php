@@ -120,20 +120,6 @@ Route::post('/invitados/{inv}/estado', [InvitadoController::class, 'cambiarEstad
 Route::get('/eventos/solicitar', [EventoController::class, 'create'])
     ->name('eventos.create');
 
-// ADMIN
-Route::get('/admin/eventos/create', function (Request $request) {
-
-    return view('eventos.admin_create', [
-        'locales' => \App\Models\Local::all(),
-        'tipos' => \App\Models\TipoEvento::all(),
-        'menus' => \App\Models\Menu::all(),
-        'clientes' => \App\Models\Usuario::where('rol', 'cliente')->get(),
-        'clienteSeleccionado' => $request->query('cliente')
-    ]);
-})
-    ->middleware(['auth', 'role:admin,empleado'])
-    ->name('eventos.admin_create');
-
 //Menús
 Route::post('/eventos/{evento}/menu', [EventoController::class, 'attachMenu'])
     ->middleware(['auth', 'role:admin,empleado'])
@@ -156,6 +142,11 @@ Route::put('/eventos/{evento}/servicio/{servicio}', [EventoController::class, 'u
 
 Route::delete('/eventos/{evento}/servicio/{servicio}', [EventoController::class, 'detachServicio'])
     ->name('eventos.servicio.delete');
+
+// PANEL ADMINISTRACIÓN EVENTOS
+Route::get('/admin/eventos/create', [EventoController::class, 'create'])
+    ->middleware(['auth', 'role:admin,empleado'])
+    ->name('eventos.admin_create');
 
 // ACCESO DENEGADO
 Route::get('/acceso-denegado', function () {

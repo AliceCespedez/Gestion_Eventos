@@ -24,6 +24,13 @@
 
                     <div class="card-body">
 
+                        {{--  PRESUPUESTO EN TIEMPO REAL --}}
+                        <div class="alert alert-info">
+                            💰 Presupuesto inicial: <span id="presupuestoTexto">0</span> € <br>
+                            💸 Gastado: <span id="gastadoTexto">0</span> € <br>
+                            🧾 Restante: <span id="restanteTexto">0</span> €
+                        </div>
+
                         {{-- ERRORES --}}
                         @if ($errors->any())
                             <div class="alert alert-danger">
@@ -37,6 +44,8 @@
 
                         <form method="POST" action="{{ route('eventos.store') }}">
                             @csrf
+
+                            {{-- CLIENTE --}}
                             <div class="mb-3">
                                 <label class="form-label">👤 Cliente</label>
 
@@ -47,7 +56,9 @@
 
                                     <input type="hidden" name="id_usuario" value="{{ $clienteSeleccionado }}">
 
-                                    <input type="text" class="form-control" value="{{ $clienteFijo ? $clienteFijo->nombre : 'Cliente seleccionado' }}" disabled>
+                                    <input type="text" class="form-control"
+                                        value="{{ $clienteFijo ? $clienteFijo->nombre : 'Cliente seleccionado' }}"
+                                        disabled>
                                 @else
                                     <select name="id_usuario" class="form-select">
                                         <option value="">Seleccione cliente</option>
@@ -59,6 +70,11 @@
                                         @endforeach
                                     </select>
                                 @endif
+                            </div>
+                            {{-- PRESUPUESTO --}}
+                            <div class="mb-3">
+                                <label class="form-label">💰 Presupuesto</label>
+                                <input type="number" name="presupuesto" id="presupuestoInput" class="form-control">
                             </div>
 
                             {{-- NOMBRE --}}
@@ -76,11 +92,13 @@
                             {{-- LOCAL --}}
                             <div class="mb-3">
                                 <label class="form-label">🏢 Local</label>
-                                <select name="local_id" class="form-select">
-                                    <option value="">Seleccione un local</option>
+
+                                <select name="local_id" id="localSelect" class="form-select">
+                                    <option value="" data-precio="0">Seleccione un local</option>
+
                                     @foreach ($locales as $local)
-                                        <option value="{{ $local->id_local }}">
-                                            {{ $local->nombre }}
+                                        <option value="{{ $local->id_local }}" data-precio="{{ $local->precio ?? 0 }}">
+                                            {{ $local->nombre }} - {{ $local->precio ?? 0 }} €
                                         </option>
                                     @endforeach
                                 </select>
@@ -121,7 +139,8 @@
                                     @foreach ($menus as $menu)
                                         <div class="d-flex align-items-center gap-2 mb-2">
 
-                                            <input type="checkbox" name="menus[]" value="{{ $menu->id_menu }}">
+                                            <input type="checkbox" name="menus[]" value="{{ $menu->id_menu }}"
+                                                data-precio="{{ $menu->precio_unitario }}">
 
                                             <span class="flex-grow-1">{{ $menu->nombre }}</span>
 
@@ -132,8 +151,31 @@
 
                                 </div>
                             </div>
+                            {{-- SERVICIOS --}}
+                            <div class="mb-3">
+                                <label class="form-label">Servicios (opcionales)</label>
 
-                            {{-- INVITADOS --}}
+                                <div class="border rounded p-3 bg-light">
+
+                                    @foreach ($servicios as $servicio)
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+
+                                            <input type="checkbox" name="servicios[]"
+                                                value="{{ $servicio->id_servicio }}"
+                                                data-precio="{{ $servicio->precio_unitario }}">
+
+                                            <span class="flex-grow-1">
+                                                {{ $servicio->nombre }} - {{ $servicio->precio_unitario }} €
+                                            </span>
+
+                                            <input type="number"
+                                                name="cantidad_servicio[{{ $servicio->id_servicio }}]"
+                                                class="form-control form-control-sm w-25" placeholder="Cant.">
+                                        </div>
+                                    @endforeach
+
+                                </div>
+                            </div>
                             <div class="mb-3">
                                 <label class="form-label">👥 Invitados</label>
 
@@ -157,11 +199,7 @@
                                 </button>
                             </div>
 
-                            {{-- PRESUPUESTO --}}
-                            <div class="mb-3">
-                                <label class="form-label">💰 Presupuesto</label>
-                                <input type="number" name="presupuesto" class="form-control">
-                            </div>
+
 
                             {{-- BOTÓN --}}
                             <button class="btn btn-primary w-100">
@@ -180,22 +218,100 @@
     <script>
         let index = 1;
 
+        // Invitados dinámicos
         function agregarInvitado() {
             let container = document.getElementById('invitados-container');
 
             container.insertAdjacentHTML('beforeend', `
-            <div class="row mb-2">
-                <div class="col">
-                    <input type="text" name="invitados[${index}][nombre]" class="form-control" placeholder="Nombre">
-                </div>
-                <div class="col">
-                    <input type="email" name="invitados[${index}][email]" class="form-control" placeholder="Email">
-                </div>
+        <div class="row mb-2">
+            <div class="col">
+                <input type="text" name="invitados[${index}][nombre]" class="form-control" placeholder="Nombre">
             </div>
-        `);
+            <div class="col">
+                <input type="email" name="invitados[${index}][email]" class="form-control" placeholder="Email">
+            </div>
+        </div>
+    `);
 
             index++;
         }
+
+        function calcularPresupuesto() {
+            console.log("Calculando presupuesto");
+
+            let presupuesto = parseFloat(document.getElementById("presupuestoInput").value) || 0;
+            let gastado = 0;
+
+            // =====================
+            // MENÚS
+            // =====================
+            document.querySelectorAll("input[name='menus[]']:checked").forEach(cb => {
+
+                let precio = parseFloat(cb.dataset.precio) || 0;
+                let id = cb.value;
+
+                let cantidadInput = document.querySelector(`input[name="cantidad[${id}]"]`);
+                let cantidad = parseFloat(cantidadInput?.value) || 1;
+
+                console.log("Menú", id, "precio:", precio, "cantidad:", cantidad, "total:", precio * cantidad);
+
+                gastado += precio * cantidad;
+            });
+
+            // =====================
+            // LOCAL
+            // =====================
+            let localSelect = document.getElementById("localSelect");
+
+            if (localSelect && localSelect.value) {
+                let localPrecio = parseFloat(
+                    localSelect.options[localSelect.selectedIndex].dataset.precio
+                ) || 0;
+
+                console.log("Local precio:", localPrecio);
+
+                gastado += localPrecio;
+            }
+
+            // =====================
+            // SERVICIOS
+            // =====================
+            document.querySelectorAll("input[name='servicios[]']:checked").forEach(cb => {
+
+                let precio = parseFloat(cb.dataset.precio) || 0;
+                let id = cb.value;
+
+                let cantidadInput = document.querySelector(`input[name="cantidad_servicio[${id}]"]`);
+                let cantidad = parseFloat(cantidadInput?.value) || 1;
+
+                console.log("Servicio", id, "precio:", precio, "cantidad:", cantidad, "total:", precio * cantidad);
+
+                gastado += precio * cantidad;
+            });
+
+            console.log("Gastado total:", gastado);
+
+            // =====================
+            // RESULTADO
+            // =====================
+            let restante = presupuesto - gastado;
+
+            document.getElementById("presupuestoTexto").innerText = presupuesto.toFixed(2);
+            document.getElementById("gastadoTexto").innerText = gastado.toFixed(2);
+            document.getElementById("restanteTexto").innerText = restante.toFixed(2);
+
+            let restanteEl = document.getElementById("restanteTexto");
+
+            if (restante < 0) {
+                restanteEl.style.color = "red";
+                restanteEl.innerText = restante.toFixed(2) + " (EXCEDIDO)";
+            } else {
+                restanteEl.style.color = "green";
+            }
+        }
+
+        document.addEventListener("input", calcularPresupuesto);
+        document.addEventListener("change", calcularPresupuesto);
     </script>
 
 </body>

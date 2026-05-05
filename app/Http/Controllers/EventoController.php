@@ -35,7 +35,8 @@ class EventoController extends Controller
             'locales' => Local::all(),
             'tipos' => TipoEvento::all(),
             'menus' => Menu::all(),
-            'clientes' => \App\Models\Usuario::where('rol', 'cliente')->get()
+            'clientes' => \App\Models\Usuario::where('rol', 'cliente')->get(),
+            'servicios' => \App\Models\Servicio::all()
         ]);
     }
 
@@ -54,10 +55,15 @@ class EventoController extends Controller
 
         $data = $this->getDashboardData($evento);
 
+        $costeTotal = $this->calcularCosteEvento($evento);
+        $presupuestoRestante = $evento->presupuesto - $costeTotal;
+
         return view('eventos.show', array_merge([
             'evento' => $evento,
             'menus' => Menu::all(),
             'servicios' => Servicio::all(),
+            'costeTotal' => $costeTotal,
+            'presupuestoRestante' => $presupuestoRestante
         ], $data));
     }
 
@@ -70,7 +76,8 @@ class EventoController extends Controller
             'usuario',
             'local',
             'invitados',
-            'menus'
+            'menus',
+            'servicios'
         ]);
 
         $data = $this->getDashboardData($evento);
@@ -356,5 +363,34 @@ class EventoController extends Controller
         $evento->servicios()->detach($servicio->id_servicio);
 
         return back()->with('success', 'Servicio eliminado');
+    }
+
+    //Presupuesto total del evento (menús + servicios + local)
+    private function calcularCosteEvento($evento)
+    {
+        $total = 0;
+
+        // MENÚS
+        foreach ($evento->menus as $menu) {
+            $total += $menu->precio_unitario * $menu->pivot->cantidad;
+        }
+
+        // SERVICIOS
+        foreach ($evento->servicios as $servicio) {
+            $total += $servicio->precio_unitario * $servicio->pivot->cantidad;
+        }
+
+        // LOCAL (ejemplo: si tiene precio)
+        if ($evento->local) {
+            $total += $evento->local->precio ?? 0;
+        }
+
+        return $total;
+    }
+
+    //Presupuesto restante del evento (presupuesto - coste)
+    private function getPresupuestoRestante($evento)
+    {
+        return $evento->presupuesto - $this->calcularCosteEvento($evento);
     }
 }

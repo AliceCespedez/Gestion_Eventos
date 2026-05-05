@@ -114,6 +114,8 @@
                         <a href="{{ route('eventos.index') }}" class="btn btn-light w-100 mt-3">
                             📅 Ver eventos
                         </a>
+                        <a href="{{ route('eventos.admin_create') }}" class="btn btn-light w-100 mt-3">
+                            ➕ Crear evento
 
                     </div>
                 </div>
