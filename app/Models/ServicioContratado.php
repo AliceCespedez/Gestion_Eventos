@@ -9,4 +9,11 @@ class ServicioContratado extends Model
     protected $table = 'servicios_contratados';
     protected $primaryKey = 'id_contratacion';
     public $timestamps = false;
+
+    protected $fillable = [
+        'id_evento',
+        'id_servicio',
+        'cantidad',
+        'precio_total'
+    ];
 }
