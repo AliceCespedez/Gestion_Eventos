@@ -74,6 +74,10 @@ Route::get('/eventos/create', [EventoController::class, 'create'])
     ->middleware('auth')
     ->name('eventos.create');
 
+Route::get('/eventos/solicitar', [EventoController::class, 'create'])
+    ->middleware('auth')
+    ->name('eventos.solicitar');
+
 Route::post('/eventos', [EventoController::class, 'store'])
     ->middleware('auth')
     ->name('eventos.store');
@@ -144,7 +148,7 @@ Route::delete('/eventos/{evento}/servicio/{servicio}', [EventoController::class,
     ->name('eventos.servicio.delete');
 
 // PANEL ADMINISTRACIÓN EVENTOS
-Route::get('/admin/eventos/create', [EventoController::class, 'create'])
+Route::get('/admin/eventos/create', [EventoController::class, 'adminCreate'])
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('eventos.admin_create');
 

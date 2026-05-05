@@ -4,208 +4,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Evento</title>
+    <title>Contacto - EvenTea</title>
 
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Iconos Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f2eee9;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .titulo-principal {
+            font-size: 3rem;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        .subtitulo {
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        .contact-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-even {
+            background-color: #2c2c2c;
+            color: #fff;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-even:hover {
+            background-color: #000;
+            transform: translateY(-1px);
+        }
+
+        /* BOTÓN BONITO */
+        .btn-back {
+            border: 1px solid #2c2c2c;
+            color: #2c2c2c;
+            border-radius: 30px;
+            padding: 8px 18px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back i {
+            margin-right: 6px;
+        }
+
+        .btn-back:hover {
+            background-color: #2c2c2c;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .image-side img {
+            width: 100%;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+    </style>
 </head>
 
-<body class="bg-light">
+<body>
 
     <div class="container py-5">
 
-        <div class="row justify-content-center">
+        <div class="row align-items-center">
 
-            <div class="col-md-8">
+            <!-- IZQUIERDA -->
+            <div class="col-md-6">
 
-                <div class="card shadow-lg border-0">
+                <p class="subtitulo">¿Alguna duda? ¿Un nuevo evento?</p>
 
-                    <div class="card-header bg-dark text-white text-center">
-                        <h4 class="mb-0">Crear Evento Completo</h4>
-                    </div>
+                <h1 class="titulo-principal mb-4">Ponte en contacto</h1>
 
-                    <div class="card-body">
+                <div class="contact-box">
 
-                        {{-- ERRORES GENERALES --}}
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul class="mb-0">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+                    <form method="POST" action="#">
+                        @csrf
 
-                        <form method="POST" action="{{ route('eventos.store') }}">
-                            @csrf
+                        <div class="mb-3">
+                            <input type="text" name="asunto" class="form-control" placeholder="Asunto">
+                        </div>
 
-                            {{-- NOMBRE --}}
-                            <div class="mb-3">
-                                <label class="form-label">Nombre evento</label>
-                                <input name="nombre_evento" value="{{ old('nombre_evento') }}"
-                                    class="form-control @error('nombre_evento') is-invalid @enderror">
+                        <div class="mb-3">
+                            <label class="form-label">¿Qué necesitas?</label>
+                            <textarea name="mensaje" rows="5" class="form-control" placeholder="Escribe aquí tu consulta..."></textarea>
+                        </div>
 
-                                @error('nombre_evento')
-                                    <div class="text-danger small">{{ $message }}</div>
-                                @enderror
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de consulta</label>
+                            <select name="tipo_consulta" class="form-select">
+                                <option value="informacion">Información general</option>
+                                <option value="evento">Organización de evento</option>
+                                <option value="soporte">Soporte</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
 
-                            {{-- FECHA --}}
-                            <div class="mb-3">
-                                <label class="form-label">Fecha</label>
-                                <input type="date" name="fecha" value="{{ old('fecha') }}"
-                                    class="form-control @error('fecha') is-invalid @enderror">
+                        <div class="mb-3">
+                            <label class="form-label">Prioridad</label>
+                            <select name="prioridad" class="form-select">
+                                <option value="baja">Baja</option>
+                                <option value="media" selected>Media</option>
+                                <option value="alta">Alta</option>
+                            </select>
+                        </div>
 
-                                @error('fecha')
-                                    <div class="text-danger small">{{ $message }}</div>
-                                @enderror
-                            </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" required>
+                            <label class="form-check-label">
+                                Acepto la política de privacidad
+                            </label>
+                        </div>
 
-                            {{-- LOCAL --}}
-                            <div class="mb-3">
-                                <label class="form-label">Local</label>
-                                <select name="local_id" class="form-select @error('local_id') is-invalid @enderror">
+                        <button class="btn btn-even w-100">
+                            Enviar mensaje
+                        </button>
 
-                                    <option value="">Seleccione un local</option>
+                    </form>
 
-                                    @foreach ($locales as $local)
-                                        <option value="{{ $local->id_local }}"
-                                            {{ old('local_id') == $local->id_local ? 'selected' : '' }}>
-                                            {{ $local->nombre }}
-                                        </option>
-                                    @endforeach
-
-                                </select>
-
-                                @error('local_id')
-                                    <div class="text-danger small">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            {{-- TIPO --}}
-                            <div class="mb-3">
-                                <label class="form-label">Tipo evento</label>
-                                <select name="tipo_id" class="form-select @error('tipo_id') is-invalid @enderror">
-
-                                    <option value="">Seleccione tipo</option>
-
-                                    @foreach ($tipos as $tipo)
-                                        <option value="{{ $tipo->id_tipo }}"
-                                            {{ old('tipo_id') == $tipo->id_tipo ? 'selected' : '' }}>
-                                            {{ $tipo->nombre_tipo }}
-                                        </option>
-                                    @endforeach
-
-                                </select>
-
-                                @error('tipo_id')
-                                    <div class="text-danger small">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            {{-- MENÚ --}}
-                            <div class="mb-3">
-                                <label class="form-label">Menú</label>
-
-                                <div class="border rounded p-3 bg-light">
-
-                                    @foreach ($menus as $menu)
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-
-                                            <input type="checkbox" name="menus[]" value="{{ $menu->id }}"
-                                                {{ is_array(old('menus')) && in_array($menu->id, old('menus')) ? 'checked' : '' }}>
-
-                                            <span class="flex-grow-1">
-                                                {{ $menu->nombre }}
-                                            </span>
-
-                                            <input type="number" name="cantidad[{{ $menu->id }}]"
-                                                class="form-control form-control-sm w-25" placeholder="Cantidad"
-                                                value="{{ old('cantidad.' . $menu->id) }}">
-                                        </div>
-                                    @endforeach
-
-                                </div>
-                            </div>
-
-                            {{-- INVITADOS --}}
-                            <div class="mb-3">
-                                <label class="form-label">Invitados</label>
-
-                                <div id="invitados-container">
-
-                                    <div class="row mb-2">
-                                        <div class="col">
-                                            <input type="text" name="invitados[0][nombre]" class="form-control"
-                                                placeholder="Nombre">
-                                        </div>
-
-                                        <div class="col">
-                                            <input type="email" name="invitados[0][email]" class="form-control"
-                                                placeholder="Email">
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <button type="button" class="btn btn-secondary btn-sm mt-2"
-                                    onclick="agregarInvitado()">
-                                    ➕ Añadir invitado
-                                </button>
-                            </div>
-
-                            {{-- PRESUPUESTO --}}
-                            <div class="mb-3">
-                                <label class="form-label">Presupuesto (€)</label>
-                                <input type="number" name="presupuesto" min="1"
-                                    value="{{ old('presupuesto') }}"
-                                    class="form-control @error('presupuesto') is-invalid @enderror">
-
-                                @error('presupuesto')
-                                    <div class="text-danger small">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            {{-- BOTÓN --}}
-                            <button class="btn btn-primary w-100 mt-3">
-                                Crear evento completo
-                            </button>
-
-                        </form>
-
-                    </div>
                 </div>
+            </div>
+
+            <!-- DERECHA -->
+            <div class="col-md-6 image-side mt-4 mt-md-0 text-end">
+
+                <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=800&q=80"
+                    alt="Evento floral" class="img-fluid mb-4">
+
+                <a href="{{ route('dashboard') }}" class="btn btn-back">
+                    <i class="bi bi-arrow-left"></i> Volver al perfil
+                </a>
 
             </div>
 
         </div>
 
     </div>
-
-    <script>
-        let index = 1;
-
-        function agregarInvitado() {
-            let container = document.getElementById('invitados-container');
-
-            let html = `
-    <div class="row mb-2">
-        <div class="col">
-            <input type="text" name="invitados[${index}][nombre]" class="form-control" placeholder="Nombre">
-        </div>
-        <div class="col">
-            <input type="email" name="invitados[${index}][email]" class="form-control" placeholder="Email">
-        </div>
-        <div class="col">
-            <input type="text" name="invitados[${index}][telefono]" class="form-control" placeholder="Teléfono">
-        </div>
-    </div>
-    `;
-
-            container.insertAdjacentHTML('beforeend', html);
-            index++;
-        }
-    </script>
 
 </body>
 

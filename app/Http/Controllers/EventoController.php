@@ -31,6 +31,11 @@ class EventoController extends Controller
 
     public function create()
     {
+        return view('eventos.create');
+    }
+
+    public function adminCreate()
+    {
         return view('eventos.admin_create', [
             'locales' => Local::all(),
             'tipos' => TipoEvento::all(),
