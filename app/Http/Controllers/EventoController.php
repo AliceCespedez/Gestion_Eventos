@@ -87,8 +87,17 @@ class EventoController extends Controller
 
         $data = $this->getDashboardData($evento);
 
+        $gastado = $this->calcularCosteEvento($evento);
+
+        $presupuesto = $evento->presupuesto;
+
+        $restante = $presupuesto - $gastado;
+
         return view('eventos.summary', array_merge([
-            'evento' => $evento
+            'evento' => $evento,
+            'presupuesto' => $presupuesto,
+            'gastado' => $gastado,
+            'restante' => $restante
         ], $data));
     }
 
@@ -131,35 +140,59 @@ class EventoController extends Controller
             'rechazados' => $evento->invitados->where('confirmacion', 'rechazado')->count(),
         ];
 
-        $labelsInvitados = ['Confirmados', 'Pendientes', 'Rechazados'];
-
-        $dataInvitados = [
-            $stats['confirmados'],
-            $stats['pendientes'],
-            $stats['rechazados']
-        ];
-
+        // MENÚS
         $labelsMenus = [];
         $dataMenus = [];
-        $totalCatering = 0;
 
         foreach ($evento->menus as $menu) {
             $labelsMenus[] = $menu->nombre;
             $dataMenus[] = $menu->pivot->cantidad;
-
-            $totalCatering += $menu->precio_unitario * $menu->pivot->cantidad;
         }
 
-        return compact(
-            'stats',
-            'labelsInvitados',
-            'dataInvitados',
-            'labelsMenus',
-            'dataMenus',
-            'totalCatering'
-        );
-    }
+        // SERVICIOS (NUEVO)
+        $labelsServicios = [];
+        $dataServicios = [];
+        $totalServicios = 0;
 
+        foreach ($evento->servicios as $servicio) {
+            $labelsServicios[] = $servicio->nombre;
+            $dataServicios[] = $servicio->pivot->cantidad;
+
+            $totalServicios += $servicio->precio_unitario * $servicio->pivot->cantidad;
+        }
+
+        // COSTES
+        $totalMenus = 0;
+
+        foreach ($evento->menus as $menu) {
+            $totalMenus += $menu->precio_unitario * $menu->pivot->cantidad;
+        }
+
+        $totalLocal = $evento->local->precio ?? 0;
+
+        $gastado = $totalMenus + $totalServicios + $totalLocal;
+
+        return [
+            'stats' => $stats,
+            'labelsInvitados' => ['Confirmados', 'Pendientes', 'Rechazados'],
+            'dataInvitados' => [
+                $stats['confirmados'],
+                $stats['pendientes'],
+                $stats['rechazados']
+            ],
+
+            'labelsMenus' => $labelsMenus,
+            'dataMenus' => $dataMenus,
+
+            // NUEVO
+            'labelsServicios' => $labelsServicios,
+            'dataServicios' => $dataServicios,
+
+            'presupuesto' => $evento->presupuesto,
+            'gastado' => $gastado,
+            'restante' => $evento->presupuesto - $gastado,
+        ];
+    }
     public function dashboardAdmin()
     {
         $user = Auth::user();
