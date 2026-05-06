@@ -21,7 +21,7 @@
 .color-negro{ color: black; }
 
 
-body {
+* {
     font-family: var(--font-primary);
     font-weight: 400;
     color: var(--color-chocolate);
@@ -31,17 +31,25 @@ h1, h2, h3 {
     font-weight: 400;
 }
 
-.btn {
+a{
+    transition: all 0.2s ease-out;
+}
+
+.btn-eventea {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 3rem 2rem;
+    max-width: max-content;
+    padding: 0.7rem 1.5rem;
+
+    background-color: var(--color-chocolate);
+    color: white;
 
     font-family: var(--font-primary);
-    font-size: 2rem;
-    font-weight: 500;
+    font-size: 1rem;
+    font-weight: 300;
     line-height: 1.5;
-    letter-spacing: 8;
+    letter-spacing: 2px;
     text-align: center;
     text-transform: uppercase;
     text-decoration: none;
@@ -50,5 +58,9 @@ h1, h2, h3 {
     cursor: pointer;
     border: none;
     border-radius: none;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s ease-out;
+}
+.btn-eventea:hover{
+    background-color: var(--color-beige-medio);
+    color: var(--color-chocolate);
 }

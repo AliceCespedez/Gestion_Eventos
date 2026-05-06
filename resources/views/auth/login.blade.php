@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 </head>
 
-<body class="bg-dark text-white">
+<body class="bg-claro text-white">
 
     <!-- Header -->
     @include('partials.header')
@@ -25,7 +25,7 @@
         <div class="row justify-content-center">
             <div class="col-md-5">
 
-                <div class="card bg-secondary text-white shadow">
+                <div class="card text-white shadow">
 
                     <div class="card-header text-center bg-dark">
                         <h3>🔐 Iniciar Sesión</h3>
