@@ -95,11 +95,42 @@
 
                 <!-- GENERAL -->
                 <div id="general" class="section">
+                    @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                     <h4>🎉 General</h4>
 
                     <p><strong>Evento:</strong> {{ $evento->nombre_evento }}</p>
                     <p><strong>Fecha:</strong> {{ $evento->fecha }}</p>
                     <p><strong>Estado:</strong> {{ $evento->estado }}</p>
+                </div>
+                <div class="row mt-3">
+
+                    <div class="col-md-4">
+                        <div class="card p-2 text-center">
+                            <strong>💰 Presupuesto</strong>
+                            <h5>{{ $evento->presupuesto }} €</h5>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card p-2 text-center">
+                            <strong>💸 Gastado</strong>
+                            <h5>{{ $costeTotal }} €</h5>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card p-2 text-center">
+                            <strong>🟢 Restante</strong>
+                            <h5 class="{{ $presupuestoRestante < 0 ? 'text-danger' : 'text-success' }}">
+                                {{ $presupuestoRestante }} €
+                            </h5>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- CATERING -->
@@ -295,7 +326,8 @@
                     @endif
 
                     @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
-                        <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#addServicioModal">
+                        <button class="btn btn-success mt-3" data-bs-toggle="modal"
+                            data-bs-target="#addServicioModal">
                             ➕ Añadir servicio
                         </button>
                     @endif

@@ -140,12 +140,13 @@
                                         <div class="d-flex align-items-center gap-2 mb-2">
 
                                             <input type="checkbox" name="menus[]" value="{{ $menu->id_menu }}"
-                                                data-precio="{{ $menu->precio_unitario }}">
+                                                data-precio="{{ $menu->precio_unitario }}" class="menu-checkbox">
 
                                             <span class="flex-grow-1">{{ $menu->nombre }}</span>
 
                                             <input type="number" name="cantidad[{{ $menu->id_menu }}]"
-                                                class="form-control form-control-sm w-25" placeholder="Cant.">
+                                                class="form-control form-control-sm w-25 cantidad-input"
+                                                placeholder="Cant." min="1" value="" step="1">
                                         </div>
                                     @endforeach
 
@@ -282,7 +283,7 @@
                 let id = cb.value;
 
                 let cantidadInput = document.querySelector(`input[name="cantidad_servicio[${id}]"]`);
-                let cantidad = parseFloat(cantidadInput?.value) || 1;
+                let cantidad = parseFloat(cantidadInput?.value) || 0;
 
                 console.log("Servicio", id, "precio:", precio, "cantidad:", cantidad, "total:", precio * cantidad);
 
