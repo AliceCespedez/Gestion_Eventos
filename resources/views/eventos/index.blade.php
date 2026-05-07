@@ -58,11 +58,26 @@
                             <td>{{ $evento->usuario->nombre ?? 'Sin cliente' }}</td>
                         @endif
 
-                        <td>
+                        <td class="d-flex gap-2">
+
                             <a href="{{ route('eventos.show', $evento->id_evento) }}"
                                 class="btn btn-outline-light btn-sm">
                                 Gestionar
                             </a>
+
+                            @if (in_array($rol, ['admin', 'empleado']))
+                                <form action="{{ route('eventos.destroy', $evento->id_evento) }}" method="POST"
+                                    onsubmit="return confirm('¿Estás seguro de que quieres eliminar este evento?');">
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            @endif
+
                         </td>
                     </tr>
                 @endforeach

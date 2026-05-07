@@ -562,6 +562,27 @@ class EventoController extends Controller
         return $total;
     }
 
+    //Eliminar evento
+    public function destroy($id)
+    {
+        $user = auth()->user();
+
+        // Solo admin y empleado pueden eliminar
+        if (!in_array($user->rol, ['admin', 'empleado'])) {
+
+            return redirect()->back()
+                ->with('error', 'No tienes permisos para eliminar eventos.');
+        }
+
+        // Buscar evento
+        $evento = Evento::findOrFail($id);
+
+        // Eliminar evento
+        $evento->delete();
+
+        return redirect()->route('eventos.index')
+            ->with('success', 'Evento eliminado correctamente.');
+    }
     //Presupuesto restante del evento (presupuesto - coste)
     private function getPresupuestoRestante($evento)
     {

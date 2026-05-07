@@ -156,6 +156,10 @@ Route::get('/admin/eventos/create', [EventoController::class, 'adminCreate'])
 Route::delete('/users/{id}', [AuthController::class, 'destroy'])
     ->name('users.destroy');
 
+// ELIMINAR EVENTO
+Route::delete('/eventos/{id}', [EventoController::class, 'destroy'])
+    ->name('eventos.destroy');
+
 // ACCESO DENEGADO
 Route::get('/acceso-denegado', function () {
     return redirect('/');
