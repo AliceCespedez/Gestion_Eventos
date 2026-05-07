@@ -79,9 +79,9 @@ class AuthController extends Controller
 
         return redirect('/login');
     }
-    
+
     // CREAR USUARIOS (ADMIN + EMPLEADO)
-    
+
     public function createUserByRole(Request $request)
     {
         $request->validate([
@@ -122,5 +122,35 @@ class AuthController extends Controller
         }
 
         return back()->with('success', 'Usuario creado correctamente');
+    }
+
+    // ELIMINAR CLIENTE (ADMIN-EMPLEADO)
+    public function destroy($id)
+    {
+        $user = auth()->user();
+
+        if (!in_array($user->rol, ['admin', 'empleado'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tienes permiso para eliminar usuarios.'
+            ], 403);
+        }
+
+        $cliente = Usuario::findOrFail($id);
+
+        // Verificar si tiene eventos asociados
+        if ($cliente->eventos()->count() > 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No puedes eliminar este usuario porque tiene eventos asociados.'
+            ], 400);
+        }
+
+        $cliente->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cliente eliminado correctamente.'
+        ]);
     }
 }

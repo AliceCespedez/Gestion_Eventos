@@ -152,6 +152,10 @@ Route::get('/admin/eventos/create', [EventoController::class, 'adminCreate'])
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('eventos.admin_create');
 
+//ELIMINAR CLIENTE (ADMIN-EMPLEADO)
+Route::delete('/users/{id}', [AuthController::class, 'destroy'])
+    ->name('users.destroy');
+
 // ACCESO DENEGADO
 Route::get('/acceso-denegado', function () {
     return redirect('/');
