@@ -13,25 +13,57 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 </head>
+<style>
+    #login-body{
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        justify-content: space-between;
+    }
+    #login-div{
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+    }
+    #login-form-card{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    #login-card-body{
+        width: 30%;
+        min-width: 400px;
+        border: solid 1px var(--color-chocolate);
+        padding: 2rem;
+    }
 
-<body class="bg-claro text-white">
+    #login-form input{
+        border-radius: 0%;
+        background-color: var(--color-beige-claro);
+    }
+</style>
+
+<body id="login-body" class="bg-claro text-white">
 
     <!-- Header -->
     @include('partials.header')
 
     <!-- Login form -->
-    <div class="container mt-5">
+    <div id="login-div" class="">
 
-        <div class="row justify-content-center">
-            <div class="col-md-5">
+            <div id="login-form-card">
 
-                <div class="card text-white shadow">
-
-                    <div class="card-header text-center bg-dark">
-                        <h3>🔐 Iniciar Sesión</h3>
+                    <!-- Título -->
+                    <div class="login-card-header text-center col gap-5">
+                        <h2 class="color-choco" style="font-style: italic; font-size: 4rem;">¡Bienvenido de vuelta!</h2>
+                        <h3 class="color-choco">Inicia sesión</h3>
                     </div>
 
-                    <div class="card-body">
+                    <!-- Body -->
+                    <div id="login-card-body" class="card-body">
 
                         {{-- ERRORES --}}
                         @if ($errors->any())
@@ -56,7 +88,7 @@
                         @endif
 
                         {{-- FORMULARIO --}}
-                        <form method="POST" action="/login">
+                        <form id="login-form" method="POST" action="/login">
 
                             @csrf
 
@@ -72,7 +104,7 @@
                                     placeholder="Introduce tu contraseña">
                             </div>
 
-                            <button class="btn btn-light w-100">
+                            <button class="btn-eventea w-100">
                                 Entrar
                             </button>
 
