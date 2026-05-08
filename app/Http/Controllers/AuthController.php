@@ -63,7 +63,9 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
+
             $request->session()->regenerate();
+
             return $this->redirectByRole(Auth::user());
         }
 
@@ -80,8 +82,7 @@ class AuthController extends Controller
         return redirect('/login');
     }
 
-    // CREAR USUARIOS (ADMIN + EMPLEADO)
-
+    // CREAR USUARIOS
     public function createUserByRole(Request $request)
     {
         $request->validate([
@@ -93,13 +94,13 @@ class AuthController extends Controller
 
         $authUser = Auth::user();
 
-        // Solo admin y empleado pueden crear usuarios
         if (!in_array($authUser->rol, ['admin', 'empleado'])) {
+
             return back()->with('error', 'No tienes permisos');
         }
 
-        // Empleado solo puede crear clientes
         if ($authUser->rol === 'empleado' && $request->rol !== 'cliente') {
+
             return back()->with('error', 'Un empleado solo puede crear clientes');
         }
 
@@ -110,13 +111,14 @@ class AuthController extends Controller
             'rol' => $request->rol
         ]);
 
-        // Redireccionar según el rol creado
         if ($request->rol === 'cliente') {
+
             return redirect('/clientes')
                 ->with('success', 'Cliente creado correctamente');
         }
 
         if ($request->rol === 'empleado') {
+
             return redirect('/empleados')
                 ->with('success', 'Empleado creado correctamente');
         }
@@ -124,33 +126,70 @@ class AuthController extends Controller
         return back()->with('success', 'Usuario creado correctamente');
     }
 
-    // ELIMINAR CLIENTE (ADMIN-EMPLEADO)
+    // ELIMINAR USUARIOS
     public function destroy($id)
     {
         $user = auth()->user();
 
-        if (!in_array($user->rol, ['admin', 'empleado'])) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No tienes permiso para eliminar usuarios.'
-            ], 403);
+        // Buscar usuario
+        $target = Usuario::findOrFail($id);
+
+        //  ELIMINAR EMPLEADOS
+        if ($target->rol === 'empleado') {
+
+            // Solo admin puede eliminar empleados
+            if ($user->rol !== 'admin') {
+                $message = 'Solo el administrador puede eliminar empleados.';
+                if (request()->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => $message], 403);
+                }
+                return back()->with('error', $message);
+            }
+
+            // No permitir eliminar empleados con eventos
+            if ($target->eventos()->exists()) {
+                $message = 'No se puede eliminar este empleado porque tiene eventos asociados.';
+                if (request()->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => $message], 400);
+                }
+                return back()->with('error', $message);
+            }
+
+            $target->delete();
+            
+            $message = 'Empleado eliminado correctamente.';
+            if (request()->expectsJson()) {
+                return response()->json(['success' => true, 'message' => $message]);
+            }
+            return back()->with('success', $message);
         }
 
-        $cliente = Usuario::findOrFail($id);
+        // ELIMINAR CLIENTES
+        if (in_array($user->rol, ['admin', 'empleado'])) {
 
-        // Verificar si tiene eventos asociados
-        if ($cliente->eventos()->count() > 0) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No puedes eliminar este usuario porque tiene eventos asociados.'
-            ], 400);
+            // No permitir eliminar clientes con eventos
+            if ($target->eventos()->exists()) {
+                $message = 'No puedes eliminar este cliente porque tiene eventos asociados.';
+                if (request()->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => $message], 400);
+                }
+                return back()->with('error', $message);
+            }
+
+            $target->delete();
+
+            $message = 'Cliente eliminado correctamente.';
+            if (request()->expectsJson()) {
+                return response()->json(['success' => true, 'message' => $message]);
+            }
+            return back()->with('success', $message);
         }
 
-        $cliente->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Cliente eliminado correctamente.'
-        ]);
+        //  SIN PERMISOS
+        $message = 'No tienes permisos para realizar esta acción.';
+        if (request()->expectsJson()) {
+            return response()->json(['success' => false, 'message' => $message], 403);
+        }
+        return back()->with('error', $message);
     }
 }

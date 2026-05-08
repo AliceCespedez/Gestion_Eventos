@@ -39,38 +39,24 @@
             </div>
         @endif
 
-        {{-- FORMULARIO CREAR CLIENTE --}}
         <div class="card bg-secondary text-white shadow mb-4">
             <div class="card-body">
-                <h5 class="card-title">➕ Crear Nuevo Cliente</h5>
 
-                <form action="{{ route('users.store') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="rol" value="cliente">
+                <h5 class="card-title">🔎 Buscar clientes</h5>
 
-                    <div class="mb-3">
-                        <label>Nombre</label>
-                        <input type="text" name="nombre" class="form-control" value="{{ old('nombre') }}" required>
+                <form method="GET" action="{{ route('clientes.index') }}">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control"
+                            placeholder="Buscar por nombre o email..." value="{{ request('search') }}">
+
+                        <button class="btn btn-light" type="submit">
+                            Buscar
+                        </button>
                     </div>
-
-                    <div class="mb-3">
-                        <label>Email</label>
-                        <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Contraseña</label>
-                        <input type="password" name="password" class="form-control" required>
-                    </div>
-
-                    <button type="submit" class="btn btn-light">
-                        Crear Cliente
-                    </button>
                 </form>
 
             </div>
         </div>
-
         {{-- TABLA CLIENTES --}}
         <table class="table table-dark table-striped mt-3">
 
@@ -167,28 +153,64 @@
             if (!clienteIdAEliminar) return;
 
             fetch(`/users/${clienteIdAEliminar}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    document.getElementById('errorMessage').textContent = data.message;
-                    bootstrap.Modal.getInstance(document.getElementById('confirmModal')).hide();
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+
+                        // cerrar modal
+                        bootstrap.Modal.getInstance(document.getElementById('confirmModal')).hide();
+
+                        // crear alerta dinámica
+                        const alert = document.createElement('div');
+                        alert.className = 'alert alert-success mt-3';
+                        alert.textContent = data.message;
+
+                        document.querySelector('.container').prepend(alert);
+
+                        // 👇 desaparece en 3 segundos
+                        setTimeout(() => {
+                            alert.style.transition = 'opacity 0.5s ease';
+                            alert.style.opacity = '0';
+
+                            setTimeout(() => {
+                                alert.remove();
+                            }, 500);
+                        }, 3000);
+
+                        // eliminar fila de la tabla sin recargar
+                        document.querySelector(`button[onclick*="${clienteIdAEliminar}"]`)
+                            .closest('tr')
+                            .remove();
+                    } else {
+                        document.getElementById('errorMessage').textContent = data.message;
+                        bootstrap.Modal.getInstance(document.getElementById('confirmModal')).hide();
+                        new bootstrap.Modal(document.getElementById('errorModal')).show();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('errorMessage').textContent =
+                        'Error inesperado al eliminar el cliente.';
                     new bootstrap.Modal(document.getElementById('errorModal')).show();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('errorMessage').textContent = 'Error inesperado al eliminar el cliente.';
-                new bootstrap.Modal(document.getElementById('errorModal')).show();
-            });
+                });
+        });
+
+        // Ocultar alertas de éxito del servidor después de unos segundos
+        document.querySelectorAll('.alert-success').forEach(successAlert => {
+            setTimeout(() => {
+                successAlert.style.transition = 'opacity 0.5s ease';
+                successAlert.style.opacity = '0';
+                setTimeout(() => {
+                    successAlert.remove();
+                }, 500);
+            }, 3000);
         });
     </script>
 
