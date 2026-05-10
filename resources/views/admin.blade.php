@@ -4,10 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 </head>
 
 <body class="bg-dark text-white">
+
+    <!-- Header -->
+    @include('partials.header')
 
     @php
         $user = auth()->user();
@@ -20,7 +27,7 @@
         <div class="card bg-secondary text-white shadow mb-4">
             <div class="card-body text-center">
 
-                <h1>👑 Panel Admin</h1>
+                <h2>Panel de Administrador</h1>
 
                 <h3>{{ $user->nombre }}</h3>
 

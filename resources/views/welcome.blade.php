@@ -16,59 +16,85 @@
             margin: 0;
             padding: 0;
         }
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'PlayfairDisplay', serif;
-        }
 
         .hero {
-            height: 100vh;
-            background: url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622') center/cover no-repeat;
-            position: relative;
+            height: calc(95vh - var(--nav-height));
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
         }
-
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
+        #welcome-header-img{
             width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.75);
-            z-index: 0;
+            height: 25vh;
+            background: url('/images/eventea-welcome-header-img-01.png') center/cover no-repeat;
+            background-size: cover;
+            background-position: bottom;
+            background-repeat: no-repeat;
         }
 
-        .content {
-            position: relative;
+        #welcome-header-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             text-align: center;
-            max-width: 700px;
-            padding: 40px;
-            z-index: 1;
+            width: 80vw;
+            height: fit-content;
         }
-
-        .title-small {
-            letter-spacing: 3px;
-            font-weight: 500;
+        
+        #welcome-section-2{
+            width: 100vw;
+            height: 70vh;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6rem 4rem 6rem 4rem;
         }
-
-        .title-big {
-            font-size: 3rem;
-            font-style: italic;
-            font-weight: 300;
+        #welcome-section-2 .right{
+            padding: 0rem 5rem 0rem 5rem;
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
-
-        .btn-custom {
-            background-color: #6c5f57;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            margin-top: 20px;
+        #welcome-section-2 .left{
+            background: url('/images/eventea-01.jpg') center/cover no-repeat;
+            width: 50%;
+            height: 100%;
         }
+        
+        #welcome-flecha-div{
+            width: 100%;
+            height: 15vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        #flecha-container{
+            width: 100%;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
 
-        .btn-custom:hover {
-            background-color: #4e463f;
-            color: white;
+            animation: flotar 2s ease-in-out infinite;
+            transition: transform 0.3s ease;
+        }
+        /*
+        #flecha-container:hover {
+            animation: none;
+            transform: translateY(5px);
+        }*/
+        @keyframes flotar {
+            0%, 100% { 
+                transform: translateY(0); 
+            }
+            50% { 
+                transform: translateY(-10px); 
+            }
         }
     </style>
 </head>
@@ -80,48 +106,61 @@
 
 <div class="hero">
 
-    <div class="overlay"></div>
-
-    <div class="content">
-
-        <div class="mb-3">
-            ⭐ ⭐ ⭐
-        </div>
-
-        <p class="title-small">Organizamos tu evento perfecto</p>
-
-        <h1 class="title-big">todo desde el mismo lugar</h1>
-
-        <p class="mt-3 text-muted">
-            Bienvenido al portal de eventos de EvenTea
-        </p>
+    <div id="welcome-header-img"></div>
+    <div id="welcome-header-content">
+        <div class="mb-3 fs-3"> ★  ★  ★</div>
+        <h3>Organizamos tu evento perfecto</h3>
+        <h2>todo desde el mismo lugar</h1>
+        <p>Bienvenido al portal de eventos de EvenTea. <br> ¡Gracias por elegirnos!</p>
 
         @auth
             @if(auth()->user()->rol === 'admin')
-                <a href="{{ route('admin') }}" class="btn btn-custom">
-                    IR A PERFIL
-                </a>
+                <a href="{{ route('admin') }}" class="btn-eventea align-self-center">PANEL DE ADMINISTRACIÓN</a>
             @else
-                <a href="{{ route('dashboard') }}" class="btn btn-custom">
-                    IR A PERFIL
-                </a>
+                <a href="{{ route('dashboard') }}" class="btn-eventea align-self-center">IR A MI PERFIL</a>
             @endif
+            <!--
             <br>
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                 @csrf
-                <button type="submit" class="btn btn-link text-white mt-2 p-0">
-                    Cerrar Sesión
-                </button>
+                <button type="submit" class="btn-eventea">Cerrar sesión</button>
             </form>
+            -->
         @else
-            <a href="/login" class="btn btn-custom">
-                INICIAR SESIÓN
-            </a>
+            <a href="/login" class="btn-eventea align-self-center">INICIAR SESIÓN</a>
         @endauth
-
     </div>
 
+    <div id="welcome-flecha-div">
+        <div id="flecha-container" onclick="welcomeScroll()">
+            <p style="margin: 0%; font-style: italic">Descubre cómo funciona</p>
+            <i class="bi bi-arrow-down-short"></i>
+        </div>
+    </div>
 </div>
+
+<div id="welcome-section-2">
+    <div class="right">
+        <h1>Tu portal personal<br>de eventos</h1>
+        <p style="width: 80%">
+            Esta aplicación está diseñada para facilitar la comunicación con el equipo de EvenTea. Así, podremos estar al tanto de todos los detalles que buscas en tu evento y poder organizarlo al pie de la letra.
+        </p>
+    </div>
+    <div class="left"></div>
+
+
+</div>
+
+<!-- Footer -->
+    @include('partials.footer')
+
+<script>
+    function welcomeScroll() {
+        document.getElementById('welcome-section-2').scrollIntoView({ 
+            behavior: 'smooth' 
+        });
+    }
+</script>
 
 </body>
 </html>

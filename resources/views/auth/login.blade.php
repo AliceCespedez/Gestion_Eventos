@@ -25,6 +25,7 @@
         width: 100%;
         align-items: center;
         justify-content: center;
+        min-height: calc(100vh - var(--nav-height));
     }
     #login-form-card{
         width: 100%;
@@ -52,14 +53,14 @@
     @include('partials.header')
 
     <!-- Login form -->
-    <div id="login-div" class="">
+    <div id="login-div">
 
             <div id="login-form-card">
 
                     <!-- Título -->
                     <div class="login-card-header text-center col gap-5">
                         <h2 class="color-choco" style="font-style: italic; font-size: 4rem;">¡Bienvenido de vuelta!</h2>
-                        <h3 class="color-choco">Inicia sesión</h3>
+                        <h3 class="color-choco pt-1 pb-2">Inicia sesión</h3>
                     </div>
 
                     <!-- Body -->

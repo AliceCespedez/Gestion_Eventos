@@ -8,6 +8,8 @@
     --color-beige-claro: #E9E5DF;
     --color-blanco: #ffffff;
     --color-negro: #000000;
+
+    --nav-height: 90px;
 }
 .bg-white{ background-color: white; }
 .color-white{ color: white; }
@@ -26,13 +28,48 @@
     font-weight: 400;
     color: var(--color-chocolate);
 }
-h1, h2, h3 {
+p{
+    font-size: 0.9rem;
+}
+
+h1, h2{
+    font-family: var(--font-secondary);
+    font-weight: 500;
+    font-size: 3rem !important;
+    color: var(--color-chocolate);
+    font-style: italic;
+}
+h3{
+    font-family: var(--font-primary) !important;
+    font-weight: 400 !important;
+    font-size: 20px !important;
+    color: var(--color-chocolate);
+}
+h4{
     font-family: var(--font-secondary);
     font-weight: 400;
+    font-size: 40px !important;
+    color: var(--color-chocolate);
+}
+h5{
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--color-chocolate);
+    text-transform: uppercase;
+    letter-spacing: 6%;
+}
+h6{
+    font-family: var(--font-secondary);
+    font-weight: 500;
+    font-size: 20px;
+    color: var(--color-chocolate);
 }
 
 a{
-    transition: all 0.2s ease-out;
+    color: var(--color-chocolate) !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease-out !important;
 }
 
 .btn-eventea {
@@ -43,9 +80,9 @@ a{
     padding: 0.7rem 1.5rem;
 
     border: solid var(--color-chocolate) 1px;
-    border-radius: none;
+    border-radius: 0%;
     background-color: var(--color-chocolate);
-    color: white;
+    color: white !important;
 
     font-family: var(--font-primary);
     font-size: 1rem;
@@ -64,5 +101,33 @@ a{
     background-color: transparent;
     border: solid var(--color-chocolate) 1px;
     /*background-color: var(--color-beige-medio);*/
-    color: var(--color-chocolate);
+    color: var(--color-chocolate) !important;
+}
+
+.alert{
+    border-radius: 0% !important;
+}
+
+input:focus, 
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover {
+    outline: solid 3px var(--color-beige-medio) !important;
+    outline-offset: -3px;
+    box-shadow: 0 0 0px 1000px white inset !important;
+    border: none !important;
+}
+input:focus-visible {
+    outline: solid 4px var(--color-beige-medio) !important;
+}
+
+input{
+    background-color: white !important;
+    box-shadow: none;
+    border-radius: none;
+    font-family: 'BeVietnam' !important;
+    transition: all 0.3s ease-out !important;
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+  font-family: 'BeVietnam' !important;
 }

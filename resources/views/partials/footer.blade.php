@@ -96,6 +96,7 @@
         <div id="footer-right-down-div" class="">
             <a href="#" class="w-auto"><i class="bi bi-facebook"></i>&#64EVENTEA.EVENTOS</a>
             <a href="#" class="w-auto"><i class="bi bi-instagram"></i>&#64EVENTEA</a>
+            <a href="#" class="w-auto"><i class="bi bi-envelope-fill"></i>info&#64eventea.com</a>
             <button class="btn-eventea w-auto">EVENTEA.COM</button>
         </div>
 

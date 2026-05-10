@@ -4,20 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+    <style>
+        #dash-container{
+            padding: 6rem 4rem 6rem 4rem;
+        }
+
+        #dash-hero{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 50vh;
+            margin-bottom: 3rem;
+            border: solid 2px var(--color-chocolate);
+        }
+    </style>
 </head>
 
-<body class="bg-dark text-white">
+<body class="bg-claro">
 
     @php
         $user = auth()->user();
         $rol = strtolower(trim($user->rol ?? ''));
     @endphp
 
-    <div class="container mt-5">
+    <!-- Header -->
+    @include('partials.header')
+
+    <div id="dash-container">
 
         @if (!$user)
-
             <div class="alert alert-danger">
                 No hay usuario autenticado
             </div>
@@ -25,26 +48,28 @@
             {{-- CLIENTE --}}
             @if ($rol === 'cliente')
 
-                <div class="card bg-light text-dark p-4 text-center">
-
-                    <h3>Hola, {{ $user->nombre }}</h3>
-
-                    <h2 class="mt-2">Bienvenido a tu portal de eventos</h2>
-
-                    <p class="text-muted">
-                        Desde aquí puedes gestionar todos tus eventos contratados
-                    </p>
-
-                    <a href="{{ route('eventos.create') }}" class="btn mt-3" style="background:#6c5f57; color:white;">
-                        ➕ Solicitar nuevo evento
-                    </a>
-
+                <div id="dash-nav align-self-end">
+                    <form method="POST" action="{{ route('logout') }}">
+                            <button type="submit">Cerrar sesión</button>
+                            <i class="bi bi-arrow-bar-right"></i>
+                    </form>
                 </div>
+
+
+                <div id="dash-hero" class="p-4 text-center">
+                    <h3>Hola, {{ $user->nombre }}</h3>
+                    <h2>¡Bienvenido a tu portal de eventos!</h2>
+                    <p class="pt-2">Desde aquí podrás gestionar todos los detalles de<br>tus eventos en marcha con el equipo de Eventea</p>
+                </div>
+
+                <a href="{{ route('eventos.create') }}" class="btn-eventea align-self-center">
+                    <i class="bi bi-plus fs-4 pb-1 color-white"></i>&nbsp;&nbsp;Solicitar nuevo evento
+                </a>
 
                 {{-- EVENTOS --}}
                 <div class="mt-5">
 
-                    <h4 class="mb-3">MIS EVENTOS</h4>
+                    <h5 class="mb-3">MIS EVENTOS</h5>
 
                     @forelse($eventos as $evento)
                         <div class="card mb-3 shadow">
@@ -140,16 +165,15 @@
                         <button class="btn btn-light w-100">
                             Crear cliente
                         </button>
-
                     </form>
-
                 </div>
-
             @endif
-
         @endif
-
     </div>
+
+    <!-- Footer -->
+    <br><br>
+    @include('partials.footer')
 
 </body>
 

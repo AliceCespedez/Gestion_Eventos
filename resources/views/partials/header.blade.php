@@ -5,6 +5,7 @@
         justify-content: space-between;
         align-items: center;
         padding: 1rem 2rem 1.5rem 2rem;
+        height: var(--nav-height);
     }
     .logo-container{
         width: fit-content;
@@ -36,7 +37,8 @@
 
 </style>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm bg-white">
+<nav class="navbar navbar-expand-lg navbar-light bg-light  bg-white sticky-top">
+    <!--shadow-sm-->
 
     <!-- LOGO -->
     <div class="logo-container">
@@ -57,9 +59,22 @@
         <a href="{{ route('eventos.create') }}" class="nav-pill">
             CONTACTO
         </a>
-        <a href="{{ route('dashboard') }}">
-            <i class="bi bi-person color-choco nav-pill fs-4"></i>
-        </a>
+
+        @auth
+            @if(auth()->user()->rol === 'admin')
+                <a href="{{ route('admin') }}" style="font-weight: 400">
+                    Admin<i class="bi bi-person color-choco nav-pill fs-4"></i>
+                </a>
+            @else
+                <a href="{{ route('dashboard') }}">
+                    Hola,  <strong>{{ auth()->user()->nombre }}</strong>&nbsp;&nbsp;<i class="bi bi-person color-choco nav-pill fs-4"></i>
+                </a>
+            @endif
+        @else
+            <a href="{{ route('login') }}">
+                <i class="bi bi-person color-choco nav-pill fs-4"></i>
+            </a>
+        @endauth
     </div>
     
 
