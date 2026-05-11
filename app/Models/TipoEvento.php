@@ -13,6 +13,7 @@ class TipoEvento extends Model
     protected $fillable = [
         'nombre_tipo'
     ];
+    // protected $fillable = ['id_tipo', 'nombre_tipo'];
 
     // Relación: un tipo tiene muchos eventos
     public function eventos()

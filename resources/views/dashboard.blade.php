@@ -25,6 +25,25 @@
             margin-bottom: 3rem;
             border: solid 2px var(--color-chocolate);
         }
+
+        .event-card{
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.585) 0%, rgba(0,0,0,0) 100%);
+        }
+        .event-card > * {
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 
@@ -77,14 +96,27 @@
                     <h5 class="mb-3">MIS EVENTOS</h5>
 
                     @forelse($eventos as $evento)
-                        <div class="p-4 d-flex column bg-medio justify-content-between align-items-end">
-
+                        <div class="event-card p-4 pt-5 d-flex column bg-medio justify-content-between align-items-end"
+                            style="background-image: url('{{ asset('images/tipo-' . $evento->id_tipo . '.jpg') }}');"
+                        >
                             <div class="d-flex row">
-                                <h5>{{ $evento->id_tipo }}</h5>
-                                <h2 class="color-white">{{ $evento->nombre_evento }}</h2>
-                                <div class="d-flex column">
-                                    <p style="font-weight: 600"><i class="bi bi-calendar4 fs-5"></i> {{ $evento->fecha }}</p>
-                                    <p><i class="bi bi-geo-alt fs-5"></i> {{ $evento->id_local }}</p>
+
+                                <h5 class="color-white">{{ $evento->tipo->nombre_tipo }}</h5>
+
+                                <h2 class="color-white" style="font-style: normal">{{ $evento->nombre_evento }}</h2>
+
+                                <div class="d-flex flex-row gap-3" style="margin-bottom: -1rem">
+                                    <p class="color-white" style="font-weight: 600">
+                                        <i class="bi bi-calendar4 fs-6 color-white"></i> {{ $evento->fecha }}
+                                    </p>
+                                    <p class="color-white">
+                                        <i class="bi bi-geo-alt fs-6 color-white"></i> {{ $evento->local->nombre }}
+                                    </p>
+                                    <!--
+                                    <p class="color-white">
+                                        <i class="bi bi-people fs-6 color-white"></i> {{ $evento->local->nombre }} invitados
+                                    </p>
+                                    -->
                                 </div>
                             </div>
 
@@ -97,7 +129,7 @@
                         </div>
 
                     @empty
-                        <p>No tienes eventos todavía.</p>
+                        <p style="font-style: italic">No tienes eventos todavía.</p>
                     @endforelse
 
                 </div>

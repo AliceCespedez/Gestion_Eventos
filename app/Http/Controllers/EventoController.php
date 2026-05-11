@@ -18,7 +18,7 @@ class EventoController extends Controller
     {
         $user = Auth::user();
 
-        $query = Evento::with(['tipo', 'usuario']);
+        $query = Evento::with(['tipo', 'usuario','local']);
 
         if ($user->rol === 'cliente') {
             $query->where('id_usuario', $user->id_usuario);
@@ -123,7 +123,7 @@ class EventoController extends Controller
         if ($user->rol === 'empleado') {
             $eventos = Evento::with(['tipo', 'usuario'])->get();
         } else {
-            $eventos = Evento::with(['tipo', 'invitados'])
+            $eventos = Evento::with(['tipo', 'invitados','local'])
                 ->where('id_usuario', $user->id_usuario)
                 ->get();
         }
