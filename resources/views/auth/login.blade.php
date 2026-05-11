@@ -105,10 +105,12 @@
                                     placeholder="Introduce tu contraseña">
                             </div>
 
-                            <button class="btn-eventea w-100">
-                                Entrar
-                            </button>
-
+                            <div class="text-center">
+                                <button class="btn-eventea">
+                                    Entrar
+                                </button>
+                            </div>
+                            
                         </form>
 
                     </div>

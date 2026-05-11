@@ -66,10 +66,15 @@ h6{
     color: var(--color-chocolate);
 }
 
-a{
+a, .button-a{
     color: var(--color-chocolate) !important;
     text-decoration: none !important;
+    background-color: transparent;
+    border: none;
     transition: all 0.2s ease-out !important;
+}
+a:hover, .button-a:hover{
+    opacity: 0.6;
 }
 
 .btn-eventea {
@@ -83,6 +88,7 @@ a{
     border-radius: 0%;
     background-color: var(--color-chocolate);
     color: white !important;
+    opacity: 1 !important;
 
     font-family: var(--font-primary);
     font-size: 1rem;
@@ -107,6 +113,7 @@ a{
 .alert{
     border-radius: 0% !important;
 }
+
 
 input:focus, 
 input:-webkit-autofill:focus,

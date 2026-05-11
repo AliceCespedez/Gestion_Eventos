@@ -12,7 +12,7 @@
 
     <style>
         #dash-container{
-            padding: 6rem 4rem 6rem 4rem;
+            padding: 2rem 4rem 6rem 4rem;
         }
 
         #dash-hero{
@@ -48,10 +48,12 @@
             {{-- CLIENTE --}}
             @if ($rol === 'cliente')
 
-                <div id="dash-nav align-self-end">
+                <div id="dash-nav" class="d-flex justify-content-end mb-4">
                     <form method="POST" action="{{ route('logout') }}">
-                            <button type="submit">Cerrar sesión</button>
-                            <i class="bi bi-arrow-bar-right"></i>
+                            @csrf
+                            <button type="submit" class="button-a" onclick="this.form.submit();">
+                                Cerrar sesión <i class="bi bi-arrow-bar-right fs-4"></i>
+                            </button>
                     </form>
                 </div>
 
@@ -62,9 +64,12 @@
                     <p class="pt-2">Desde aquí podrás gestionar todos los detalles de<br>tus eventos en marcha con el equipo de Eventea</p>
                 </div>
 
-                <a href="{{ route('eventos.create') }}" class="btn-eventea align-self-center">
-                    <i class="bi bi-plus fs-4 pb-1 color-white"></i>&nbsp;&nbsp;Solicitar nuevo evento
-                </a>
+
+                <div class="text-center">
+                    <a href="{{ route('eventos.create') }}" class="btn-eventea align-self-center">
+                        <i class="bi bi-plus fs-4 pb-1" style="color: inherit"></i>&nbsp;&nbsp;Solicitar nuevo evento
+                    </a>
+                </div>
 
                 {{-- EVENTOS --}}
                 <div class="mt-5">
@@ -72,20 +77,23 @@
                     <h5 class="mb-3">MIS EVENTOS</h5>
 
                     @forelse($eventos as $evento)
-                        <div class="card mb-3 shadow">
-                            <div class="card-body">
+                        <div class="p-4 d-flex column bg-medio justify-content-between align-items-end">
 
-                                <h5>{{ $evento->nombre_evento }}</h5>
-
-                                <p>📅 {{ $evento->fecha }}</p>
-
-                                <p>📍 {{ $evento->ubicacion }}</p>
-
-                                <a href="{{ route('eventos.show', $evento->id_evento) }}" class="btn btn-dark btn-sm">
-                                    Gestionar
-                                </a>
-
+                            <div class="d-flex row">
+                                <h5>{{ $evento->id_tipo }}</h5>
+                                <h2 class="color-white">{{ $evento->nombre_evento }}</h2>
+                                <div class="d-flex column">
+                                    <p style="font-weight: 600"><i class="bi bi-calendar4 fs-5"></i> {{ $evento->fecha }}</p>
+                                    <p><i class="bi bi-geo-alt fs-5"></i> {{ $evento->id_local }}</p>
+                                </div>
                             </div>
+
+                            <div>
+                                <a href="{{ route('eventos.show', $evento->id_evento) }}" class="btn-eventea">
+                                    Gestionar >
+                                </a>
+                            </div>
+                                                            
                         </div>
 
                     @empty
@@ -94,19 +102,6 @@
 
                 </div>
 
-                {{-- LOGOUT --}}
-                <div class="card bg-secondary text-white shadow mb-4 mt-3">
-                    <div class="card-body text-center">
-
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-light w-100">
-                                Cerrar sesión
-                            </button>
-                        </form>
-
-                    </div>
-                </div>
 
                 {{-- EMPLEADO --}}
             @elseif ($rol === 'empleado')
