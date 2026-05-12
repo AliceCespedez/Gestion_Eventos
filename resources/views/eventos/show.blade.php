@@ -5,56 +5,104 @@
     <meta charset="UTF-8">
     <title>{{ $evento->nombre_evento }}</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
     <style>
         body {
-            background: #f5f5f5;
+            background: white;
+            position: relative;
+        }
+
+        
+        #event-header-sticky{
+            width: 100%;
+            height: fit-content;
+            position: sticky;
+            top: var(--nav-height);
+            z-index: 1;
+        }
+        .event-header {
+            width: 100%;
+            height: 160px;
+            color: white;
+            display: flex;
+            padding: 2rem 5rem 2rem 5rem;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .event-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+        }
+        .event-header>* {
+            position: relative;
+            z-index: 0;
+        }
+
+
+        #event-section{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 4rem;
+        }
+        #event-section-cols{
+            width: 80vw;
+        }
+
+        #event-content-right{
+            margin-top: -3vw;
+        }
+        #event-sidebar{
+
         }
 
         .sidebar {
             position: sticky;
-            top: 20px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            height: fit-content;
-        }
+            top: calc(var(--nav-height) + 160px);
+            z-index: 1;
 
+            background: white;
+            padding: 2rem 1rem 1rem 1rem;
+            height: calc(100vh - (var(--nav-height) + 160px));
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: flex-start;
+        }
         .menu-link {
             display: block;
             padding: 10px;
-            margin-bottom: 8px;
             text-decoration: none;
             color: #444;
-            border-radius: 6px;
             transition: 0.2s;
         }
-
         .menu-link:hover {
-            background: #eee;
+            text-decoration: underline;
         }
+
 
         .section {
-            background: white;
+            padding: 20px 20px 0px 20px;
+            scroll-margin-top: calc(var(--nav-height) + 160px);
+            position: relative;
+            z-index: 3;
+        }
+        .section-inside{
+            border: solid 1px var(--color-chocolate);
+            border-bottom: none;
             padding: 30px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            scroll-margin-top: 20px;
         }
 
-        .hero {
-            background: url('https://images.unsplash.com/photo-1505236858219-8359eb29e329') center/cover;
-            height: 180px;
-            border-radius: 10px;
-            color: white;
-            display: flex;
-            align-items: center;
-            padding: 30px;
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
 
         html {
             scroll-behavior: smooth;
@@ -64,77 +112,95 @@
 
 <body>
 
-    <div class="container mt-4">
+    <!-- Header -->
+    @include('partials.header')
 
-        <div class="row">
 
-            <!--  SIDEBAR -->
-            <div class="col-md-3">
+    <!-- SECTION HEADER -->
+    <div id="event-header-sticky">
+        <div class="event-header d-flex justify-content-start align-items-end"
+        style="background-image: url('{{ asset('images/tipo-' . $evento->id_tipo . '.jpg') }}');">
+
+            <div id="evento-title-div" class="color-white">
+                <a href="{{ route('dashboard') }}" class="a-white" style="font-weight: 300">< Todos mis eventos</a>
+                <h2>{{ $evento->nombre_evento }}</h2>
+            </div>
+        </div>
+    </div>
+    
+
+    <div id="event-section">
+        <div id="event-section-cols" class="row">
+
+            <!-- SIDEBAR -->
+            <div id="event-sidebar" class="col-md-3">
                 <div class="sidebar">
-
-                    <h5 class="mb-3">📋 Menú</h5>
-
-                    <a href="#general" class="menu-link">🏠 General</a>
-                    <a href="#catering" class="menu-link">🍽 Catering</a>
-                    <a href=#servicios class="menu-link">🛎 Servicios</a>
-                    <a href="#localizacion" class="menu-link">📍 Localización</a>
-                    <a href="#invitados" class="menu-link">👥 Invitados</a>
-                    <a href="#sitting" class="menu-link">🪑 Sitting</a>
-                    <a href="#resumen" class="menu-link">📊 Resumen</a>
-
+                    <a href="#general" class="menu-link">GENERAL</a>
+                    <a href="#catering" class="menu-link">CATERING</a>
+                    <a href=#servicios class="menu-link">SERVICIOS</a>
+                    <a href="#localizacion" class="menu-link">LOCALIZACIÓN</a>
+                    <a href="#invitados" class="menu-link">INVITADOS</a>
+                    <a href="#sitting" class="menu-link">SITTING</a>
+                    <a href="{{ route('eventos.summary', $evento->id_evento) }}" class="btn-eventea">RESUMEN ></a>
                 </div>
             </div>
 
+
+
             <!--  CONTENIDO -->
-            <div class="col-md-9">
+            <div id="event-content-right" class="col-md-9">
 
-                <!-- HERO -->
-                <div class="hero">
-                    {{ $evento->nombre_evento }}
-                </div>
 
+                
                 <!-- GENERAL -->
-                <div id="general" class="section">
+                <div id="general" class="section bg-claro">
+                <div class="section-inside">
                     @if (session('error'))
                         <div class="alert alert-danger">
                             {{ session('error') }}
                         </div>
                     @endif
-                    <h4>🎉 General</h4>
+                    <h4>General</h4>
 
                     <p><strong>Evento:</strong> {{ $evento->nombre_evento }}</p>
                     <p><strong>Fecha:</strong> {{ $evento->fecha }}</p>
                     <p><strong>Estado:</strong> {{ $evento->estado }}</p>
+                
+
+                    <!-- Presupuesto -->
+                    <div class="row mt-3">
+
+                        <div class="col-md-4">
+                            <div class="card p-2 text-center">
+                                <strong>💰 Presupuesto</strong>
+                                <h5>{{ $evento->presupuesto }} €</h5>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card p-2 text-center">
+                                <strong>💸 Gastado</strong>
+                                <h5>{{ $costeTotal }} €</h5>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card p-2 text-center">
+                                <strong>🟢 Restante</strong>
+                                <h5 class="{{ $presupuestoRestante < 0 ? 'text-danger' : 'text-success' }}">
+                                    {{ $presupuestoRestante }} €
+                                </h5>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-                <div class="row mt-3">
-
-                    <div class="col-md-4">
-                        <div class="card p-2 text-center">
-                            <strong>💰 Presupuesto</strong>
-                            <h5>{{ $evento->presupuesto }} €</h5>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="card p-2 text-center">
-                            <strong>💸 Gastado</strong>
-                            <h5>{{ $costeTotal }} €</h5>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="card p-2 text-center">
-                            <strong>🟢 Restante</strong>
-                            <h5 class="{{ $presupuestoRestante < 0 ? 'text-danger' : 'text-success' }}">
-                                {{ $presupuestoRestante }} €
-                            </h5>
-                        </div>
-                    </div>
-
                 </div>
+
 
                 <!-- CATERING -->
-                <div id="catering" class="section">
+                <div id="catering" class="section bg-medio">
+                <div class="section-inside">
                     <h4>🍽 Catering</h4>
 
                     @if ($evento->menus->count() > 0)
@@ -213,9 +279,11 @@
                         </button>
                     @endif
                 </div>
+                </div>
 
                 <!-- MODAL AÑADIR MENÚ -->
                 <div class="modal fade" id="addMenuModal" tabindex="-1">
+                <div class="section-inside">
                     <div class="modal-dialog">
                         <div class="modal-content">
 
@@ -260,8 +328,13 @@
                         </div>
                     </div>
                 </div>
+                </div>
+
+
+
                 <!-- SERVICIOS -->
-                <div id="servicios" class="section">
+                <div id="servicios" class="section bg-claro">
+                <div class="section-inside">
                     <h4>🛎 Servicios</h4>
 
                     @if ($evento->servicios->count())
@@ -332,6 +405,9 @@
                         </button>
                     @endif
                 </div>
+                </div>
+
+
                 <!-- MODAL AÑADIR SERVICIO -->
                 <div class="modal fade" id="addServicioModal" tabindex="-1">
                     <div class="modal-dialog">
@@ -379,8 +455,10 @@
                     </div>
                 </div>
 
+
                 <!-- LOCALIZACION -->
-                <div id="localizacion" class="section">
+                <div id="localizacion" class="section bg-medio">
+                <div class="section-inside">
                     <h4>📍 Localización</h4>
 
                     @if ($evento->local)
@@ -397,11 +475,12 @@
                     @else
                         <p class="text-muted">No hay local asignado a este evento</p>
                     @endif
-
+                </div>
                 </div>
 
                 <!-- INVITADOS -->
-                <div id="invitados" class="section">
+                <div id="invitados" class="section bg-claro">
+                <div class="section-inside">
                     <h4>👥 Invitados</h4>
 
                     <div class="row">
@@ -438,16 +517,22 @@
                         Ver lista de invitados
                     </a>
                 </div>
+                </div>
+
 
                 <!-- SITTING -->
-                <div id="sitting" class="section">
+                <div id="sitting" class="section bg-medio">
+                <div class="section-inside">
                     <h4>🪑 Seating Plan</h4>
 
                     @include('eventos.seating')
                 </div>
+                </div>
+
 
                 <!-- RESUMEN -->
-                <div id="resumen" class="section">
+                <div id="resumen" class="section bg-claro">
+                <div class="section-inside">
                     <h4>📊 Resumen</h4>
                     <p>Estado general del evento, presupuesto, etc...</p>
 
@@ -456,6 +541,7 @@
                         Ir a resumen completo
                     </a>
                 </div>
+                </div>
 
             </div>
 
@@ -463,6 +549,11 @@
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <!-- Footer -->
+    @include('partials.footer')
+
 
 </body>
 

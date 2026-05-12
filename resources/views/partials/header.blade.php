@@ -37,7 +37,7 @@
 
 </style>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light  bg-white sticky-top">
+<nav class="navbar navbar-expand-lg navbar-light bg-light bg-white sticky-top">
     <!--shadow-sm-->
 
     <!-- LOGO -->
@@ -53,7 +53,7 @@
 
     <!-- MENU -->
     <div class="nav-menu">
-        <a href="{{ route('eventos.store') }}" class="nav-pill">
+        <a href="{{ route('dashboard') }}" class="nav-pill">
             MIS EVENTOS
         </a>
         <a href="{{ route('eventos.create') }}" class="nav-pill">

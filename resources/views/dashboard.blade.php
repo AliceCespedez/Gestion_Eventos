@@ -31,7 +31,6 @@
             background-position: center;
             position: relative;
         }
-
         .event-card::before {
             content: '';
             position: absolute;
@@ -41,7 +40,6 @@
             bottom: 0;
             background: linear-gradient(90deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
         }
-
         .event-card>* {
             position: relative;
             z-index: 1;
@@ -245,6 +243,9 @@
         @endif
 
     </div>
+
+    <!-- Footer -->
+    @include('partials.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
