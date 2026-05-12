@@ -39,45 +39,28 @@
             background-color: #2c2c2c;
             color: #fff;
             border-radius: 8px;
-            transition: all 0.3s ease;
         }
 
         .btn-even:hover {
             background-color: #000;
-            transform: translateY(-1px);
         }
 
-        /* BOTÓN BONITO */
         .btn-back {
             border: 1px solid #2c2c2c;
             color: #2c2c2c;
             border-radius: 30px;
             padding: 8px 18px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .btn-back i {
-            margin-right: 6px;
         }
 
         .btn-back:hover {
             background-color: #2c2c2c;
             color: #fff;
-            transform: translateY(-2px);
-        }
-
-        .image-side img {
-            width: 100%;
-            border-radius: 12px;
-            object-fit: cover;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Header -->
     @include('partials.header')
 
     <div class="container py-5">
@@ -93,37 +76,67 @@
 
                 <div class="contact-box">
 
-                    <form method="POST" action="#">
+                    {{-- ✅ MENSAJE DE ÉXITO --}}
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('consulta.store') }}">
                         @csrf
 
+                        {{-- ASUNTO --}}
                         <div class="mb-3">
-                            <input type="text" name="asunto" class="form-control" placeholder="Asunto">
+                            <input type="text" name="asunto"
+                                class="form-control @error('asunto') is-invalid @enderror" placeholder="Asunto"
+                                value="{{ old('asunto') }}">
+
+                            @error('asunto')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
 
+                        {{-- MENSAJE --}}
                         <div class="mb-3">
                             <label class="form-label">¿Qué necesitas?</label>
-                            <textarea name="mensaje" rows="5" class="form-control" placeholder="Escribe aquí tu consulta..."></textarea>
+
+                            <textarea name="mensaje" rows="5" class="form-control @error('mensaje') is-invalid @enderror"
+                                placeholder="Escribe aquí tu consulta...">{{ old('mensaje') }}</textarea>
+
+                            @error('mensaje')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
 
+                        {{-- TIPO --}}
                         <div class="mb-3">
                             <label class="form-label">Tipo de consulta</label>
+
                             <select name="tipo_consulta" class="form-select">
+
                                 <option value="informacion">Información general</option>
                                 <option value="evento">Organización de evento</option>
                                 <option value="soporte">Soporte</option>
                                 <option value="otro">Otro</option>
+
                             </select>
                         </div>
 
+                        {{-- PRIORIDAD --}}
                         <div class="mb-3">
                             <label class="form-label">Prioridad</label>
+
                             <select name="prioridad" class="form-select">
+
                                 <option value="baja">Baja</option>
                                 <option value="media" selected>Media</option>
                                 <option value="alta">Alta</option>
+
                             </select>
                         </div>
 
+                        {{-- CHECK --}}
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="checkbox" required>
                             <label class="form-check-label">
@@ -141,10 +154,10 @@
             </div>
 
             <!-- DERECHA -->
-            <div class="col-md-6 image-side mt-4 mt-md-0 text-end">
+            <div class="col-md-6 text-end">
 
                 <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=800&q=80"
-                    alt="Evento floral" class="img-fluid mb-4">
+                    class="img-fluid mb-4 rounded">
 
                 <a href="{{ route('dashboard') }}" class="btn btn-back">
                     <i class="bi bi-arrow-left"></i> Volver al perfil

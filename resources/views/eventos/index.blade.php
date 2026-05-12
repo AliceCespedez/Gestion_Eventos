@@ -24,6 +24,21 @@
                 {{ session('success') }}
             </div>
         @endif
+        {{-- BUSCADOR --}}
+        <form method="GET" action="{{ route('eventos.index') }}" class="mb-4">
+
+            <div class="input-group">
+
+                <input type="text" name="buscar" class="form-control" placeholder="Buscar evento por nombre..."
+                    value="{{ request('buscar') }}">
+
+                <button class="btn btn-light">
+                    🔍 Buscar
+                </button>
+
+            </div>
+
+        </form>
 
         <table class="table table-dark table-striped">
 

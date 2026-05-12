@@ -8,16 +8,14 @@ use App\Http\Controllers\EventoController;
 use App\Http\Controllers\AsientoController;
 use App\Http\Controllers\MesaController;
 use App\Http\Controllers\InvitadoController;
+use App\Http\Controllers\ConsultaController;
 use App\Models\Usuario;
 use App\Models\Evento;
 
 // PÚBLICAS
 Route::get('/', fn() => view('welcome'));
 
-// =====================
-// 🔐 AUTH
-// =====================
-
+// AUTH
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 
 Route::post('/login', [AuthController::class, 'login'])
@@ -28,10 +26,8 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
-// =====================
-// 🔒 PROTEGIDAS
-// =====================
 
+// PROTEGIDAS
 Route::middleware(['auth', 'nocache'])->group(function () {
 
     Route::get('/dashboard', [EventoController::class, 'dashboard'])
@@ -48,10 +44,8 @@ Route::middleware(['auth', 'nocache'])->group(function () {
     })->middleware(['role:admin'])->name('admin');
 });
 
-// =====================
-// 👥 CLIENTES (CON BUSCADOR)
-// =====================
 
+// CLIENTES (CON BUSCADOR)
 Route::get('/clientes', function (Request $request) {
 
     $query = Usuario::where('rol', 'cliente');
@@ -71,10 +65,7 @@ Route::get('/clientes', function (Request $request) {
 })->middleware(['auth', 'role:empleado,admin'])
     ->name('clientes.index');
 
-// =====================
-// 👨‍💼 EMPLEADOS
-// =====================
-
+// EMPLEADOS
 Route::get('/empleados', function () {
     return view('empleados.index', [
         'empleados' => Usuario::where('rol', 'empleado')->get()
@@ -87,7 +78,7 @@ Route::get('/empleados', function (Request $request) {
 
     $query = \App\Models\Usuario::where('rol', 'empleado');
 
-    // 🔍 BUSCADOR
+    //  BUSCADOR
     if ($request->filled('search')) {
         $query->where(function ($q) use ($request) {
             $q->where('nombre', 'like', '%' . $request->search . '%')
@@ -101,26 +92,19 @@ Route::get('/empleados', function (Request $request) {
     ]);
 })->middleware(['auth', 'role:admin'])
     ->name('empleados.index');
-// =====================
-// 👤 USUARIOS (CREAR)
-// =====================
 
+
+//  USUARIOS (CREAR)
 Route::post('/users/create', [AuthController::class, 'createUserByRole'])
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('users.store');
 
-// =====================
-// 🗑 ELIMINAR USUARIOS
-// =====================
-
+// ELIMINAR USUARIOS
 Route::delete('/users/{id}', [AuthController::class, 'destroy'])
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('users.destroy');
 
-// =====================
-// 📅 EVENTOS
-// =====================
-
+// EVENTOS
 Route::get('/eventos/create', [EventoController::class, 'create'])
     ->middleware('auth')
     ->name('eventos.create');
@@ -141,22 +125,37 @@ Route::get('/eventos/{evento}', [EventoController::class, 'show'])
     ->middleware('auth')
     ->name('eventos.show');
 
+Route::delete('/eventos/{evento}', [EventoController::class, 'destroy'])
+    ->middleware(['auth', 'role:admin,empleado'])
+    ->name('eventos.destroy');
+
 Route::get('/eventos/{evento}/resumen', [EventoController::class, 'summary'])
     ->middleware('auth')
     ->name('eventos.summary');
 
-// =====================
-// 🪑 MESAS
-// =====================
+//Buscador eventos
+Route::get('/eventos', function (Request $request) {
 
+    $buscar = $request->buscar;
+
+    $eventos = Evento::with(['tipo', 'usuario'])
+
+        ->when($buscar, function ($query, $buscar) {
+            $query->where('nombre_evento', 'like', "%{$buscar}%");
+        })
+
+        ->get();
+
+    return view('eventos.index', compact('eventos'));
+
+})->middleware('auth')->name('eventos.index');
+
+//  MESAS
 Route::get('/eventos/{evento}/mesas', [MesaController::class, 'porEvento'])
     ->middleware('auth')
     ->name('mesas.porEvento');
 
-// =====================
-// 🪑 ASIENTOS
-// =====================
-
+//  ASIENTOS
 Route::post('/asientos/asignar', [AsientoController::class, 'asignar'])
     ->middleware('auth')
     ->name('asientos.asignar');
@@ -165,10 +164,7 @@ Route::post('/asientos/desasignar', [AsientoController::class, 'desasignar'])
     ->middleware('auth')
     ->name('asientos.desasignar');
 
-// =====================
-// 🎟 INVITADOS
-// =====================
-
+// INVITADOS
 Route::get('/eventos/{evento}/invitados', function ($evento) {
 
     $evento = Evento::with('invitados')->findOrFail($evento);
@@ -181,10 +177,7 @@ Route::post('/invitados/{inv}/estado', [InvitadoController::class, 'cambiarEstad
     ->middleware('auth')
     ->name('invitados.estado');
 
-// =====================
-// 🍽 MENÚS
-// =====================
-
+//  MENÚS
 Route::post('/eventos/{evento}/menu', [EventoController::class, 'attachMenu'])
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('eventos.menu.attach');
@@ -197,10 +190,8 @@ Route::delete('/eventos/{evento}/menu/{menu}', [EventoController::class, 'detach
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('eventos.menu.delete');
 
-// =====================
-// 🧾 SERVICIOS
-// =====================
 
+// SERVICIOS
 Route::post('/eventos/{evento}/servicio', [EventoController::class, 'attachServicio'])
     ->name('eventos.servicio.attach');
 
@@ -210,18 +201,21 @@ Route::put('/eventos/{evento}/servicio/{servicio}', [EventoController::class, 'u
 Route::delete('/eventos/{evento}/servicio/{servicio}', [EventoController::class, 'detachServicio'])
     ->name('eventos.servicio.delete');
 
-// =====================
-// 🛠 ADMIN EVENTOS
-// =====================
+// CONSULTAS
+Route::post('/consulta', [ConsultaController::class, 'store'])->name('consulta.store');
 
+Route::get('/consultas', [ConsultaController::class, 'index'])->name('consultas.index');
+
+//Notificaciones
+Route::get('/notificacion/{id}', [App\Http\Controllers\ConsultaController::class, 'leerNotificacion'])
+    ->name('consultas.leer');
+
+// ADMIN EVENTOS
 Route::get('/admin/eventos/create', [EventoController::class, 'adminCreate'])
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('eventos.admin_create');
 
-// =====================
-// ❌ ACCESO DENEGADO
-// =====================
-
+//  ACCESO DENEGADO
 Route::get('/acceso-denegado', function () {
     return redirect('/');
 })->name('access.denied');

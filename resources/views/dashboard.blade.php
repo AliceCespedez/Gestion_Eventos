@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
     <style>
-        #dash-container{
+        #dash-container {
             padding: 2rem 4rem 6rem 4rem;
         }
 
-        #dash-hero{
+        #dash-hero {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -26,11 +26,12 @@
             border: solid 2px var(--color-chocolate);
         }
 
-        .event-card{
+        .event-card {
             background-size: cover;
             background-position: center;
             position: relative;
         }
+
         .event-card::before {
             content: '';
             position: absolute;
@@ -38,9 +39,10 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(90deg, rgba(0, 0, 0, 0.585) 0%, rgba(0,0,0,0) 100%);
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
         }
-        .event-card > * {
+
+        .event-card>* {
             position: relative;
             z-index: 1;
         }
@@ -52,128 +54,169 @@
     @php
         $user = auth()->user();
         $rol = strtolower(trim($user->rol ?? ''));
+        $eventos = $eventos ?? collect();
     @endphp
 
-    <!-- Header -->
     @include('partials.header')
 
     <div id="dash-container">
 
         @if (!$user)
+
             <div class="alert alert-danger">
                 No hay usuario autenticado
             </div>
         @else
-            {{-- CLIENTE --}}
+            {{-- ================= CLIENTE ================= --}}
             @if ($rol === 'cliente')
 
-                <div id="dash-nav" class="d-flex justify-content-end mb-4">
+                {{-- LOGOUT CLIENTE --}}
+                <div class="d-flex justify-content-end mb-4">
                     <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="button-a" onclick="this.form.submit();">
-                                Cerrar sesión <i class="bi bi-arrow-bar-right fs-4"></i>
-                            </button>
+                        @csrf
+                        <button type="submit" class="btn btn-dark">
+                            Cerrar sesión
+                        </button>
                     </form>
                 </div>
-
 
                 <div id="dash-hero" class="p-4 text-center">
                     <h3>Hola, {{ $user->nombre }}</h3>
                     <h2>¡Bienvenido a tu portal de eventos!</h2>
-                    <p class="pt-2">Desde aquí podrás gestionar todos los detalles de<br>tus eventos en marcha con el equipo de Eventea</p>
                 </div>
 
-
-                <div class="text-center">
-                    <a href="{{ route('eventos.create') }}" class="btn-eventea align-self-center">
-                        <i class="bi bi-plus fs-4 pb-1" style="color: inherit"></i>&nbsp;&nbsp;Solicitar nuevo evento
-                    </a>
-                </div>
-
-                {{-- EVENTOS --}}
+                {{-- EVENTOS CLIENTE --}}
                 <div class="mt-5">
-
                     <h5 class="mb-3">MIS EVENTOS</h5>
 
                     @forelse($eventos as $evento)
-                        <div class="event-card p-4 pt-5 d-flex column bg-medio justify-content-between align-items-end"
-                            style="background-image: url('{{ asset('images/tipo-' . $evento->id_tipo . '.jpg') }}');"
-                        >
-                            <div class="d-flex row">
-
-                                <h5 class="color-white">{{ $evento->tipo->nombre_tipo }}</h5>
-
-                                <h2 class="color-white" style="font-style: normal">{{ $evento->nombre_evento }}</h2>
-
-                                <div class="d-flex flex-row gap-3" style="margin-bottom: -1rem">
-                                    <p class="color-white" style="font-weight: 600">
-                                        <i class="bi bi-calendar4 fs-6 color-white"></i> {{ $evento->fecha }}
-                                    </p>
-                                    <p class="color-white">
-                                        <i class="bi bi-geo-alt fs-6 color-white"></i> {{ $evento->local->nombre }}
-                                    </p>
-                                    <!--
-                                    <p class="color-white">
-                                        <i class="bi bi-people fs-6 color-white"></i> {{ $evento->local->nombre }} invitados
-                                    </p>
-                                    -->
-                                </div>
-                            </div>
+                        <div class="event-card p-4 d-flex justify-content-between align-items-end mb-3"
+                            style="background-image: url('{{ asset('images/tipo-' . $evento->id_tipo . '.jpg') }}');">
 
                             <div>
-                                <a href="{{ route('eventos.show', $evento->id_evento) }}" class="btn-eventea">
-                                    Gestionar >
-                                </a>
+                                <h5 class="text-white">{{ $evento->tipo->nombre_tipo ?? '' }}</h5>
+                                <h2 class="text-white">{{ $evento->nombre_evento }}</h2>
+                                <p class="text-white">
+                                    📅 {{ $evento->fecha }} | 📍 {{ $evento->local->nombre ?? '' }}
+                                </p>
                             </div>
-                                                            
+
+                            <a href="{{ route('eventos.show', $evento->id_evento) }}" class="btn btn-light">
+                                Gestionar
+                            </a>
+
                         </div>
 
                     @empty
-                        <p style="font-style: italic">No tienes eventos todavía.</p>
+                        <p>No tienes eventos todavía.</p>
                     @endforelse
-
                 </div>
 
-
-                {{-- EMPLEADO --}}
+                {{-- ================= EMPLEADO ================= --}}
             @elseif ($rol === 'empleado')
-                <div class="card bg-secondary text-white shadow mb-4">
-                    <div class="card-body text-center">
+                {{-- HEADER EMPLEADO --}}
+                <div class="d-flex justify-content-between align-items-center mb-4">
 
-                        <h1>👨‍💼 Panel Administrativo</h1>
-                        <h2>Hola, {{ $user->nombre }}</h2>
+                    <div>
+                        <h2>👨‍💼 Panel Administrativo</h2>
+                        <p>Hola, {{ $user->nombre }}</p>
+                    </div>
 
-                        <p>Rol: <strong>{{ $user->rol }}</strong></p>
+                    <div class="d-flex align-items-center gap-3">
 
+                        {{-- 🔔 CAMPANA (FIJA Y SIEMPRE VISIBLE) --}}
+                        @if (in_array($rol, ['empleado', 'admin']))
+
+                            @php
+                                $user = auth()->user();
+                                $notificaciones = $user->unreadNotifications ?? collect();
+                            @endphp
+
+                            <div class="position-fixed top-0 end-0 p-3" style="z-index:9999;">
+
+                                <div class="dropdown">
+
+                                    {{-- CAMPANA --}}
+                                    <a href="#" class="text-dark position-relative text-decoration-none"
+                                        data-bs-toggle="dropdown">
+
+                                        <i class="bi bi-bell fs-3"></i>
+
+                                        @if ($notificaciones->count() > 0)
+                                            <span class="position-absolute top-0 start-100 translate-middle badge bg-danger">
+                                                {{ $notificaciones->count() }}
+                                            </span>
+                                        @endif
+
+                                    </a>
+
+                                    {{-- DROPDOWN --}}
+                                    <ul class="dropdown-menu dropdown-menu-end p-2" style="width:300px;">
+
+                                        <li class="fw-bold mb-2">Notificaciones</li>
+
+                                        @forelse($user->notifications as $noti)
+                                            <li>
+                                                <a href="{{ route('consultas.leer', $noti->id) }}" class="dropdown-item small">
+
+                                                    🔔 {{ $noti->data['mensaje'] ?? 'Notificación' }}
+
+                                                    <br>
+
+                                                    <small class="text-muted">
+                                                        {{ $noti->read_at ? 'Leída' : 'Nueva' }}
+                                                    </small>
+
+                                                </a>
+                                            </li>
+                                        @empty
+                                            <li class="text-muted small px-2 py-1">
+                                                No tienes notificaciones
+                                            </li>
+                                        @endforelse
+
+                                        <hr>
+
+                                        <li>
+                                            <a href="{{ route('consultas.index') }}" class="dropdown-item text-center fw-bold">
+                                                Ver todas las consultas
+                                            </a>
+                                        </li>
+
+                                    </ul>
+
+                                </div>
+
+                            </div>
+
+                        @endif
+
+                        {{-- LOGOUT EMPLEADO --}}
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button class="btn btn-light mt-3">
+                            <button class="btn btn-dark">
                                 Cerrar sesión
                             </button>
                         </form>
 
                     </div>
+
                 </div>
 
-                {{-- VER CLIENTES --}}
+                {{-- BOTONES ADMIN --}}
                 <div class="card bg-secondary text-white shadow mb-4">
                     <div class="card-body text-center">
 
-
-                        <a href="{{ route('clientes.index') }}" class="btn btn-light w-100">
-                            <h4>👤 Clientes</h4>
-                        </a>
-                        <a href="{{ route('eventos.index') }}" class="btn btn-light w-100 mt-3">
-                            📅 Ver eventos
-                        </a>
-                        <a href="{{ route('eventos.admin_create') }}" class="btn btn-light w-100 mt-3">
-                            ➕ Crear evento
+                        <a href="{{ route('clientes.index') }}" class="btn btn-light w-100">👤 Clientes</a>
+                        <a href="{{ route('eventos.index') }}" class="btn btn-light w-100 mt-2">📅 Eventos</a>
+                        <a href="{{ route('eventos.admin_create') }}" class="btn btn-light w-100 mt-2">➕ Crear
+                            evento</a>
 
                     </div>
                 </div>
 
-                {{-- CREAR CLIENTE --}}
-                <div class="card bg-secondary text-white shadow p-4">
+                {{-- CREAR CLIENTE (IMPORTANTE) --}}
+                <div class="card bg-secondary text-white shadow p-4 mt-3">
 
                     <h4>➕ Crear Cliente</h4>
 
@@ -192,15 +235,18 @@
                         <button class="btn btn-light w-100">
                             Crear cliente
                         </button>
+
                     </form>
+
                 </div>
+
             @endif
+
         @endif
+
     </div>
 
-    <!-- Footer -->
-    <br><br>
-    @include('partials.footer')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
