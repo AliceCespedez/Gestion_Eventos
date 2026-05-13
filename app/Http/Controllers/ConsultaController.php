@@ -43,20 +43,29 @@ class ConsultaController extends Controller
 
         $consultas = Consulta::latest()->get();
 
-        // 👇 esto limpia la campana al entrar
+        //  esto limpia la campana al entrar
         auth()->user()->unreadNotifications->markAsRead();
 
         return view('consultas.index', compact('consultas'));
     }
 
-    public function leerNotificacion($id)
+    public function marcarLeido($id)
     {
-        $noti = Auth::user()->notifications()->findOrFail($id);
+        $consulta = Consulta::findOrFail($id);
 
-        // marcar como leída
-        $noti->markAsRead();
+        $consulta->leido = true;
 
-        // ir a consultas
-        return redirect()->route('consultas.index');
+        $consulta->save();
+
+        return back()->with('success', 'Consulta marcada como leída');
+    }
+
+    public function destroy($id)
+    {
+        $consulta = Consulta::findOrFail($id);
+
+        $consulta->delete();
+
+        return back()->with('success', 'Consulta eliminada');
     }
 }

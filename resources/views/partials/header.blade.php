@@ -1,5 +1,5 @@
 <style>
-    .navbar{
+    .navbar {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -7,34 +7,38 @@
         padding: 1rem 2rem 1.5rem 2rem;
         height: var(--nav-height);
     }
-    .logo-container{
+
+    .logo-container {
         width: fit-content;
     }
-    .logo-placeholder{
+
+    .logo-placeholder {
         font-family: 'PlayfairDisplay';
         font-style: italic;
         font-weight: 500;
     }
-    .nav-menu{
+
+    .nav-menu {
         width: fit-content;
     }
-    .nav-menu a{
+
+    .nav-menu a {
         letter-spacing: 6%;
         font-weight: 500;
         font-size: 0.8rem;
         margin-right: 2rem;
     }
 
-    .nav-pill{
+    .nav-pill {
         text-decoration: none;
         color: #574E49;
         font-family: 'BeVietnam';
         transition: 0.3s ease;
     }
-    .nav-pill:hover{
+
+    .nav-pill:hover {
         opacity: 0.6;
     }
-
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light bg-white sticky-top">
@@ -43,9 +47,10 @@
     <!-- LOGO -->
     <div class="logo-container">
         <a class="navbar-brand" href="{{ url('/') }}">
-            @if(file_exists(public_path('logo-EvenTeaPortal-PLACEHOLDER.svg')))
-                <img src="{{ asset('logo-EvenTeaPortal-PLACEHOLDER.svg') }}" alt="Logo" height="40" class="d-inline-block">
-            @else 
+            @if (file_exists(public_path('logo-EvenTeaPortal-PLACEHOLDER.svg')))
+                <img src="{{ asset('logo-EvenTeaPortal-PLACEHOLDER.svg') }}" alt="Logo" height="40"
+                    class="d-inline-block">
+            @else
                 <strong class="color-choco logo-placeholder">EvenTea</strong>
             @endif
         </a>
@@ -53,21 +58,42 @@
 
     <!-- MENU -->
     <div class="nav-menu">
-        <a href="{{ route('dashboard') }}" class="nav-pill">
-            MIS EVENTOS
-        </a>
+
+            @php
+                $user = auth()->user();
+
+                $rol = strtolower($user->rol ?? '');
+
+                $primerEvento = $user && $rol === 'cliente' ? $user->eventos->first() : null;
+            @endphp
+
+            @if ($rol === 'admin' || $rol === 'empleado')
+                <a href="{{ route('eventos.index') }}">
+                    MIS EVENTOS
+                </a>
+            @elseif ($rol === 'cliente' && $primerEvento)
+                <a href="{{ route('eventos.show', $primerEvento->id_evento) }}">
+                    MIS EVENTOS
+                </a>
+            @else
+                <a href="#">
+                    MIS EVENTOS
+                </a>
+            @endif
+
         <a href="{{ route('eventos.create') }}" class="nav-pill">
             CONTACTO
         </a>
 
         @auth
-            @if(auth()->user()->rol === 'admin')
+            @if (auth()->user()->rol === 'admin')
                 <a href="{{ route('admin') }}" style="font-weight: 400">
                     Admin<i class="bi bi-person color-choco nav-pill fs-4"></i>
                 </a>
             @else
                 <a href="{{ route('dashboard') }}">
-                    Hola,  <strong>{{ auth()->user()->nombre }}</strong>&nbsp;&nbsp;<i class="bi bi-person color-choco nav-pill fs-4"></i>
+                    Hola, <strong>{{ auth()->user()->nombre }}</strong>&nbsp;&nbsp;<i
+                        class="bi bi-person color-choco nav-pill fs-4"></i>
                 </a>
             @endif
         @else
@@ -76,6 +102,6 @@
             </a>
         @endauth
     </div>
-    
+
 
 </nav>

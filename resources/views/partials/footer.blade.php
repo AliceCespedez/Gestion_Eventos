@@ -1,5 +1,5 @@
 <style>
-    .footer-container{
+    .footer-container {
         background-color: transparent;
         width: 100vw;
         height: max-content;
@@ -9,59 +9,63 @@
 
         padding: 2rem 2rem 2rem 2rem;
     }
-    .footer-container a{
+
+    .footer-container a {
         font-family: 'BeVietnam';
         color: var(--color-chocolate);
     }
-    .footer-container a:hover{
+
+    .footer-container a:hover {
         color: black;
     }
-    .footer-div{
+
+    .footer-div {
         display: flex;
         flex-direction: column;
         width: max-content;
     }
 
 
-    #footer-left{
+    #footer-left {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
     }
 
 
-    #footer-right-up-div{
+    #footer-right-up-div {
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         text-align: right;
         gap: 1rem;
     }
-    #footer-right{
+
+    #footer-right {
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         align-items: flex-end;
         gap: 2rem;
     }
-    #footer-right a{
+
+    #footer-right a {
         text-decoration: none;
     }
-    
-    #footer-right-down-div{
+
+    #footer-right-down-div {
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: 2rem;
     }
+
     #footer-right-down-div a {
         display: inline-flex;
-        align-items: flex-start; 
-        gap: 0.5rem;        
+        align-items: flex-start;
+        gap: 0.5rem;
         text-decoration: none;
     }
-
-
 </style>
 
 
@@ -70,9 +74,10 @@
     <div class="footer-div" id="footer-left">
         <div>
             <a id="footer-logo" class="navbar-brand" href="{{ url('/') }}">
-                @if(file_exists(public_path('logo-EvenTeaPortal-PLACEHOLDER.svg')))
-                    <img src="{{ asset('logo-EvenTeaPortal-PLACEHOLDER.svg') }}" alt="Logo" height="70" class="d-inline-block">
-                @else 
+                @if (file_exists(public_path('logo-EvenTeaPortal-PLACEHOLDER.svg')))
+                    <img src="{{ asset('logo-EvenTeaPortal-PLACEHOLDER.svg') }}" alt="Logo" height="70"
+                        class="d-inline-block">
+                @else
                     <strong class="color-choco logo-placeholder">EvenTea</strong>
                 @endif
             </a>
@@ -85,14 +90,64 @@
 
     </div>
 
-    <div  id="footer-right" class="footer-div">
+    <div id="footer-right" class="footer-div">
 
         <div id="footer-right-up-div" class="">
-            <div><a href="{{ route('eventos.store') }}">MIS EVENTOS</a></div>
-            <div><a href="{{ route('eventos.create') }}">CONTACTO</a></div>
-            <div><a href="">CUENTA</a></div>
+
+            @php
+                $user = auth()->user();
+                $rol = strtolower($user->rol ?? '');
+            @endphp
+
+            <div id="footer-right-up-div" class="">
+
+                <div id="footer-right-up-div" class="">
+
+                    {{-- MIS EVENTOS --}}
+                    <div>
+
+                        @php
+                            $user = auth()->user();
+
+                            $rol = strtolower($user->rol ?? '');
+
+                            $primerEvento = $user && $rol === 'cliente' ? $user->eventos->first() : null;
+                        @endphp
+
+                        @if ($rol === 'admin' || $rol === 'empleado')
+                            <a href="{{ route('eventos.index') }}">
+                                MIS EVENTOS
+                            </a>
+                        @elseif ($rol === 'cliente' && $primerEvento)
+                            <a href="{{ route('eventos.show', $primerEvento->id_evento) }}">
+                                MIS EVENTOS
+                            </a>
+                        @else
+                            <a href="#">
+                                MIS EVENTOS
+                            </a>
+                        @endif
+
+                    </div>
+
+                    {{-- CONTACTO --}}
+                    <div>
+                        <a href="{{ route('eventos.create') }}">
+                            CONTACTO
+                        </a>
+                    </div>
+
+                    {{-- CUENTA --}}
+                    <div>
+                        <a href="">
+                            CUENTA
+                        </a>
+                    </div>
+
+            </div>
+
         </div>
-        
+
         <div id="footer-right-down-div" class="">
             <a href="#" class="w-auto"><i class="bi bi-facebook"></i>&#64EVENTEA.EVENTOS</a>
             <a href="#" class="w-auto"><i class="bi bi-instagram"></i>&#64EVENTEA</a>

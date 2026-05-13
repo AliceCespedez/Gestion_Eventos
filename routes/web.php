@@ -147,7 +147,6 @@ Route::get('/eventos', function (Request $request) {
         ->get();
 
     return view('eventos.index', compact('eventos'));
-
 })->middleware('auth')->name('eventos.index');
 
 //  MESAS
@@ -206,9 +205,15 @@ Route::post('/consulta', [ConsultaController::class, 'store'])->name('consulta.s
 
 Route::get('/consultas', [ConsultaController::class, 'index'])->name('consultas.index');
 
-//Notificaciones
-Route::get('/notificacion/{id}', [App\Http\Controllers\ConsultaController::class, 'leerNotificacion'])
+Route::patch('/consultas/{consulta}/leer', [ConsultaController::class, 'marcarLeido'])
     ->name('consultas.leer');
+
+Route::delete('/consultas/{consulta}', [ConsultaController::class, 'destroy'])
+    ->name('consultas.destroy');
+
+// Notificaciones 
+Route::get('/notificacion/{id}', [App\Http\Controllers\ConsultaController::class, 'leerNotificacion'])
+    ->name('notificaciones.leer');
 
 // ADMIN EVENTOS
 Route::get('/admin/eventos/create', [EventoController::class, 'adminCreate'])
