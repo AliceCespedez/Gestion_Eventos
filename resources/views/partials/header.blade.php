@@ -20,13 +20,19 @@
 
     .nav-menu {
         width: fit-content;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 2rem;  /* Espacio entre elementos */
     }
 
     .nav-menu a {
         letter-spacing: 6%;
         font-weight: 500;
         font-size: 0.8rem;
-        margin-right: 2rem;
+        margin-top: 8px;
+        /*margin-right: 2rem;*/
     }
 
     .nav-pill {
@@ -86,16 +92,28 @@
         </a>
 
         @auth
+        <div class="d-flex align-items-center gap-2">
             @if (auth()->user()->rol === 'admin')
                 <a href="{{ route('admin') }}" style="font-weight: 400">
-                    Admin<i class="bi bi-person color-choco nav-pill fs-4"></i>
+                    Admin <i class="bi bi-person color-choco nav-pill fs-4"></i>
                 </a>
+
             @else
-                <a href="{{ route('dashboard') }}">
-                    Hola, <strong>{{ auth()->user()->nombre }}</strong>&nbsp;&nbsp;<i
-                        class="bi bi-person color-choco nav-pill fs-4"></i>
+                <a href="{{ route('dashboard') }}" style="margin: 0px">
+                    Hola, <strong>{{ auth()->user()->nombre }}</strong>
+                    &nbsp;&nbsp;
+                    <i class="bi bi-person color-choco nav-pill fs-4"></i>
                 </a>
+
             @endif
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn-link" style="background: none; border: none; padding: 0; text-decoration: none;">
+                    <i class="bi bi-door-open color-choco nav-pill fs-4"></i>
+                </button>
+            </form>
+        </div>
+
         @else
             <a href="{{ route('login') }}">
                 <i class="bi bi-person color-choco nav-pill fs-4"></i>

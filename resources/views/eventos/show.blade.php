@@ -160,10 +160,23 @@
                             {{ session('error') }}
                         </div>
                     @endif
-                    <h4>General</h4>
-
-                    <p><strong>Evento:</strong> {{ $evento->nombre_evento }}</p>
-                    <p><strong>Fecha:</strong> {{ $evento->fecha }}</p>
+                    <h5>{{ $evento->tipo->nombre_tipo ?? '' }}</h5>
+                    <h6>{{ \Carbon\Carbon::parse($evento->fecha)->isoFormat('D [de] MMMM [de] YYYY') }}</h6>
+                    @php
+                        $fechaEvento = \Carbon\Carbon::parse($evento->fecha)->startOfDay();
+                        $hoy = \Carbon\Carbon::now()->startOfDay();
+                        $dias = $hoy->diffInDays($fechaEvento);
+                    @endphp
+                    <p class="detalles">
+                        @if($dias == 0)
+                            ¡Hoy es el evento!
+                        @elseif($dias == 1)
+                            Queda 1 día
+                        @else
+                            Quedan {{ $dias }} días
+                        @endif
+                    </p>
+                    <h6 class="pb-3">{{ $evento->local->nombre ?? ''}}</h6>
                     <p><strong>Estado:</strong> {{ $evento->estado }}</p>
                 
 
@@ -171,21 +184,21 @@
                     <div class="row mt-3">
 
                         <div class="col-md-4">
-                            <div class="card p-2 text-center">
+                            <div class="border-eventea p-2 text-center">
                                 <strong>💰 Presupuesto</strong>
                                 <h5>{{ $evento->presupuesto }} €</h5>
                             </div>
                         </div>
 
                         <div class="col-md-4">
-                            <div class="card p-2 text-center">
+                            <div class="border-eventea p-2 text-center">
                                 <strong>💸 Gastado</strong>
                                 <h5>{{ $costeTotal }} €</h5>
                             </div>
                         </div>
 
                         <div class="col-md-4">
-                            <div class="card p-2 text-center">
+                            <div class="border-eventea p-2 text-center">
                                 <strong>🟢 Restante</strong>
                                 <h5 class="{{ $presupuestoRestante < 0 ? 'text-danger' : 'text-success' }}">
                                     {{ $presupuestoRestante }} €

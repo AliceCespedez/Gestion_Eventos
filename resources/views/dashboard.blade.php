@@ -69,6 +69,11 @@
             @if ($rol === 'cliente')
 
                 {{-- LOGOUT CLIENTE --}}
+                <!--
+                <div class="container mt-5">
+                    <a href="{{ route('logout') }}">🡠 Cerrar sesión</a>
+                </div>
+
                 <div class="d-flex justify-content-end mb-4">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
@@ -77,6 +82,7 @@
                         </button>
                     </form>
                 </div>
+                -->
 
                 <div id="dash-hero" class="p-4 text-center">
                     <h3>Hola, {{ $user->nombre }}</h3>

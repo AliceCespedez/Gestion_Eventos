@@ -14,12 +14,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 </head>
 <style>
-    #login-body{
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        justify-content: space-between;
-    }
+    
     #login-div{
         display: flex;
         width: 100%;
@@ -47,7 +42,7 @@
     }
 </style>
 
-<body id="login-body" class="bg-claro text-white">
+<body class="normal-body bg-claro text-white">
 
     <!-- Header -->
     @include('partials.header')

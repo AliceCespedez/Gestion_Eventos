@@ -5,105 +5,121 @@
     <meta charset="UTF-8">
     <title>Lista de invitados</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Bootstrap JS (IMPORTANTE para dropdown) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+     <!-- Bootstrap JS (IMPORTANTE para dropdown) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+    <style>
+        #invitados-body{
+            justify-content: flex-start;
+        }
+    </style>
 </head>
 
-<body class="bg-light">
 
-    <div class="container mt-5">
+<body class="bg-white normal-body">
 
-        <h2>👥 Invitados del evento: {{ $evento->nombre_evento }}</h2>
+    @include('partials.header')
 
-        <a href="{{ route('eventos.show', $evento->id_evento) }}" class="btn btn-secondary mb-3">
-            ← Volver al evento
-        </a>
 
-        <table class="table table-bordered bg-white">
+    <div id="invitados-body" class="section-1">
+            
+        <div class="normal-header">
+                <h2 class="color-choco">Invitados</h2>
+                <h5 class="color-choco">{{ $evento->nombre_evento }}</h5>
+        </div>
 
-            <thead class="table-dark">
-                <tr>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
+        <div class="container mt-5">
+            <a href="{{ url()->previous() }}">🡠 Volver al evento</a>
 
-            <tbody>
-
-                @forelse($evento->invitados as $inv)
+            <table class="table table-choco border-eventea bg-white mt-3">
+                <thead class="">
                     <tr>
-
-                        <td>{{ $inv->nombre }}</td>
-                        <td>{{ $inv->email }}</td>
-
-                        <!-- ESTADO -->
-                        <td>
-
-                            @if (in_array(auth()->user()->rol, ['admin', 'empleado']))
-                                <form method="POST" action="{{ route('invitados.estado', $inv->id_invitado) }}">
-                                    @csrf
-
-                                    <div class="dropdown">
-
-                                        <button
-                                            class="btn btn-sm btn-{{ $inv->confirmacion == 'confirmado' ? 'success' : ($inv->confirmacion == 'pendiente' ? 'warning' : 'danger') }} dropdown-toggle"
-                                            type="button" data-bs-toggle="dropdown">
-
-                                            {{ ucfirst($inv->confirmacion) }}
-
-                                        </button>
-
-                                        <ul class="dropdown-menu">
-
-                                            <li>
-                                                <button class="dropdown-item" name="confirmacion" value="pendiente">
-                                                    🟡 Pendiente
-                                                </button>
-                                            </li>
-
-                                            <li>
-                                                <button class="dropdown-item" name="confirmacion" value="confirmado">
-                                                    🟢 Confirmado
-                                                </button>
-                                            </li>
-
-                                            <li>
-                                                <button class="dropdown-item" name="confirmacion" value="rechazado">
-                                                    🔴 Rechazado
-                                                </button>
-                                            </li>
-
-                                        </ul>
-
-                                    </div>
-
-                                </form>
-                            @else
-                                <!-- SOLO LECTURA (CLIENTE) -->
-                                <span
-                                    class="badge bg-{{ $inv->confirmacion == 'confirmado' ? 'success' : ($inv->confirmacion == 'pendiente' ? 'warning' : 'danger') }}">
-                                    {{ ucfirst($inv->confirmacion) }}
-                                </span>
-                            @endif
-
-                        </td>
-
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Estado</th>
                     </tr>
+                </thead>
 
-                @empty
-                    <tr>
-                        <td colspan="3" class="text-center">No hay invitados</td>
-                    </tr>
-                @endforelse
+                <tbody>
 
-            </tbody>
+                    @forelse($evento->invitados as $inv)
+                        <tr>
 
-        </table>
+                            <td>{{ $inv->nombre }}</td>
+                            <td>{{ $inv->email }}</td>
 
+                            <!-- ESTADO -->
+                            <td>
+
+                                @if (in_array(auth()->user()->rol, ['admin', 'empleado']))
+                                    <form method="POST" action="{{ route('invitados.estado', $inv->id_invitado) }}">
+                                        @csrf
+
+                                        <div class="dropdown">
+
+                                            <button
+                                                class="btn btn-sm btn-{{ $inv->confirmacion == 'confirmado' ? 'success' : ($inv->confirmacion == 'pendiente' ? 'warning' : 'danger') }} dropdown-toggle"
+                                                type="button" data-bs-toggle="dropdown">
+
+                                                {{ ucfirst($inv->confirmacion) }}
+
+                                            </button>
+
+                                            <ul class="dropdown-menu">
+
+                                                <li>
+                                                    <button class="dropdown-item" name="confirmacion" value="pendiente">
+                                                        🟡 Pendiente
+                                                    </button>
+                                                </li>
+
+                                                <li>
+                                                    <button class="dropdown-item" name="confirmacion" value="confirmado">
+                                                        🟢 Confirmado
+                                                    </button>
+                                                </li>
+
+                                                <li>
+                                                    <button class="dropdown-item" name="confirmacion" value="rechazado">
+                                                        🔴 Rechazado
+                                                    </button>
+                                                </li>
+
+                                            </ul>
+
+                                        </div>
+
+                                    </form>
+                                @else
+                                    <!-- SOLO LECTURA (CLIENTE) -->
+                                    <span
+                                        class="badge bg-{{ $inv->confirmacion == 'confirmado' ? 'success' : ($inv->confirmacion == 'pendiente' ? 'warning' : 'danger') }}">
+                                        {{ ucfirst($inv->confirmacion) }}
+                                    </span>
+                                @endif
+
+                            </td>
+
+                        </tr>
+
+                    @empty
+                        <tr>
+                            <td colspan="3" class="text-center">No hay invitados</td>
+                        </tr>
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
     </div>
+
+    @include('partials.footer')
 
 </body>
 
