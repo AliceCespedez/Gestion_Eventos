@@ -193,6 +193,7 @@ class EventoController extends Controller
             'restante' => $evento->presupuesto - $gastado,
         ];
     }
+    
     public function dashboardAdmin()
     {
         $user = Auth::user();
@@ -207,7 +208,7 @@ class EventoController extends Controller
             ->orderBy('mes')
             ->get();
 
-        return view('eventos.dashboardAdmin', compact('eventosPorMes'));
+        return view('admin', compact('eventosPorMes'));
     }
 
     public function attachMenu(Request $request, Evento $evento)

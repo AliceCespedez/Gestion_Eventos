@@ -70,6 +70,7 @@
 }
 p{
     font-size: 0.9rem;
+    margin-bottom: 0 !important;
 }
 
 h1, h2{
@@ -186,4 +187,7 @@ input{
 input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px white inset;
   font-family: 'BeVietnam' !important;
+}
+input::placeholder{
+    opacity: 0.6 !important;
 }

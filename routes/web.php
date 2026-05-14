@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\AuthController;
@@ -33,15 +34,22 @@ Route::middleware(['auth', 'nocache'])->group(function () {
     Route::get('/dashboard', [EventoController::class, 'dashboard'])
         ->name('dashboard');
 
-    Route::get('/admin/dashboard', [EventoController::class, 'dashboardAdmin'])
-        ->name('eventos.dashboardAdmin');
+    Route::get('/admin', [EventoController::class, 'dashboardAdmin'])
+        ->middleware(['role:admin'])
+        ->name('admin');
 
+    /*
+    Route::get('/admin/dashboard', [EventoController::class, 'admin'])
+        ->name('eventos.dashboardAdmin');
+    */
+    /*
     Route::get('/admin', function () {
 
         $eventos = Evento::with(['tipo', 'usuario'])->get();
 
         return view('admin', compact('eventos'));
     })->middleware(['role:admin'])->name('admin');
+    */
 });
 
 
