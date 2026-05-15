@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -63,7 +63,7 @@
                     $notificaciones = $user->unreadNotifications ?? collect();
                 @endphp
 
-                <div class="position-fixed top-0 end-0 p-3" style="z-index:9999;">
+                <div class="position-fixed top-0 end-0 p-4" style="z-index:9999;">
                     <div class="dropdown">
 
                         {{-- CAMPANA --}}
@@ -89,7 +89,7 @@
                                 <li>
                                     <a href="{{ route('consultas.leer', $noti->id) }}" class="dropdown-item small">
 
-                                        🔔 {{ $noti->data['mensaje'] ?? 'Notificación' }}
+                                        🔔<i class="bi bi-bell-fill fs-4"></i> {{ $noti->data['mensaje'] ?? 'Notificación' }}
 
                                         <br>
 
@@ -129,24 +129,24 @@
                     <div class="dropdown">
 
                         <button class="btn-eventea dropdown-toggle w-100" data-bs-toggle="dropdown">
-                            👥 Ver usuarios
+                            <i class="bi bi-people-fill me-2"></i> Ver usuarios
                         </button>
 
                         <ul class="dropdown-menu text-start">
-                            <li><a class="dropdown-item" href="{{ route('clientes.index') }}">👤 Clientes</a></li>
-                            <li><a class="dropdown-item" href="{{ route('empleados.index') }}">👨‍💼 Empleados</a></li>
+                            <li><a class="dropdown-item" href="{{ route('clientes.index') }}"><i class="bi bi-person-fill me-2"></i> Clientes</a></li>
+                            <li><a class="dropdown-item" href="{{ route('empleados.index') }}"><i class="bi bi-person-vcard me-2"></i> Empleados</a></li>
                         </ul>
 
                     </div>
 
                     <div class="mt-4">
-                        <h4>Eventos</h4>
 
-                        <a href="{{ route('eventos.index') }}" class="btn-eventea w-100 mt-2">
-                            Ir a eventos
+                        <a href="{{ route('eventos.index') }}" class="btn-eventea mt-2" title="Abrir panel de eventos">
+                            Ver todos los eventos
                         </a>
-                        <a href="{{ route('eventos.admin_create') }}" class="btn-eventea w-100 mt-2">
-                            Crear evento
+                            
+                        <a href="{{ route('eventos.admin_create') }}" class="btn-claro ms-2" title="Crear nuevo evento">
+                            <i class="bi bi-plus-lg"></i>
                         </a>
                     </div>
                 </div>
@@ -184,7 +184,7 @@
             
             {{-- STATS DE EVENTOS --}}
             <div class="container mt-5">
-                <div class="card bg-secondary p-4">
+                <div class="bg-claro p-4">
                     <canvas id="eventosChart"></canvas>
                 </div>
             </div>

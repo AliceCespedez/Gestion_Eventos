@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Lista de invitados</title>
+    <title>Invitados</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
      <!-- Bootstrap JS (IMPORTANTE para dropdown) -->
@@ -33,9 +33,9 @@
         </div>
 
         <div class="container mt-5">
-            <a href="{{ url()->previous() }}">🡠 Volver al evento</a>
+            <a href="{{ url()->previous() }}" class="d-inline-block mb-3">🡠 Volver al evento</a>
 
-            <table class="table table-choco border-eventea bg-white mt-3">
+            <table class="table table-choco border-eventea bg-white">
                 <thead class="">
                     <tr>
                         <th>Nombre</th>

@@ -14,6 +14,8 @@
 
 <body class="bg-dark text-white">
 
+    @include('partials.header')
+
     <div class="container mt-5">
 
         <h2 class="mb-4">📅 Eventos</h2>

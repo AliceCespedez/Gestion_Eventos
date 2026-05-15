@@ -9,135 +9,275 @@
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        .btn-search{
+            text-transform: uppercase !important;
+            background-color: var(--color-beige-claro);
+            color: var(--color-chocolate);
+            font-family: 'BeVietnam';
+            border-radius: 0;
+        }
+        .btn-search:hover{
+            background-color: var(--color-beige-medio);
+        }
+
+
+        .table-choco thead th {
+            background-color: var(--color-chocolate) !important;
+            color: white !important;
+            border: 1px solid white !important;
+        }
+        .table-choco tbody td {
+            border: 1px solid var(--color-chocolate) !important;
+            color: var(--color-chocolate) !important;
+        }
+        
+        /* Hover en filas */
+        .table-choco tbody tr:hover {
+            background-color: var(--color-beige-medio) !important;
+            cursor: pointer;
+        }
+        
+        /* Estilo del desplegable */
+        .eventos-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .eventos-dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 300px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            border: 1px solid var(--color-chocolate);
+        }        
+        
+        .dropdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid var(--color-chocolate);
+            gap: 10px;
+        }
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        .dropdown-item span {
+            font-size: 0.9rem;
+            color: var(--color-chocolate);
+        }
+        
+        .btn-ver-evento {
+            background-color: var(--color-chocolate);
+            color: white !important;
+            padding: 5px 10px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .btn-ver-evento:hover {
+            background-color: var(--color-beige-medio);
+            color: var(--color-chocolate);
+        }
+        
+        .eventos-count {
+            display: inline-block;
+            background-color: var(--color-chocolate);
+            color: white;
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+        
+        .eventos-link {
+            color: var(--color-chocolate);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+    </style>
 </head>
 
-<body class="bg-dark text-white">
+<body class="bg-white normal-body text-white">
 
-    <!-- Header -->
-    @include('partials.header')
+    @include('partials.header')            
+        
 
-    <div class="container mt-5">
+    <div class="section-1">
 
-        <h2>📋 Lista de Clientes</h2>
-
-        {{-- ERRORES --}}
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        {{-- MENSAJE DE ÉXITO --}}
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <div class="card bg-secondary text-white shadow mb-4">
-            <div class="card-body">
-
-                <h5 class="card-title">🔎 Buscar clientes</h5>
-
-                <form method="GET" action="{{ route('clientes.index') }}">
-                    <div class="input-group">
-                        <input type="text" name="search" class="form-control"
-                            placeholder="Buscar por nombre o email..." value="{{ request('search') }}">
-
-                        <button class="btn btn-light" type="submit">
-                            Buscar
-                        </button>
-                    </div>
-                </form>
-
-            </div>
+        <div class="normal-header">
+                <h2 class="color-choco">Clientes registrados</h2>
         </div>
-        {{-- TABLA CLIENTES --}}
-        <table class="table table-dark table-striped mt-3">
 
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
+        <div class="mt-5 container">
 
-            <tbody>
+            <a href="{{ url()->previous() }}" class="d-inline-block mb-3">🡠 Volver</a>
 
-                @foreach ($clientes as $cliente)
+            {{-- ERRORES --}}
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            {{-- MENSAJE DE ÉXITO --}}
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+
+            {{-- BUSCADOR --}}
+            <div class="bg-medio color-choco p-4 mb-4">
+                <div class="card-body">
+
+                    <h5><i class="bi bi-search color-choco"></i> Buscar clientes</h5>
+
+                    <form method="GET" action="{{ route('clientes.index') }}">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control rounded-0"
+                                placeholder="Buscar por nombre o email..." value="{{ request('search') }}">
+
+                            <button class="btn btn-search" type="submit">Buscar</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+
+            {{-- TABLA CLIENTES --}}
+            
+            <table class="table table-choco mt-3">
+                <thead>
                     <tr>
-                        <td>{{ $cliente->id_usuario }}</td>
-                        <td>{{ $cliente->nombre }}</td>
-                        <td>{{ $cliente->email }}</td>
-
-                        <td>
-                            {{-- BOTÓN CREAR EVENTO --}}
-                            <a href="{{ route('eventos.admin_create', ['cliente' => $cliente->id_usuario]) }}"
-                                class="btn btn-success btn-sm">
-                                ➕ Crear evento
-                            </a>
-
-                            {{-- BOTÓN ELIMINAR --}}
-                            @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
-                                <button type="button" class="btn btn-danger btn-sm"
-                                    onclick="eliminarCliente({{ $cliente->id_usuario }}, '{{ $cliente->nombre }}')">
-                                    🗑 Eliminar
-                                </button>
-                            @endif
-                        </td>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Eventos</th>
+                        <th>Acciones</th>
                     </tr>
-                @endforeach
+                </thead>
+                <tbody>
+                    @foreach ($clientes as $cliente)
+                        @php
+                            $eventosCliente = $cliente->eventos ?? collect();
+                            $totalEventos = $eventosCliente->count();
+                        @endphp
+                        
+                        <tr>
+                            <td>{{ $cliente->id_usuario }}</td>
+                            <td>{{ $cliente->nombre }}</td>
+                            <td>{{ $cliente->email }}</td>
+                            
+                            {{-- COLUMNA DE EVENTOS --}}
+                            <td>
+                                @if($totalEventos > 0)
+                                    <div class="eventos-dropdown">
+                                        <span class="eventos-link">
+                                            <span class="eventos-count">🡣</span>
+                                            {{ $totalEventos }}
+                                        </span>
+                                        
+                                        <div class="dropdown-content">
+                                            @foreach($eventosCliente as $evento)
+                                                <div class="dropdown-item">
+                                                    <span>
+                                                        <strong>{{ $evento->nombre_evento }}</strong><br>
+                                                        <small>{{ \Carbon\Carbon::parse($evento->fecha)->format('d/m/Y') }}</small>
+                                                    </span>
+                                                    <a href="{{ route('eventos.show', $evento->id_evento) }}" class="btn-ver-evento">
+                                                        VER
+                                                    </a>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @else
+                                    <span style="color: var(--color-beige-medio);">Sin eventos</span>
+                                @endif
+                            </td>
+                            
+                            <td>
+                                {{-- BOTÓN CREAR EVENTO --}}
+                                <a href="{{ route('eventos.admin_create', ['cliente' => $cliente->id_usuario]) }}"
+                                    class="btn btn-success btn-sm">
+                                    <i class="bi bi-plus-lg"></i> Crear evento
+                                </a>
 
-            </tbody>
+                                {{-- BOTÓN ELIMINAR --}}
+                                @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
+                                    <button type="button" class="btn btn-danger btn-sm"
+                                        onclick="eliminarCliente({{ $cliente->id_usuario }}, '{{ $cliente->nombre }}')">
+                                        🗑 Eliminar
+                                    </button>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
 
-        </table>
+        </div>
 
-    </div>
-
-    <!-- MODAL DE ERROR -->
-    <div class="modal fade" id="errorModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content bg-dark text-white">
-                <div class="modal-header">
-                    <h5 class="modal-title">❌ Error al eliminar</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <!-- MODAL DE ERROR -->
+        <div class="modal fade" id="errorModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title">❌ Error al eliminar</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="errorMessage"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <p id="errorMessage"></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+
+        <!-- MODAL DE CONFIRMACIÓN -->
+        <div class="modal fade" id="confirmModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title">🗑 Confirmar eliminación</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro de que quieres eliminar al cliente <strong id="clienteNombre"></strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL DE CONFIRMACIÓN -->
-    <div class="modal fade" id="confirmModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content bg-dark text-white">
-                <div class="modal-header">
-                    <h5 class="modal-title">🗑 Confirmar eliminación</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p>¿Estás seguro de que quieres eliminar al cliente <strong id="clienteNombre"></strong>?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
+    @include('partials.footer')        
+
+
+    <!--  SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>

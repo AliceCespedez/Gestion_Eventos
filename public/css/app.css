@@ -13,7 +13,7 @@
 }
 .bg-white{ background-color: white; }
 .color-white{ color: white; }
-.bg-claro{ background-color: var(--color-beige-claro); }
+.bg-claro{ background-color: var(--color-beige-claro) !important; }
 .color-claro{ color: var(--color-beige-claro); }
 .bg-medio{ background-color: var(--color-beige-medio); }
 .color-medio{ color: var(--color-beige-medio); }
@@ -158,6 +158,54 @@ a:hover, .button-a:hover{
     border: solid var(--color-chocolate) 1px;
     /*background-color: var(--color-beige-medio);*/
     color: var(--color-chocolate) !important;
+}
+
+
+.btn-claro {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: max-content;
+    padding: 0.7rem 1.5rem;
+
+    border: solid #574e491d 1px !important;
+    border-radius: 0%;
+    background-color: #574e4953 !important;
+    color: white !important;
+    opacity: 1 !important;
+
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.5;
+    letter-spacing: 2px;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+}
+.btn-claro:hover{
+    border: solid var(--color-chocolate) 1px !important;
+    /*background-color: #574e4975;*/
+    background-color: transparent !important;
+    color: var(--color-chocolate) !important;
+}
+
+.btn-eventea i,
+.btn-eventea .bi,
+.btn-claro .bi,
+.btn-claro i {
+    color: inherit;
+    transition: inherit;
+}
+.btn-eventea:hover i,
+.btn-eventea:hover .bi,
+.btn-claro .bi,
+.btn-claro i {
+    color: inherit;
 }
 
 .alert{
