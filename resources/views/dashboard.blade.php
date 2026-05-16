@@ -65,7 +65,7 @@
                 No hay usuario autenticado
             </div>
         @else
-            {{-- ================= CLIENTE ================= --}}
+            {{--  CLIENTE --}}
             @if ($rol === 'cliente')
 
                 {{-- LOGOUT CLIENTE --}}
@@ -116,7 +116,7 @@
                     @endforelse
                 </div>
 
-                {{-- ================= EMPLEADO ================= --}}
+                {{--  EMPLEADO  --}}
             @elseif ($rol === 'empleado')
                 {{-- HEADER EMPLEADO --}}
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -128,7 +128,7 @@
 
                     <div class="d-flex align-items-center gap-3">
 
-                        {{-- 🔔 CAMPANA (FIJA Y SIEMPRE VISIBLE) --}}
+                        {{-- CAMPANA (FIJA Y SIEMPRE VISIBLE) --}}
                         @if (in_array($rol, ['empleado', 'admin']))
 
                             @php
@@ -137,9 +137,7 @@
                             @endphp
 
                             <div class="position-fixed top-0 end-0 p-3" style="z-index:9999;">
-
                                 <div class="dropdown">
-
                                     {{-- CAMPANA --}}
                                     <a href="#" class="text-dark position-relative text-decoration-none"
                                         data-bs-toggle="dropdown">
@@ -151,9 +149,7 @@
                                                 {{ $notificaciones->count() }}
                                             </span>
                                         @endif
-
                                     </a>
-
                                     {{-- DROPDOWN --}}
                                     <ul class="dropdown-menu dropdown-menu-end p-2" style="width:300px;">
 
@@ -186,11 +182,8 @@
                                                 Ver todas las consultas
                                             </a>
                                         </li>
-
                                     </ul>
-
                                 </div>
-
                             </div>
 
                         @endif

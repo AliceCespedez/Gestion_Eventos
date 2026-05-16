@@ -184,6 +184,10 @@ Route::post('/invitados/{inv}/estado', [InvitadoController::class, 'cambiarEstad
     ->middleware('auth')
     ->name('invitados.estado');
 
+    Route::post('/eventos/{evento}/invitados', [InvitadoController::class, 'store'])
+    ->middleware(['auth', 'role:admin,empleado'])
+    ->name('invitados.store');
+    
 //  MENÚS
 Route::post('/eventos/{evento}/menu', [EventoController::class, 'attachMenu'])
     ->middleware(['auth', 'role:admin,empleado'])
@@ -197,9 +201,9 @@ Route::delete('/eventos/{evento}/menu/{menu}', [EventoController::class, 'detach
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('eventos.menu.delete');
 
-
 // SERVICIOS
 Route::post('/eventos/{evento}/servicio', [EventoController::class, 'attachServicio'])
+    ->middleware(['auth', 'role:admin,empleado'])
     ->name('eventos.servicio.attach');
 
 Route::put('/eventos/{evento}/servicio/{servicio}', [EventoController::class, 'updateServicio'])
@@ -219,7 +223,7 @@ Route::patch('/consultas/{consulta}/leer', [ConsultaController::class, 'marcarLe
 Route::delete('/consultas/{consulta}', [ConsultaController::class, 'destroy'])
     ->name('consultas.destroy');
 
-// Notificaciones 
+// Notificaciones
 Route::get('/notificacion/{id}', [App\Http\Controllers\ConsultaController::class, 'leerNotificacion'])
     ->name('notificaciones.leer');
 

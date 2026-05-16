@@ -8,8 +8,8 @@ use App\Models\Invitado;
 
 class InvitadoController extends Controller
 {
-    
-     //Cambiar estado de confirmación de un invitado
+
+    //Cambiar estado de confirmación de un invitado
 
     public function cambiarEstado(Request $request, Invitado $inv)
     {
@@ -40,5 +40,22 @@ class InvitadoController extends Controller
             ->findOrFail($eventoId);
 
         return view('invitados.index', compact('evento'));
+    }
+
+    public function store(Request $request, $eventoId)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'email' => 'nullable|email',
+        ]);
+
+        Invitado::create([
+            'nombre' => $request->nombre,
+            'email' => $request->email,
+            'id_evento' => $eventoId,
+            'confirmacion' => 'pendiente'
+        ]);
+
+        return back()->with('success', 'Invitado añadido correctamente');
     }
 }
