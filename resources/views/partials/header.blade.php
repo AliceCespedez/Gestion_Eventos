@@ -75,7 +75,7 @@
 
             @if ($rol === 'admin' || $rol === 'empleado')
                 <a href="{{ route('eventos.index') }}">
-                    MIS EVENTOS
+                    EVENTOS
                 </a>
             @elseif ($rol === 'cliente' && $primerEvento)
                 <a href="{{ route('eventos.show', $primerEvento->id_evento) }}">
@@ -93,25 +93,38 @@
 
         @auth
         <div class="d-flex align-items-center gap-2">
+            {{--  NAV ADMIN  --}}
             @if (auth()->user()->rol === 'admin')
-                <a href="{{ route('admin') }}" style="font-weight: 400">
-                    Admin <i class="bi bi-person color-choco nav-pill fs-4"></i>
+                <a href="{{ route('admin') }}" style="font-weight: 400; margin: 0px">
+                    <b>Admin</b>
+                    &nbsp;&nbsp;
+                    <i class="bi bi-person color-choco nav-pill fs-4"></i>
                 </a>
 
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn-link me-4" style="background: none; border: none; padding: 0; text-decoration: none;">
+                        <i class="bi bi-door-open color-choco nav-pill fs-4"></i>
+                    </button>
+                </form>
+
+            {{--  NAV CLIENTE  --}}
             @else
-                <a href="{{ route('dashboard') }}" style="margin: 0px">
+                <a href="{{ route('dashboard') }}" title="Mi cuenta" style="margin: 0px">
                     Hola, <strong>{{ auth()->user()->nombre }}</strong>
                     &nbsp;&nbsp;
                     <i class="bi bi-person color-choco nav-pill fs-4"></i>
                 </a>
 
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" title="Cerrar sesión"
+                    class="btn-link" style="background: none; border: none; padding: 0; text-decoration: none;">
+                        <i class="bi bi-door-open color-choco nav-pill fs-4"></i>
+                    </button>
+                </form>
             @endif
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="btn-link" style="background: none; border: none; padding: 0; text-decoration: none;">
-                    <i class="bi bi-door-open color-choco nav-pill fs-4"></i>
-                </button>
-            </form>
+            
         </div>
 
         @else

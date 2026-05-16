@@ -28,6 +28,10 @@
     font-size: 12px !important;
 }
 
+*{
+    border-radius: 0 !important;
+}
+
 .border-eventea{
     border: 1px solid var(--color-chocolate);
 }
@@ -127,6 +131,10 @@ a:hover, .button-a:hover{
     opacity: 0.8;
 }
 
+button{
+    border-radius: 0 !important;
+}
+
 .btn-eventea {
     display: inline-flex;
     align-items: center;
@@ -194,17 +202,51 @@ a:hover, .button-a:hover{
     color: var(--color-chocolate) !important;
 }
 
+.btn-small{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: max-content;
+    padding: 0.3rem 0.6rem;
+
+    border-radius: 0%;
+    background-color: var(--color-chocolate) !important;
+    color: white !important;
+    opacity: 0.7 !important;
+
+    border: none;
+    font-family: var(--font-primary);
+    font-size: 0.8rem;
+    font-weight: 300;
+    line-height: 1.5;
+    letter-spacing: 2px;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+}
+.btn-small:hover{
+    opacity: 1 !important;
+}
+
 .btn-eventea i,
 .btn-eventea .bi,
 .btn-claro .bi,
-.btn-claro i {
+.btn-claro i,
+.btn-small .bi,
+.btn-small i {
     color: inherit;
     transition: inherit;
 }
 .btn-eventea:hover i,
 .btn-eventea:hover .bi,
-.btn-claro .bi,
-.btn-claro i {
+.btn-claro:hover .bi,
+.btn-claro:hover i,
+.btn-claro:hover .bi,
+.btn-claro:hover i{
     color: inherit;
 }
 

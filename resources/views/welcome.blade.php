@@ -115,17 +115,10 @@
 
         @auth
             @if(auth()->user()->rol === 'admin')
-                <a href="{{ route('admin') }}" class="btn-eventea align-self-center">PANEL DE ADMINISTRACIÓN</a>
+                <a href="{{ route('admin') }}" class="btn-eventea align-self-center mt-3">PANEL DE ADMINISTRACIÓN</a>
             @else
                 <a href="{{ route('dashboard') }}" class="btn-eventea align-self-center">IR A MI PERFIL</a>
             @endif
-            <!--
-            <br>
-            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                @csrf
-                <button type="submit" class="btn-eventea">Cerrar sesión</button>
-            </form>
-            -->
         @else
             <a href="/login" class="btn-eventea align-self-center">INICIAR SESIÓN</a>
         @endauth

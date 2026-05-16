@@ -34,13 +34,7 @@
             color: var(--color-chocolate) !important;
         }
         
-        /* Hover en filas */
-        .table-choco tbody tr:hover {
-            background-color: var(--color-beige-medio) !important;
-            cursor: pointer;
-        }
-        
-        /* Estilo del desplegable */
+        /* DESPLEGABLE */
         .eventos-dropdown {
             position: relative;
             display: inline-block;
@@ -104,6 +98,20 @@
             text-decoration: none;
             cursor: pointer;
             font-weight: 500;
+        }
+
+
+        .btn-success{
+            background-color: var(--color-beige-claro);
+            color: var(--color-chocolate);
+            border-radius: 0;
+            border: none;
+        }
+        .btn-success:hover{
+            background-color: var(--color-beige-medio) !important;
+            color: var(--color-chocolate);
+            opacity: 1;
+            border: none;
         }
     </style>
 </head>
@@ -224,7 +232,7 @@
                                 @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
                                     <button type="button" class="btn btn-danger btn-sm"
                                         onclick="eliminarCliente({{ $cliente->id_usuario }}, '{{ $cliente->nombre }}')">
-                                        🗑 Eliminar
+                                        <i class="bi bi-trash3 color-white pe-1"></i> Eliminar
                                     </button>
                                 @endif
                             </td>

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Admin</title>
+    <title>Administrador</title>
 
     
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
@@ -63,7 +63,7 @@
                     $notificaciones = $user->unreadNotifications ?? collect();
                 @endphp
 
-                <div class="position-fixed top-0 end-0 p-4" style="z-index:9999;">
+                <div class="position-fixed top-0 end-0 p-4 ps-0" style="z-index:9999;">
                     <div class="dropdown">
 
                         {{-- CAMPANA --}}
@@ -90,7 +90,6 @@
                                     <a href="{{ route('consultas.leer', $noti->id) }}" class="dropdown-item small">
 
                                         🔔<i class="bi bi-bell-fill fs-4"></i> {{ $noti->data['mensaje'] ?? 'Notificación' }}
-
                                         <br>
 
                                         <small class="text-muted">

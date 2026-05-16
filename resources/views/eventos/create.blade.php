@@ -12,10 +12,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
     <style>
-        body {
-            background-color: #f2eee9;
-            font-family: 'Arial', sans-serif;
-        }
 
         .titulo-principal {
             font-size: 3rem;
