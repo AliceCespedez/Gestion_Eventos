@@ -202,7 +202,7 @@
     <!-- TARJETAS -->
     <div id="welcome-section-3" style="width: 70vw;" class="align-self-center">
 
-        <div class="text-center" style="margin-bottom: 7rem;">
+        <div class="text-center" style="margin-bottom: 6rem;">
             <h2>¿Qué puedes hacer desde aquí?</h2>
             <p>Una vez que tu evento esté dado de alta,<br>podrás gestionarlo todo en un mismo sitio.</p>
         </div>

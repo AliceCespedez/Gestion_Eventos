@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
     <style>
         body {
@@ -122,7 +122,8 @@
         style="background-image: url('{{ asset('images/tipo-' . $evento->id_tipo . '.jpg') }}');">
 
             <div id="evento-title-div" class="color-white">
-                <a href="{{ route('dashboard') }}" class="a-white" style="font-weight: 300">< Todos mis eventos</a>
+                <a href="{{ url()->previous() }}" class="d-inline-block a-white">🡠 Volver al evento</a>
+                <!--<a href="{{ route('dashboard') }}" class="a-white" style="font-weight: 300">< Volver</a>-->
                 <h2>{{ $evento->nombre_evento }}</h2>
             </div>
         </div>
@@ -185,21 +186,21 @@
 
                         <div class="col-md-4">
                             <div class="border-eventea p-2 text-center">
-                                <strong>💰 Presupuesto</strong>
+                                <strong>PRESUPUESTO</strong>
                                 <h5>{{ $evento->presupuesto }} €</h5>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="border-eventea p-2 text-center">
-                                <strong>💸 Gastado</strong>
+                                <strong>Gastado</strong>
                                 <h5>{{ $costeTotal }} €</h5>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="border-eventea p-2 text-center">
-                                <strong>🟢 Restante</strong>
+                                <strong>Restante</strong>
                                 <h5 class="{{ $presupuestoRestante < 0 ? 'text-danger' : 'text-success' }}">
                                     {{ $presupuestoRestante }} €
                                 </h5>
@@ -214,7 +215,7 @@
                 <!-- CATERING -->
                 <div id="catering" class="section bg-medio">
                 <div class="section-inside">
-                    <h4>🍽 Catering</h4>
+                    <h4>Catering</h4>
 
                     @if ($evento->menus->count() > 0)
 
@@ -288,7 +289,7 @@
                     {{-- BOTÓN AÑADIR MENÚ --}}
                     @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
                         <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#addMenuModal">
-                            ➕ Añadir menú
+                            <i class="bi bi-plus-lg"></i> Añadir menú
                         </button>
                     @endif
                 </div>
@@ -348,7 +349,7 @@
                 <!-- SERVICIOS -->
                 <div id="servicios" class="section bg-claro">
                 <div class="section-inside">
-                    <h4>🛎 Servicios</h4>
+                    <h4>Servicios</h4>
 
                     @if ($evento->servicios->count())
 
@@ -414,7 +415,7 @@
                     @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
                         <button class="btn btn-success mt-3" data-bs-toggle="modal"
                             data-bs-target="#addServicioModal">
-                            ➕ Añadir servicio
+                            <i class="bi bi-plus-lg"></i> Añadir servicio
                         </button>
                     @endif
                 </div>
@@ -472,7 +473,7 @@
                 <!-- LOCALIZACION -->
                 <div id="localizacion" class="section bg-medio">
                 <div class="section-inside">
-                    <h4>📍 Localización</h4>
+                    <h4>Localización</h4>
 
                     @if ($evento->local)
                         <p><strong>Nombre:</strong> {{ $evento->local->nombre }}</p>
@@ -494,7 +495,7 @@
                 <!-- INVITADOS -->
                 <div id="invitados" class="section bg-claro">
                 <div class="section-inside">
-                    <h4>👥 Invitados</h4>
+                    <h4>Invitados</h4>
 
                     <div class="row">
                         <div class="col-md-3">
@@ -536,7 +537,7 @@
                 <!-- SITTING -->
                 <div id="sitting" class="section bg-medio">
                 <div class="section-inside">
-                    <h4>🪑 Seating Plan</h4>
+                    <h4>Seating plan</h4>
 
                     @include('eventos.seating')
                 </div>
@@ -546,7 +547,7 @@
                 <!-- RESUMEN -->
                 <div id="resumen" class="section bg-claro">
                 <div class="section-inside">
-                    <h4>📊 Resumen</h4>
+                    <h4>Resumen</h4>
                     <p>Estado general del evento, presupuesto, etc...</p>
 
 

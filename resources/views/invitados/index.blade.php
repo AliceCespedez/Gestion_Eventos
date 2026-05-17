@@ -24,13 +24,11 @@
 
     @include('partials.header')
 
-    <a href="{{ route('eventos.show', $evento->id_evento) }}" class="btn btn-secondary mb-3">
-        ← Volver al evento
-    </a>
+
+
     @if (in_array(auth()->user()->rol, ['admin', 'empleado']))
         <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addInvitadoModal">
-
-            ➕ Añadir invitado
+            <i class="bi bi-plus-lg"></i> Añadir invitado
         </button>
     @endif
 
@@ -60,6 +58,8 @@
                             <td>{{ $inv->nombre }}</td>
                             <td>{{ $inv->email }}</td>
             </table>
+
+            
             <!-- MODAL AÑADIR INVITADO -->
             <div class="modal fade" id="addInvitadoModal" tabindex="-1">
 

@@ -26,15 +26,12 @@
 
         .contact-box {
             background: #fff;
-            border-radius: 12px;
             padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
 
         .btn-even {
             background-color: #2c2c2c;
             color: #fff;
-            border-radius: 8px;
         }
 
         .btn-even:hover {
@@ -44,7 +41,6 @@
         .btn-back {
             border: 1px solid #2c2c2c;
             color: #2c2c2c;
-            border-radius: 30px;
             padding: 8px 18px;
         }
 
@@ -55,12 +51,11 @@
     </style>
 </head>
 
-<body>
+<body class="bg-claro">
 
     @include('partials.header')
 
     <div class="container py-5">
-
         <div class="row align-items-center">
 
             <!-- IZQUIERDA -->
@@ -140,8 +135,8 @@
                             </label>
                         </div>
 
-                        <button class="btn btn-even w-100">
-                            Enviar mensaje
+                        <button class="btn-eventea w-100">
+                            ENVIAR
                         </button>
 
                     </form>
@@ -150,20 +145,21 @@
             </div>
 
             <!-- DERECHA -->
-            <div class="col-md-6 text-end">
-
-                <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=800&q=80"
-                    class="img-fluid mb-4 rounded">
+            <div class="col-md-6 text-end" style="height: 100%;">
+                <div style="background: url('/images/flores-1.jpg') center/cover no-repeat; height: 100%;" class="" alt="Imagen flores"></div>
 
                 <a href="{{ route('dashboard') }}" class="btn btn-back">
-                    <i class="bi bi-arrow-left"></i> Volver al perfil
+                    <i class="bi bi-arrow-left"></i> Volver
                 </a>
+
+                <!-- <img src="/images/flores-1.jpg" class="img-fluid mb-4"> -->
 
             </div>
 
         </div>
-
     </div>
+
+    @include('partials.footer')
 
 </body>
 
