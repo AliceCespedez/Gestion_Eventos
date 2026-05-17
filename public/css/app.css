@@ -131,6 +131,10 @@ a:hover, .button-a:hover{
     opacity: 0.8;
 }
 
+.px-normal{
+    padding: 0 4rem 0 4rem;
+}
+
 button{
     border-radius: 0 !important;
 }
