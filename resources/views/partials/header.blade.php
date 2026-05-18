@@ -104,7 +104,7 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="btn-link me-4" style="background: none; border: none; padding: 0; text-decoration: none;">
-                        <i class="bi bi-door-open color-choco nav-pill fs-4"></i>
+                        <i class="bi bi-door-closed color-choco nav-pill fs-4"></i>
                     </button>
                 </form>
 

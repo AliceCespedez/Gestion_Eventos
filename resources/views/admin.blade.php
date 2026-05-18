@@ -17,6 +17,34 @@
         .form-control{
             border-radius: 0;
         }
+
+        .admin-div-1{
+            display: flex;
+            flex-direction: row;
+            gap: 3rem;
+            width: 100%;
+            padding: 4rem;
+            height: fit-content;
+        }
+        
+        .admin-carta{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-width: 30%;
+        }
+        .admin-carta:first-child{
+            heigth: 100%;
+        }
+        .admin-carta:last-child{
+            height: fit-content;
+        }
+        .admin-carta-img{
+            min-height: 20vh;
+            height: 100%;
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -42,14 +70,14 @@
 
     
         
-        <div class="container mt-4">
+        <div class="container my-4">
 
             {{-- CERRAR SESIÓN --}}
-                <div class="text-end mb-4">
+                <div class="text-end mb-2">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="btn-eventea">
-                            Cerrar sesión
+                        <button type="submit" class="button-a">
+                            Cerrar sesión <i class="bi bi-door-closed fs-4"></i>
                         </button>
                     </form>
                 </div>
@@ -113,20 +141,35 @@
                             </li>
 
                         </ul>
-
                     </div>
-
                 </div>
-
             @endif
 
 
-            {{-- USUARIOS --}}
-            <div class="mb-4 bg-claro p-4">
-                <div class="text-center border-eventea p-4">
+            <div class="admin-div-1">
 
-                    <div class="dropdown">
+                {{-- Carta Eventos --}}
+                <div class="admin-carta flex-fill">
+                    <h4>Eventos</h4>
 
+                    <div class="mt-2">
+                        <a href="{{ route('eventos.index') }}" class="btn-eventea" title="Abrir panel de eventos">
+                            Ver todos los eventos
+                        </a>
+                        <a href="{{ route('eventos.admin_create') }}" class="btn-claro ms-2" title="Crear nuevo evento">
+                            <i class="bi bi-plus-lg"></i>
+                        </a>
+                    </div>
+
+                    <div style="background: url('/images/eventea-03.jpg') center/cover no-repeat;" class="admin-carta-img mt-4" alt="Imagen mesa"></div>
+                </div>
+
+
+                {{-- Carta Usuarios --}}
+                <div class="admin-carta flex-fill">
+                    <h4>Usuarios</h4>
+
+                    <div class="dropdown mt-2">
                         <button class="btn-eventea dropdown-toggle w-100" data-bs-toggle="dropdown">
                             <i class="bi bi-people-fill me-2"></i> Ver usuarios
                         </button>
@@ -135,54 +178,43 @@
                             <li><a class="dropdown-item" href="{{ route('clientes.index') }}"><i class="bi bi-person-fill me-2"></i> Clientes</a></li>
                             <li><a class="dropdown-item" href="{{ route('empleados.index') }}"><i class="bi bi-person-vcard me-2"></i> Empleados</a></li>
                         </ul>
-
                     </div>
 
-                    <div class="mt-4">
+                    {{-- Formulario --}}
+                    <div class="bg-claro p-4 mt-4 w-100">
+                        <div class="border-eventea p-4">
+                            <h5 class="mb-4"><i class="bi bi-plus fs-4"></i>Crear usuario</h5>
 
-                        <a href="{{ route('eventos.index') }}" class="btn-eventea mt-2" title="Abrir panel de eventos">
-                            Ver todos los eventos
-                        </a>
-                            
-                        <a href="{{ route('eventos.admin_create') }}" class="btn-claro ms-2" title="Crear nuevo evento">
-                            <i class="bi bi-plus-lg"></i>
-                        </a>
-                    </div>
+                            <form method="POST" action="{{ route('users.store') }}">
+                                @csrf
+
+                                <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre" required>
+                                <input type="email" name="email" class="form-control mb-2" placeholder="Email" required>
+                                <input type="password" name="password" class="form-control mb-2" placeholder="Contraseña" required>
+
+                                @if ($rol === 'admin')
+                                    <select name="rol" class="form-control mb-3">
+                                        <option value="cliente">Cliente</option>
+                                        <option value="empleado">Empleado</option>
+                                    </select>
+                                @endif
+
+                                <button class="btn-eventea w-100">
+                                    Crear
+                                </button>
+
+                            </form>
+                        </div>
+                    </div> <!-- form -->
                 </div>
-            </div>
 
-            {{-- FORMULARIO --}}
-            <div class="mb-4 bg-claro p-4">
-                <div class="border-eventea p-4">
-
-                    <h5 class="mb-4"><i class="bi bi-plus fs-4"></i>Crear usuario</h5>
-
-                    <form method="POST" action="{{ route('users.store') }}">
-                        @csrf
-
-                        <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre" required>
-                        <input type="email" name="email" class="form-control mb-2" placeholder="Email" required>
-                        <input type="password" name="password" class="form-control mb-2" placeholder="Contraseña" required>
-
-                        @if ($rol === 'admin')
-                            <select name="rol" class="form-control mb-3">
-                                <option value="cliente">Cliente</option>
-                                <option value="empleado">Empleado</option>
-                            </select>
-                        @endif
-
-                        <button class="btn-eventea w-100">
-                            Crear
-                        </button>
-
-                    </form>
-                </div>
             </div>
 
 
             
+            
             {{-- STATS DE EVENTOS --}}
-            <div class="container mt-5">
+            <div class="container mt-4">
                 <div class="bg-claro p-4">
                     <canvas id="eventosChart"></canvas>
                 </div>

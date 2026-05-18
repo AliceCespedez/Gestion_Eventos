@@ -62,9 +62,12 @@
 }
 .table-choco thead th {
     border: 1px solid white !important;
+    border-bottom: none !important;
 }
 .table-choco tbody td {
     border: 1px solid var(--color-chocolate) !important;
+    border-left: none !important;
+    border-right: none !important;
 }
 
 * {
@@ -160,7 +163,7 @@ button{
     text-align: center;
     text-transform: uppercase;
     text-decoration: none;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
 
     cursor: pointer;
     transition: all 0.3s ease-out;
@@ -234,6 +237,19 @@ button{
 }
 .btn-small:hover{
     opacity: 1 !important;
+}
+
+.btn-success{
+    background-color: var(--color-beige-claro) !important;
+    color: var(--color-chocolate) !important;
+    border-radius: 0;
+    border: none !important;
+}
+.btn-success:hover{
+    background-color: var(--color-beige-medio) !important;
+    color: var(--color-chocolate);
+    opacity: 1;
+    border: none;
 }
 
 .btn-eventea i,

@@ -22,17 +22,6 @@
         .btn-search:hover{
             background-color: var(--color-beige-medio);
         }
-
-
-        .table-choco thead th {
-            background-color: var(--color-chocolate) !important;
-            color: white !important;
-            border: 1px solid white !important;
-        }
-        .table-choco tbody td {
-            border: 1px solid var(--color-chocolate) !important;
-            color: var(--color-chocolate) !important;
-        }
         
         /* DESPLEGABLE */
         .eventos-dropdown {
@@ -100,19 +89,6 @@
             font-weight: 500;
         }
 
-
-        .btn-success{
-            background-color: var(--color-beige-claro);
-            color: var(--color-chocolate);
-            border-radius: 0;
-            border: none;
-        }
-        .btn-success:hover{
-            background-color: var(--color-beige-medio) !important;
-            color: var(--color-chocolate);
-            opacity: 1;
-            border: none;
-        }
     </style>
 </head>
 
@@ -170,7 +146,6 @@
 
 
             {{-- TABLA CLIENTES --}}
-            
             <table class="table table-choco mt-3">
                 <thead>
                     <tr>
@@ -246,10 +221,10 @@
         <!-- MODAL DE ERROR -->
         <div class="modal fade" id="errorModal" tabindex="-1">
             <div class="modal-dialog">
-                <div class="modal-content bg-dark text-white">
+                <div class="modal-content bg-white text-white">
                     <div class="modal-header">
-                        <h5 class="modal-title">❌ Error al eliminar</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        <h5 class="modal-title"><i class="bi bi-x-lg"></i>Error al eliminar</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <p id="errorMessage"></p>
@@ -264,16 +239,16 @@
         <!-- MODAL DE CONFIRMACIÓN -->
         <div class="modal fade" id="confirmModal" tabindex="-1">
             <div class="modal-dialog">
-                <div class="modal-content bg-dark text-white">
+                <div class="modal-content bg-white text-white">
                     <div class="modal-header">
-                        <h5 class="modal-title">🗑 Confirmar eliminación</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        <h5 class="modal-title"><i class="bi bi-exclamation-triangle"></i> Confirmar eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <p>¿Estás seguro de que quieres eliminar al cliente <strong id="clienteNombre"></strong>?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancelar</button>
                         <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
                     </div>
                 </div>

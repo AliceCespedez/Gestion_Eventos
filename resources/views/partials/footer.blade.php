@@ -1,7 +1,7 @@
 <style>
     .footer-container {
         background-color: transparent;
-        width: 100vw;
+        width: 100%;
         height: max-content;
         display: flex;
         flex-direction: row;

@@ -122,7 +122,7 @@
         style="background-image: url('{{ asset('images/tipo-' . $evento->id_tipo . '.jpg') }}');">
 
             <div id="evento-title-div" class="color-white">
-                <a href="{{ url()->previous() }}" class="d-inline-block a-white">🡠 Volver al evento</a>
+                <a href="{{ url()->previous() }}" class="d-inline-block a-white">🡠 Volver</a>
                 <!--<a href="{{ route('dashboard') }}" class="a-white" style="font-weight: 300">< Volver</a>-->
                 <h2>{{ $evento->nombre_evento }}</h2>
             </div>
