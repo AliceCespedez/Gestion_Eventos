@@ -8,13 +8,10 @@ use App\Models\Invitado;
 
 class InvitadoController extends Controller
 {
-
     //Cambiar estado de confirmación de un invitado
-
     public function cambiarEstado(Request $request, Invitado $inv)
     {
         $user = Auth::user();
-
         // SOLO ADMIN Y EMPLEADO
         if (!in_array($user->rol, ['admin', 'empleado'])) {
             abort(403, 'No tienes permisos para realizar esta acción');
@@ -42,6 +39,8 @@ class InvitadoController extends Controller
         return view('invitados.index', compact('evento'));
     }
 
+
+    // Agregar nuevo invitado a un evento
     public function store(Request $request, $eventoId)
     {
         $request->validate([

@@ -9,12 +9,14 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 </head>
 
 @php
     $user = auth()->user();
     $rol = $user->rol;
 @endphp
+
 
 <body class="bg-white normal-body">
 
@@ -24,13 +26,13 @@
     <div class="section-1">
 
         <div class="normal-header">
-                <h2 class="color-choco">Eventos</h2>
+            <h2 class="color-choco">Eventos</h2>
         </div>
 
         <div class="mt-5 container">
 
             <a href="{{ url()->previous() }}" class="d-inline-block mb-3">🡠 Volver</a>
-            
+
             {{-- Mensaje --}}
             @if (session('success'))
                 <div class="alert alert-success">
@@ -46,8 +48,8 @@
 
                     <form method="GET" action="{{ route('eventos.index') }}" class="mb-2">
                         <div class="input-group">
-                            <input type="text" name="buscar" class="form-control" placeholder="Buscar evento por nombre..."
-                                value="{{ request('buscar') }}">
+                            <input type="text" name="buscar" class="form-control"
+                                placeholder="Buscar evento por nombre..." value="{{ request('buscar') }}">
 
                             <button class="btn btn-search" type="submit">Buscar</button>
                         </div>
@@ -99,7 +101,7 @@
 
                                 @if (in_array($rol, ['admin', 'empleado']))
                                     <form action="{{ route('eventos.destroy', $evento->id_evento) }}" method="POST"
-                                        onsubmit="return confirm('¿Estás seguro de que quieres eliminar este evento?');">
+                                        class="delete-form">
 
                                         @csrf
                                         @method('DELETE')
@@ -113,6 +115,36 @@
                             </td>
                         </tr>
                     @endforeach
+                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                    <script>
+                        document.querySelectorAll('.delete-form').forEach(form => {
+
+                            form.addEventListener('submit', function(e) {
+
+                                e.preventDefault();
+
+                                Swal.fire({
+                                    title: '¿Eliminar evento?',
+                                    text: 'Esta acción no se puede deshacer',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#7b2d26',
+                                    cancelButtonColor: '#6c757d',
+                                    confirmButtonText: 'Sí, eliminar',
+                                    cancelButtonText: 'Cancelar'
+                                }).then((result) => {
+
+                                    if (result.isConfirmed) {
+                                        form.submit();
+                                    }
+
+                                });
+
+                            });
+
+                        });
+                    </script>
                 </tbody>
 
             </table>
@@ -136,7 +168,7 @@
                 </a>
             @endif
             --}}
-        
+
         </div>
 
     </div>
