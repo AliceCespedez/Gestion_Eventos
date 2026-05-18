@@ -61,8 +61,7 @@
     color: white !important;
 }
 .table-choco thead th {
-    border: 1px solid white !important;
-    border-bottom: none !important;
+    border-right: 1px solid white !important;
 }
 .table-choco tbody td {
     border: 1px solid var(--color-chocolate) !important;
@@ -274,7 +273,7 @@ button{
     border-radius: 0% !important;
 }
 
-
+/*
 input:focus, 
 input:-webkit-autofill:focus,
 input:-webkit-autofill:hover {
@@ -283,6 +282,7 @@ input:-webkit-autofill:hover {
     box-shadow: 0 0 0px 1000px white inset !important;
     border: none !important;
 }
+    */
 input:focus-visible {
     outline: solid 4px var(--color-beige-medio) !important;
 }

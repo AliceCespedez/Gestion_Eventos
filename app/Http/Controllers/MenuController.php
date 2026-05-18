@@ -76,4 +76,5 @@ class MenuController extends Controller
 
         return back()->with('success', 'Menú eliminado correctamente');
     }
+
 }
