@@ -95,12 +95,10 @@ class AuthController extends Controller
         $authUser = Auth::user();
 
         if (!in_array($authUser->rol, ['admin', 'empleado'])) {
-
             return back()->with('error', 'No tienes permisos');
         }
 
         if ($authUser->rol === 'empleado' && $request->rol !== 'cliente') {
-
             return back()->with('error', 'Un empleado solo puede crear clientes');
         }
 
@@ -112,13 +110,11 @@ class AuthController extends Controller
         ]);
 
         if ($request->rol === 'cliente') {
-
             return redirect('/clientes')
                 ->with('success', 'Cliente creado correctamente');
         }
 
         if ($request->rol === 'empleado') {
-
             return redirect('/empleados')
                 ->with('success', 'Empleado creado correctamente');
         }

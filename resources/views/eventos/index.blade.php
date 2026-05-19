@@ -58,7 +58,13 @@
                 </div>
             </div>
 
+            {{-- CREAR EVENTO --}}
+            <div>
+                <a href="{{ route('eventos.admin_create') }}" class="btn-claro"><i class="bi bi-plus-lg me-3"></i> Nuevo evento</a>
+            </div>
 
+
+            {{-- TABLA DE EVENTOS --}}
             <table class="table table-choco mt-3">
 
                 <thead>

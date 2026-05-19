@@ -17,14 +17,14 @@
 
         .invitados {
             width: 30%;
-            border: 1px solid #ddd;
+            border: 1px solid var(--color-chocolate);
             padding: 10px;
             min-height: 300px;
         }
 
         .invitado {
             padding: 6px;
-            background: #2563eb;
+            background: var(--color-chocolate);
             color: white;
             margin-bottom: 5px;
             border-radius: 5px;
@@ -77,12 +77,12 @@
         }
 
         .asiento.occupied {
-            background: #22c55e;
+            background: var(--color-chocolate);
         }
 
         .asiento .invitado {
             background: transparent;
-            color: black;
+            color: rgb(255, 255, 255);
             font-size: 10px;
             padding: 0;
             margin: 0;
@@ -95,7 +95,7 @@
     <div class="container">
         <!-- INVITADOS -->
         <div class="invitados" id="seating-invitados">
-            <h3>🎟 Invitados</h3>
+            <h3>Invitados</h3>
 
             @foreach ($evento->invitados as $inv)
                 @if (!$inv->asiento)

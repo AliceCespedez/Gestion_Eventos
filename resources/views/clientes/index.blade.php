@@ -145,6 +145,12 @@
             </div>
 
 
+            {{-- CREAR USUARIO --}}
+            <div>
+                <a href="{{ route('dashboard') }}" class="btn-claro" title="Nuevo usuario"><i class="bi bi-plus-lg"></i></a>
+            </div>
+
+
             {{-- TABLA CLIENTES --}}
             <table class="table table-choco mt-3">
                 <thead>

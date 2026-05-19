@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <title>Dashboard</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
-        #dash-container {
+        .dash-container {
             padding: 2rem 4rem 6rem 4rem;
         }
 
@@ -44,11 +44,47 @@
             position: relative;
             z-index: 1;
         }
+
+
+        /* EMPLEADO */
+        
+        .admin-div-1{
+            display: flex;
+            flex-direction: row;
+            gap: 3rem;
+            width: 100%;
+            padding: 4rem;
+            height: fit-content;
+        }
+        
+        .admin-carta{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-width: 30%;
+        }
+
+        .admin-carta:first-child{
+            heigth: 100%;
+        }
+
+        .admin-carta:last-child{
+            height: fit-content;
+        }
+        
+        .admin-carta-img{
+            min-height: 20vh;
+            height: 100%;
+            width: 100%;
+        }
     </style>
 </head>
 
-<body class="bg-claro">
+<body>
 
+    <div class="bg-claro normal-body">
+    
     @php
         $user = auth()->user();
         $rol = strtolower(trim($user->rol ?? ''));
@@ -57,32 +93,19 @@
 
     @include('partials.header')
 
-    <div id="dash-container">
+    
 
         @if (!$user)
-
             <div class="alert alert-danger">
-                No hay usuario autenticado
+                <i>No hay usuario autenticado</i>
             </div>
+
         @else
+            
             {{--  CLIENTE --}}
             @if ($rol === 'cliente')
 
-                {{-- LOGOUT CLIENTE --}}
-                <!--
-                <div class="container mt-5">
-                    <a href="{{ route('logout') }}">🡠 Cerrar sesión</a>
-                </div>
-
-                <div class="d-flex justify-content-end mb-4">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="btn btn-dark">
-                            Cerrar sesión
-                        </button>
-                    </form>
-                </div>
-                -->
+            <div class="dash-container">
 
                 <div id="dash-hero" class="p-4 text-center">
                     <h3>Hola, {{ $user->nombre }}</h3>
@@ -116,66 +139,90 @@
                     @endforelse
                 </div>
 
-                {{--  EMPLEADO  --}}
+            </div>
+
+
+
+
+
+            {{--  EMPLEADO  --}}
             @elseif ($rol === 'empleado')
-                {{-- HEADER EMPLEADO --}}
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="section-1 bg-white">
 
-                    <div>
-                        <h2>👨‍💼 Panel Administrativo</h2>
-                        <p>Hola, {{ $user->nombre }}</p>
+                    <div class="normal-header d-flex flex-row justify-content-between align-items-center">
+                        <h2 class="color-choco">Panel de administración</h2>
+                        <div class="d-flex flex-column align-items-end">
+                            <h3>Hola, {{ $user->nombre }}</h3>
+                            <p><b>Rol:</b> {{ $user->rol }}</p>
+                        </div>
                     </div>
 
-                    <div class="d-flex align-items-center gap-3">
+                    <div class="dash-container">
 
-                       
                         {{-- LOGOUT EMPLEADO --}}
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="btn btn-dark">
-                                Cerrar sesión
-                            </button>
-                        </form>
+                        <div class="text-end mb-2">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="button-a">
+                                    Cerrar sesión <i class="bi bi-door-closed fs-4"></i>
+                                </button>
+                            </form>
+                        </div>
+                                    
+                        <div class="admin-div-1">
+
+                            {{-- CARTA EVENTOS --}}
+                            <div class="admin-carta flex-fill">
+                                <h4>Eventos</h4>
+
+                                <div class="mt-2">
+                                    <a href="{{ route('eventos.index') }}" class="btn-eventea" title="Abrir panel de eventos">
+                                        Ver todos los eventos
+                                    </a>
+                                    <a href="{{ route('eventos.admin_create') }}" class="btn-claro ms-2" title="Crear nuevo evento">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </a>
+                                </div>
+
+                                <div style="background: url('/images/eventea-03.jpg') center/cover no-repeat;" class="admin-carta-img mt-4" alt="Imagen mesa"></div>
+                            </div>
+
+
+                            {{-- CARTA CLIENTES --}}
+                            <div class="admin-carta flex-fill">
+                                <h4>Clientes</h4>
+
+                                <div class="mt-2">
+                                    <a href="{{ route('clientes.index') }}" class="btn-eventea">
+                                        <i class="bi bi-people-fill me-2"></i> Ver clientes
+                                    </a>
+                                </div>
+
+                                {{-- Formulario --}}
+                                <div class="bg-claro p-4 mt-4 w-100">
+                                    <div class="border-eventea p-4">
+                                        <h5 class="mb-4"><i class="bi bi-plus fs-4"></i>Nuevo cliente</h5>
+
+                                        <form method="POST" action="{{ route('users.store') }}">
+                                            @csrf
+
+                                            <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre" required>
+                                            <input type="email" name="email" class="form-control mb-2" placeholder="Email" required>
+                                            <input type="password" name="password" class="form-control mb-2" placeholder="Contraseña" required>
+
+                                            <button class="btn-eventea w-100">
+                                                Crear
+                                            </button>
+
+                                        </form>
+                                    </div>
+                                </div> <!-- form -->
+                            </div>
+
+                        </div>
+
 
                     </div>
-
-                </div>
-
-                {{-- BOTONES ADMIN --}}
-                <div class="card bg-secondary text-white shadow mb-4">
-                    <div class="card-body text-center">
-
-                        <a href="{{ route('clientes.index') }}" class="btn btn-light w-100">👤 Clientes</a>
-                        <a href="{{ route('eventos.index') }}" class="btn btn-light w-100 mt-2">📅 Eventos</a>
-                        <a href="{{ route('eventos.admin_create') }}" class="btn btn-light w-100 mt-2">➕ Crear
-                            evento</a>
-
-                    </div>
-                </div>
-
-                {{-- CREAR CLIENTE (IMPORTANTE) --}}
-                <div class="card bg-secondary text-white shadow p-4 mt-3">
-
-                    <h4>➕ Crear Cliente</h4>
-
-                    <form method="POST" action="{{ route('users.store') }}">
-                        @csrf
-
-                        <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre" required>
-
-                        <input type="email" name="email" class="form-control mb-2" placeholder="Email" required>
-
-                        <input type="password" name="password" class="form-control mb-2" placeholder="Contraseña"
-                            required>
-
-                        <input type="hidden" name="rol" value="cliente">
-
-                        <button class="btn btn-light w-100">
-                            Crear cliente
-                        </button>
-
-                    </form>
-
                 </div>
 
             @endif

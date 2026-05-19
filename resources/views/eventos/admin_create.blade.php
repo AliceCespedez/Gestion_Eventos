@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
+        #crear-presu-div{
+            position: sticky;
+            top: calc(var(--nav-height) + 1rem);
+            z-index: 0;
+        }
          .progress-bar-container {
             background-color: var(--color-beige-claro);
             border: 1px solid var(--color-chocolate);
@@ -19,7 +24,6 @@
             width: 100%;
             overflow: hidden;
         }
-        
         .progress-bar-fill {
             background-color: var(--color-chocolate);
             width: 100%;
@@ -35,6 +39,10 @@
             margin-top: 5px;
             font-size: 0.75rem;
             color: var(--color-chocolate);
+        }
+
+        #crear-evento-right{
+            width: 70%;
         }
 
         hr{
@@ -64,35 +72,39 @@
         <div class="mt-5 row justify-content-center">
             <div class="col-md-9">
                 <div class="border-0">
-                    <div class="d-flex flex-row align-items-start gap-4">
+                    <div class="d-flex flex-row align-items-start gap-4 position-relative">
+
 
                         {{--  PRESUPUESTO EN TIEMPO REAL --}}
-                        <div id="crear-presu-div" class="mb-4 border-eventea p-4" style="width: 30%">
+                        <div id="crear-presu-div" class="mb-4 p-4 pt-0" style="width: 30%">
+                            <div class="border-eventea p-4 mb-3">
+                                <div>
+                                    <h5>PRESUPUESTO</h5>
+                                    <span id="presupuestoTexto">0</span> € <br>
+                                    <b>Gastado: </b><span id="gastadoTexto">0</span> € <br>
+                                    <b>Restante: </b><span id="restanteTexto">0</span> €
+                                </div>
 
-                            <div>
-                                <h5>PRESUPUESTO</h5>
-                                <span id="presupuestoTexto">0</span> € <br>
-                                <b>Gastado: </b><span id="gastadoTexto">0</span> € <br>
-                                <b>Restante: </b><span id="restanteTexto">0</span> €
+                                {{-- BARRA DE PROGRESO --}}
+                                <div class="mt-3">
+                                    <div class="progress-bar-container">
+                                        <div id="barraPresupuesto" class="progress-bar-fill"></div>
+                                    </div>
+                                    <div class="progress-labels">
+                                        <span>0%</span>
+                                        <span id="porcentajeTexto">100%</span>
+                                        <span>100%</span>
+                                    </div>
+                                </div>
+
                             </div>
 
-                            {{-- BARRA DE PROGRESO --}}
-                            <div class="mt-3">
-                                <div class="progress-bar-container">
-                                    <div id="barraPresupuesto" class="progress-bar-fill"></div>
-                                </div>
-                                <div class="progress-labels">
-                                    <span>0%</span>
-                                    <span id="porcentajeTexto">100%</span>
-                                    <span>100%</span>
-                                </div>
-                            </div>
-
+                            <a href="{{ url()->previous() }}" class="d-inline-block mb-3">🡠 Volver</a>
+                            
                         </div>
 
 
-
-                        <div class="bg-claro p-4">
+                        <div id="crear-evento-right" class="bg-claro p-4">
 
                     
                             {{-- ERRORES --}}
@@ -154,11 +166,12 @@
                                 </div>
 
 
-                                <div class="d-flex d-flex flex-row gap-4">
+                                <div class="d-flex flex-row gap-4">
+
                                     {{-- PRESUPUESTO --}}
                                     <div class="mb-3 flex-fill">
                                         <label class="form-label">Presupuesto</label>
-                                        <input type="number" name="presupuesto" id="presupuestoInput" class="form-control">
+                                        <input type="number" name="presupuesto" min="0" step="0.01" id="presupuestoInput" class="form-control">
                                     </div>
 
                                     {{-- NOMBRE --}}
@@ -169,7 +182,8 @@
                                 </div>
 
 
-                                <div class="d-flex d-flex flex-row gap-4">
+                                <div class="d-flex flex-row gap-4">
+
                                     {{-- FECHA --}}
                                     <div class="mb-3 flex-fill">
                                         <label class="form-label">Fecha</label>
@@ -191,7 +205,11 @@
                                         </select>
                                     </div>
 
-                                    {{-- MESAS --}}
+                                </div>
+
+                                {{-- MESAS --}}
+                                <div class="d-flex flex-row gap-4">
+
                                     <div class="row mb-3 flex-fill">
                                         <div class="col-md-6">
                                             <label class="form-label">Número de mesas</label>
@@ -203,6 +221,7 @@
                                             <input type="number" name="asientos_mesa" min="1" class="form-control">
                                         </div>
                                     </div>
+                                    
                                 </div>
 
                                 <hr>
@@ -211,7 +230,7 @@
                                 <div class="mb-3">
                                     <label class="form-label"><h5>Menús</h5></label>
 
-                                    <div class="border rounded p-3 bg-light">
+                                    <div class="border p-3 bg-white">
 
                                         @foreach ($menus as $menu)
                                             <div class="d-flex align-items-center gap-2 mb-2">
@@ -234,7 +253,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Servicios (opcionales)</label>
 
-                                    <div class="border rounded p-3 bg-light">
+                                    <div class="border p-3 bg-white">
 
                                         @foreach ($servicios as $servicio)
                                             <div class="d-flex align-items-center gap-2 mb-2">

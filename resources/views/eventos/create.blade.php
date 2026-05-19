@@ -62,7 +62,6 @@
             <div class="col-md-6">
 
                 <p class="subtitulo">¿Alguna duda? ¿Un nuevo evento?</p>
-
                 <h1 class="titulo-principal mb-4">Ponte en contacto</h1>
 
                 <div class="contact-box">

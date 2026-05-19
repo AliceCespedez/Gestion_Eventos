@@ -76,18 +76,18 @@
         <div class="container my-4">
 
             {{-- CERRAR SESIÓN --}}
-                <div class="text-end mb-2">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="button-a">
-                            Cerrar sesión <i class="bi bi-door-closed fs-4"></i>
-                        </button>
-                    </form>
-                </div>
+            <div class="text-end mb-2">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="button-a">
+                        Cerrar sesión <i class="bi bi-door-closed fs-4"></i>
+                    </button>
+                </form>
+            </div>
            
             <div class="admin-div-1">
 
-                {{-- Carta Eventos --}}
+                {{-- CARTA EVENTOS --}}
                 <div class="admin-carta flex-fill">
                     <h4>Eventos</h4>
 
@@ -104,7 +104,7 @@
                 </div>
 
 
-                {{-- Carta Usuarios --}}
+                {{-- CARTA USUARIOS --}}
                 <div class="admin-carta flex-fill">
                     <h4>Usuarios</h4>
 
@@ -128,7 +128,7 @@
                                 @csrf
 
                                 <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre" required>
-                                <input type="email" name="email" class="form-control mb-2" placeholder="Email" required>
+                                <input typegit ="email" name="email" class="form-control mb-2" placeholder="Email" required>
                                 <input type="password" name="password" class="form-control mb-2" placeholder="Contraseña" required>
 
                                 @if ($rol === 'admin')
