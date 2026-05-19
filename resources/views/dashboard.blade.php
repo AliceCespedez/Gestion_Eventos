@@ -128,66 +128,7 @@
 
                     <div class="d-flex align-items-center gap-3">
 
-                        {{-- CAMPANA (FIJA Y SIEMPRE VISIBLE) --}}
-                        @if (in_array($rol, ['empleado', 'admin']))
-
-                            @php
-                                $user = auth()->user();
-                                $notificaciones = $user->unreadNotifications ?? collect();
-                            @endphp
-
-                            <div class="position-fixed top-0 end-0 p-3" style="z-index:9999;">
-                                <div class="dropdown">
-                                    {{-- CAMPANA --}}
-                                    <a href="#" class="text-dark position-relative text-decoration-none"
-                                        data-bs-toggle="dropdown">
-
-                                        <i class="bi bi-bell fs-3"></i>
-
-                                        @if ($notificaciones->count() > 0)
-                                            <span class="position-absolute top-0 start-100 translate-middle badge bg-danger">
-                                                {{ $notificaciones->count() }}
-                                            </span>
-                                        @endif
-                                    </a>
-                                    {{-- DROPDOWN --}}
-                                    <ul class="dropdown-menu dropdown-menu-end p-2" style="width:300px;">
-
-                                        <li class="fw-bold mb-2">Notificaciones</li>
-
-                                        @forelse($user->notifications as $noti)
-                                            <li>
-                                                <a href="{{ route('consultas.leer', $noti->id) }}" class="dropdown-item small">
-
-                                                    🔔 {{ $noti->data['mensaje'] ?? 'Notificación' }}
-
-                                                    <br>
-
-                                                    <small class="text-muted">
-                                                        {{ $noti->read_at ? 'Leída' : 'Nueva' }}
-                                                    </small>
-
-                                                </a>
-                                            </li>
-                                        @empty
-                                            <li class="text-muted small px-2 py-1">
-                                                No tienes notificaciones
-                                            </li>
-                                        @endforelse
-
-                                        <hr>
-
-                                        <li>
-                                            <a href="{{ route('consultas.index') }}" class="dropdown-item text-center fw-bold">
-                                                Ver todas las consultas
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                        @endif
-
+                       
                         {{-- LOGOUT EMPLEADO --}}
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

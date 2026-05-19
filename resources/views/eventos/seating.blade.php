@@ -46,11 +46,14 @@
         }
 
         .mesa {
-            width: 170px;
-            height: 170px;
-            border-radius: 50%;
+            width: 170px !important;
+            height: 170px !important;
+            border-radius: 50% !important;
             border: 2px solid #999;
             position: relative;
+            flex: 0 0 170px;
+            display: block;
+            overflow: visible;
         }
 
         .mesa-title {
@@ -90,7 +93,6 @@
 <body>
 
     <div class="container">
-
         <!-- INVITADOS -->
         <div class="invitados" id="seating-invitados">
             <h3>🎟 Invitados</h3>
@@ -103,10 +105,8 @@
                 @endif
             @endforeach
         </div>
-
         <!-- MESAS -->
         <div class="mesas">
-
             @foreach ($evento->mesas as $mesa)
                 <div class="mesa">
 

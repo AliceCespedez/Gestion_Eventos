@@ -39,7 +39,6 @@ class InvitadoController extends Controller
         return view('invitados.index', compact('evento'));
     }
 
-
     // Agregar nuevo invitado a un evento
     public function store(Request $request, $eventoId)
     {
@@ -56,5 +55,13 @@ class InvitadoController extends Controller
         ]);
 
         return back()->with('success', 'Invitado añadido correctamente');
+    }
+    public function destroy($id)
+    {
+        $invitado = Invitado::findOrFail($id);
+
+        $invitado->delete();
+
+        return back()->with('success', 'Invitado eliminado');
     }
 }

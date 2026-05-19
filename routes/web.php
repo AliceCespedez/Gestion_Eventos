@@ -184,10 +184,14 @@ Route::post('/invitados/{inv}/estado', [InvitadoController::class, 'cambiarEstad
     ->middleware('auth')
     ->name('invitados.estado');
 
-    Route::post('/eventos/{evento}/invitados', [InvitadoController::class, 'store'])
+Route::post('/eventos/{evento}/invitados', [InvitadoController::class, 'store'])
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('invitados.store');
     
+    //Eliminar invitado
+Route::delete('/invitados/{id}', [InvitadoController::class, 'destroy'])
+    ->name('invitados.destroy');
+
 //  MENÚS
 Route::post('/eventos/{evento}/menu', [EventoController::class, 'attachMenu'])
     ->middleware(['auth', 'role:admin,empleado'])
