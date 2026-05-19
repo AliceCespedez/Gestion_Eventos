@@ -165,19 +165,31 @@
 
                         @forelse($user->notifications as $noti)
                             <li>
-                                <a href="{{ route('consultas.leer', $noti->id) }}" class="dropdown-item small">
 
-                                    🔔<i class="bi bi-bell-fill fs-4"></i>
-                                    {{ $noti->data['mensaje'] ?? 'Notificación' }}
-                                    <br>
+                                <form method="POST" action="{{ route('consultas.leer', $noti->id) }}">
 
-                                    <small class="text-muted">
-                                        {{ $noti->read_at ? 'Leída' : 'Nueva' }}
-                                    </small>
+                                    @csrf
+                                    @method('PATCH')
 
-                                </a>
+                                    <button type="submit"
+                                        class="dropdown-item small border-0 bg-transparent text-start w-100">
+
+                                        🔔 {{ $noti->data['mensaje'] ?? 'Notificación' }}
+
+                                        <br>
+
+                                        <small class="text-muted">
+                                            {{ $noti->read_at ? 'Leída' : 'Nueva' }}
+                                        </small>
+
+                                    </button>
+
+                                </form>
+
                             </li>
+
                         @empty
+
                             <li class="text-muted small px-2 py-1 fst-italic">
                                 No tienes notificaciones
                             </li>

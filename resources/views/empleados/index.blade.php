@@ -39,7 +39,6 @@
                     {{ session('error') }}
                 </div>
             @endif
-
                 
             {{-- BUSCADOR --}}
             <div class="bg-medio color-choco p-4 mb-4">
@@ -63,7 +62,6 @@
 
                 </div>
             </div>
-
 
             {{-- EMPLEADOS --}}
              <table class="table table-choco mt-3">
@@ -141,7 +139,7 @@
 
     {{-- Bootstrap JS --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    
 </body>
 
 </html>

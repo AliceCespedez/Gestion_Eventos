@@ -187,8 +187,8 @@ Route::post('/invitados/{inv}/estado', [InvitadoController::class, 'cambiarEstad
 Route::post('/eventos/{evento}/invitados', [InvitadoController::class, 'store'])
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('invitados.store');
-    
-    //Eliminar invitado
+
+//Eliminar invitado
 Route::delete('/invitados/{id}', [InvitadoController::class, 'destroy'])
     ->name('invitados.destroy');
 
@@ -228,9 +228,8 @@ Route::delete('/consultas/{consulta}', [ConsultaController::class, 'destroy'])
     ->name('consultas.destroy');
 
 // Notificaciones
-Route::get('/notificacion/{id}', [App\Http\Controllers\ConsultaController::class, 'leerNotificacion'])
-    ->name('notificaciones.leer');
-
+Route::get('/consultas/{consulta}/leer', [ConsultaController::class, 'marcarLeido'])
+    ->name('consultas.leer');
 // ADMIN EVENTOS
 Route::get('/admin/eventos/create', [EventoController::class, 'adminCreate'])
     ->middleware(['auth', 'role:admin,empleado'])

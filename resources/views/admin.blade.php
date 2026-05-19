@@ -34,12 +34,15 @@
             align-items: center;
             min-width: 30%;
         }
+
         .admin-carta:first-child{
             heigth: 100%;
         }
+
         .admin-carta:last-child{
             height: fit-content;
         }
+        
         .admin-carta-img{
             min-height: 20vh;
             height: 100%;
@@ -81,11 +84,7 @@
                         </button>
                     </form>
                 </div>
-
-            
            
-
-
             <div class="admin-div-1">
 
                 {{-- Carta Eventos --}}

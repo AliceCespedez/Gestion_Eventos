@@ -115,7 +115,6 @@
     <!-- Header -->
     @include('partials.header')
 
-
     <!-- SECTION HEADER -->
     <div id="event-header-sticky">
         <div class="event-header d-flex justify-content-start align-items-end"
@@ -146,12 +145,8 @@
                 </div>
             </div>
 
-
-
             <!--  CONTENIDO -->
             <div id="event-content-right" class="col-md-9">
-
-
                 
                 <!-- GENERAL -->
                 <div id="general" class="section bg-claro">
@@ -210,7 +205,6 @@
                     </div>
                 </div>
                 </div>
-
 
                 <!-- CATERING -->
                 <div id="catering" class="section bg-medio">
@@ -343,8 +337,6 @@
                     </div>
                 </div>
                 </div>
-
-
 
                 <!-- SERVICIOS -->
                 <div id="servicios" class="section bg-claro">
@@ -562,12 +554,12 @@
         </div>
 
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 
     <!-- Footer -->
     @include('partials.footer')
+    </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
