@@ -172,6 +172,7 @@
                                     </div>
                                 @endforeach
                             @else
+                                {{-- si no funciona el método de leer menus, leer en texto plano--}}
                                 <div style="white-space: pre-line; margin-left: 1rem; margin-bottom: 1rem;">
                                     {{ $menu->descripcion }}
                                 </div>
