@@ -31,6 +31,7 @@
             background-position: center;
             position: relative;
         }
+
         .event-card::before {
             content: '';
             position: absolute;
@@ -40,15 +41,15 @@
             bottom: 0;
             background: linear-gradient(90deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
         }
+
         .event-card>* {
             position: relative;
             z-index: 1;
         }
 
-
         /* EMPLEADO */
-        
-        .admin-div-1{
+
+        .admin-div-1 {
             display: flex;
             flex-direction: row;
             gap: 3rem;
@@ -56,8 +57,8 @@
             padding: 4rem;
             height: fit-content;
         }
-        
-        .admin-carta{
+
+        .admin-carta {
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -65,15 +66,15 @@
             min-width: 30%;
         }
 
-        .admin-carta:first-child{
+        .admin-carta:first-child {
             heigth: 100%;
         }
 
-        .admin-carta:last-child{
+        .admin-carta:last-child {
             height: fit-content;
         }
-        
-        .admin-carta-img{
+
+        .admin-carta-img {
             min-height: 20vh;
             height: 100%;
             width: 100%;
@@ -84,68 +85,59 @@
 <body>
 
     <div class="bg-claro normal-body">
-    
-    @php
-        $user = auth()->user();
-        $rol = strtolower(trim($user->rol ?? ''));
-        $eventos = $eventos ?? collect();
-    @endphp
+        @php
+            $user = auth()->user();
+            $rol = strtolower(trim($user->rol ?? ''));
+            $eventos = $eventos ?? collect();
+        @endphp
 
-    @include('partials.header')
-
-    
+        @include('partials.header')
 
         @if (!$user)
             <div class="alert alert-danger">
                 <i>No hay usuario autenticado</i>
             </div>
-
         @else
-            
             {{--  CLIENTE --}}
             @if ($rol === 'cliente')
 
-            <div class="dash-container">
+                <div class="dash-container">
 
-                <div id="dash-hero" class="p-4 text-center">
-                    <h3>Hola, {{ $user->nombre }}</h3>
-                    <h2>¡Bienvenido a tu portal de eventos!</h2>
-                </div>
+                    <div id="dash-hero" class="p-4 text-center">
+                        <h3>Hola, {{ $user->nombre }}</h3>
+                        <h2>¡Bienvenido a tu portal de eventos!</h2>
+                    </div>
 
-                {{-- EVENTOS CLIENTE --}}
-                <div class="mt-5">
-                    <h5 class="mb-3">MIS EVENTOS</h5>
+                    {{-- EVENTOS CLIENTE --}}
+                    <div class="mt-5">
+                        <h5 class="mb-3">MIS EVENTOS</h5>
 
-                    @forelse($eventos as $evento)
-                        <div class="event-card p-4 d-flex justify-content-between align-items-end mb-3"
-                            style="background-image: url('{{ asset('images/tipo-' . $evento->id_tipo . '.jpg') }}');">
+                        @forelse($eventos as $evento)
+                            <div class="event-card p-4 d-flex justify-content-between align-items-end mb-3"
+                                style="background-image: url('{{ asset('images/tipo-' . $evento->id_tipo . '.jpg') }}');">
 
-                            <div>
-                                <h5 class="text-white">{{ $evento->tipo->nombre_tipo ?? '' }}</h5>
-                                <h2 class="text-white">{{ $evento->nombre_evento }}</h2>
-                                <p class="text-white">
-                                    📅 {{ $evento->fecha }} | 📍 {{ $evento->local->nombre ?? '' }}
-                                </p>
+                                <div>
+                                    <h5 class="text-white">{{ $evento->tipo->nombre_tipo ?? '' }}</h5>
+                                    <h2 class="text-white">{{ $evento->nombre_evento }}</h2>
+                                    <p class="text-white">
+                                        📅 {{ $evento->fecha }} | 📍 {{ $evento->local->nombre ?? '' }}
+                                    </p>
+                                </div>
+
+                                <a href="{{ route('eventos.show', $evento->id_evento) }}" class="btn btn-light">
+                                    Gestionar
+                                </a>
+
                             </div>
 
-                            <a href="{{ route('eventos.show', $evento->id_evento) }}" class="btn btn-light">
-                                Gestionar
-                            </a>
+                        @empty
+                            <p>No tienes eventos todavía.</p>
+                        @endforelse
+                    </div>
 
-                        </div>
-
-                    @empty
-                        <p>No tienes eventos todavía.</p>
-                    @endforelse
                 </div>
 
-            </div>
-
-
-
-
-
-            {{--  EMPLEADO  --}}
+                {{--  EMPLEADO  --}}
             @elseif ($rol === 'empleado')
                 <div class="section-1 bg-white">
 
@@ -168,7 +160,7 @@
                                 </button>
                             </form>
                         </div>
-                                    
+
                         <div class="admin-div-1">
 
                             {{-- CARTA EVENTOS --}}
@@ -176,15 +168,18 @@
                                 <h4>Eventos</h4>
 
                                 <div class="mt-2">
-                                    <a href="{{ route('eventos.index') }}" class="btn-eventea" title="Abrir panel de eventos">
+                                    <a href="{{ route('eventos.index') }}" class="btn-eventea"
+                                        title="Abrir panel de eventos">
                                         Ver todos los eventos
                                     </a>
-                                    <a href="{{ route('eventos.admin_create') }}" class="btn-claro ms-2" title="Crear nuevo evento">
+                                    <a href="{{ route('eventos.admin_create') }}" class="btn-claro ms-2"
+                                        title="Crear nuevo evento">
                                         <i class="bi bi-plus-lg"></i>
                                     </a>
                                 </div>
 
-                                <div style="background: url('/images/eventea-03.jpg') center/cover no-repeat;" class="admin-carta-img mt-4" alt="Imagen mesa"></div>
+                                <div style="background: url('/images/eventea-03.jpg') center/cover no-repeat;"
+                                    class="admin-carta-img mt-4" alt="Imagen mesa"></div>
                             </div>
 
 
@@ -206,9 +201,14 @@
                                         <form method="POST" action="{{ route('users.store') }}">
                                             @csrf
 
-                                            <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre" required>
-                                            <input type="email" name="email" class="form-control mb-2" placeholder="Email" required>
-                                            <input type="password" name="password" class="form-control mb-2" placeholder="Contraseña" required>
+                                            <input type="text" name="nombre" class="form-control mb-2"
+                                                placeholder="Nombre" required>
+                                            <input type="email" name="email" class="form-control mb-2"
+                                                placeholder="Email" required>
+                                            <input type="password" name="password" class="form-control mb-2"
+                                                placeholder="Contraseña" required>
+
+                                            <input type="hidden" name="rol" value="cliente">
 
                                             <button class="btn-eventea w-100">
                                                 Crear
