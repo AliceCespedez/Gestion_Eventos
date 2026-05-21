@@ -31,19 +31,19 @@
             border: none;
         }
         .info-table td:first-child {
-            width: 20vw;
+            width: 25vw;
             vertical-align: top;
         }
         .info-table td:last-child {
             padding-left: 15px;
         }
 
-        #summary-menu-table td{
+        .summary-menu-table td{
             background-color: transparent;
             color: var(--color-chocolate);
             text-align: center;
         }
-        #summary-menu-table td:first-child{
+        .summary-menu-table td:first-child{
             background-color: var(--color-chocolate);
             color:white !important;
             text-transform: uppercase;
@@ -148,12 +148,12 @@
                     @if ($evento->menus->count() > 0)
                         @foreach ($evento->menus as $menu)
 
-                            <table id="summary-menu-table" class="table table-choco mb-2">
+                            <table class="summary-menu-table table table-choco mb-2">
                                 <tbody>
                                     <tr>
                                         <td class="color-white">{{ $menu->nombre }}</td>
                                         <td>{{ $menu->precio_unitario }} €/unidad</td>
-                                        <td>{{ $menu->pivot->cantidad }} unidades</td>
+                                        <td>x{{ $menu->pivot->cantidad }}</td>
                                         <td><b>{{ $menu->precio_unitario * $menu->pivot->cantidad }} €</b></td>
                                     </tr>
                                 </tbody>
@@ -187,77 +187,169 @@
                         <p class="text-muted"><i>No hay menús contratados</i></p>
                     @endif
 
-                    {{--
-                    @if ($evento->menus->count() > 0)
-                        <table id="summary-menu-table" class="table table-choco">
-                            <tbody>
-                                @foreach ($evento->menus as $menu)
-                                    <tr>
-                                        <td>{{ $menu->nombre }}</td>
-                                        <td>{{ $menu->precio_unitario }} €/unidad</td>
-                                        <td>{{ $menu->pivot->cantidad }} unidades</td>
-                                        <td><b>{{ $menu->precio_unitario * $menu->pivot->cantidad }} € </b></td>
-                                    </tr>
-                            </tbody>
+                </div>
+                <br><hr><br>
+
+
+                <h5>INVITADOS</h5>
+                <div class="row g-3 mb-4">
+                    
+                    <!-- INFO -->
+                    <div style="width: 45%" class="d-flex align-items-center">
+                        <table class="info-table">
+                            <tr>
+                                <td>TOTAL</td>
+                                <td><p>{{ $stats['total'] }}</p></td>
+                            </tr>
+                            <tr>
+                                <td>CONFIRMADOS</td>
+                                <td><p>{{ $stats['confirmados'] }}</p></td>
+                            </tr>
+                            <tr>
+                                <td>PENDIENTES</td>
+                                <td>{{ $stats['pendientes'] }}</td>
+                            </tr>
+                            <tr>
+                                <td>RECHAZADOS</td>
+                                <td>{{ $stats['rechazados'] }}</td>
+                            </tr>
                         </table>
+                    </div>
 
-                        
-                        @if(isset($menu->secciones_menu) && count($menu->secciones_menu) > 0)
-                            @foreach($menu->secciones_menu as $seccion)
-                                <div class="mb-3">
-                                    <h6>{{ $seccion['titulo'] }}</h6>
-                                    <ul class="mb-2" style="margin-left: 1rem;">
-                                        @foreach($seccion['items'] as $item)
-                                            <li>{{ $item }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endforeach
-                        @else
-                            <div style="white-space: pre-line;">{{ $menu->descripcion }}</div>
-                        @endif
+                    <div class="col-md-6">
+                        <div class="section">
+                                <canvas id="chartInvitados"></canvas>
+                            </div>
+                    </div>
 
-                    @else
-                        <p class="text-muted">No hay menús</p>
-                    @endif
-                    --}}
+                </div>
 
-                    {{--
-                    @if ($evento->menus->count() > 0)
-                        <table class="table table-choco">
-                            <thead>
-                                <tr>
-                                    <th>Menú</th>
-                                    <th>Precio</th>
-                                    <th>Cantidad</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
 
+                <br><hr><br>
+                
+
+                <h5>SERVICIOS</h5>
+                <div class="section">
+
+                    @if ($evento->servicios->count() > 0)
+                        <table class="table table-choco mb-2 summary-menu-table">
                             <tbody>
-                                @foreach ($evento->menus as $menu)
+                                @foreach ($evento->servicios as $servicio)
                                     <tr>
-                                        <td>{{ $menu->nombre }}</td>
-                                        <td>{{ $menu->precio_unitario }} €/unidad</td>
-                                        <td>{{ $menu->pivot->cantidad }} unidades</td>
-                                        <td>{{ $menu->precio_unitario * $menu->pivot->cantidad }} €</td>
+                                        <td>{{ $servicio->nombre }}</td>
+                                        <td>{{ $servicio->precio_unitario }} € /unidad</td>
+                                        <td>x{{ $servicio->pivot->cantidad }}</td>
+                                        <td><b>{{ $servicio->precio_unitario * $servicio->pivot->cantidad }} €</b></td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     @else
-                        <p class="text-muted">No hay menús</p>
+                        <p class="text-muted">No hay servicios</p>
                     @endif
-                    --}}
+                </div>
+
+                <div class="section text-center">
+                    <h5>Servicios contratados</h5>
+
+                    <div style="max-width: 500px; height: 300px; margin:auto;">
+                        <canvas id="chartServicios"></canvas>
+                    </div>
+                </div>
+
+                <hr><br>
+
+                
+
+                <h5>PRESUPUESTO</h5>
+                <div class="row g-3 mb-4">
+
+                    <!-- INFO -->
+                    <div style="width: 45%" class="d-flex align-items-center">
+                        <table class="info-table col-md-6">
+                            <tr>
+                                <td>INICIAL</td>
+                                <td><p>{{ $presupuesto ?? 0 }} €</p></td>
+                            </tr>
+                            <tr>
+                                <td>GASTADO</td>
+                                <td><p><b>{{ $gastado ?? 0 }} €</b></p></td>
+                            </tr>
+                            <tr>
+                                <td>RESTANTE</td>
+                                <td>{{ $restante ?? 0 }} €</td>
+                            </tr>
+                        </table>
+                    </div>
+                
+                    <!-- DONUT PRESUPUESTO -->
+                    <div class="col-md-6">
+                        <div style="max-width: 300px; margin: auto;">
+                            <canvas id="chartPresupuesto"></canvas>
+                        </div>
+                    </div>
 
                 </div>
 
+                <br><hr><br>
+
+                <div class="d-flex flex-row gap-4 justify-content-center pt-4 pb-3 bg-choco">
+                    <h5 class="color-white">TOTAL:</h5>
+                    <p class="color-white">{{ $gastado ?? 0 }} €</p>
+                </div>
+
+                <div class="py-4">
+                    <p><b>Condiciones y forma de pago</b></p>
+                    <p>
+                        El presente resumen forma parte del compromiso entre el cliente y EvenTea. Para formalizar el encargo, se requiere el pago de una reserva del 30% del importe total. El resto se abonará 7 días antes del evento.
+
+                        Forma de pago: transferencia bancaria a la cuenta:
+                        ESXX XXXX XXXX XXXX XXXX (IBAN)
+                        En concepto: "Nombre del evento + fecha"
+                    </p>
+                    <br>
+                    <p><b>El servicio incluye:</b></p>
+                    <p>
+                        · Menaje completo: vajilla, cubertería, copas y servilletas.
+                        <br>
+                        · Mobiliario básico: mesas y sillas según número de asistentes y tipo de evento.
+                        <br>
+                        · Decoración básica para mesa adaptada al tipo de evento (más información en nuestra web <a href="#"><i>eventea.com</i></a>)
+                        <br>
+                        · Transporte del equipo necesario para servir en caliente.
+                        <br>
+                        · Servicio de camareros (1 por cada 20 comensales, incluido dentro del precio)
+                        <br>
+                        · Limpieza del espacio durante y al finalizar el evento (recogida de menaje, residuos y mobiliario básico)
+                    </p>
+                    <br>
+                    <p><b>No incluye:</b></p>
+                    <p>
+                        · Decoración adicional, centros de mesa especiales o personalizaciones fuera del pack básico
+                        <br>
+                        · Equipos de sonido o iluminación (salvo que se especifique en servicios contratados).
+                        <br>
+                        · Servicios no contratados expresamente en este resumen.
+                    </p>
+                    <br>
+                    <p><b>Importante:</b></p>
+                    <p>
+                        El cliente se compromete a proveer de suministro eléctrico suficiente y accesible para la correcta ejecución del evento (cocina caliente, iluminación extra, equipos de sonido, pirotecnia, hinchables...). EvenTea no se hace responsable de la falta de electricidad ni de los cortes de suministro ajenos a la organización.
+                    </p>
+                    <br>
+                    <p>
+                        Para cualquier duda o comentario contacta con nuestro equipo desde el <a href=""><i>formulario de contacto</i></a> a través de <i>eventea.com</i>. Estaremos encantados de ayudarte.
+                    </p>
+                </div>
+
+                
+                {{--
                 <!-- KPI INVITADOS -->
                 <div class="row g-3 mb-4">
 
                     <div class="col-md-3">
                         <div class="kpi kpi-total">
-                            <div class="kpi-title">Total invitados</div>
+                            <div class="kpi-title">Total de invitados</div>
                             <h2>{{ $stats['total'] }}</h2>
                         </div>
                     </div>
@@ -284,7 +376,9 @@
                     </div>
 
                 </div>
+                --}}
 
+                {{--
                 <!-- KPI PRESUPUESTO -->
                 <div class="row g-3 mb-4">
 
@@ -310,16 +404,11 @@
                     </div>
 
                 </div>
+                --}}
 
-                <!-- DONUT PRESUPUESTO -->
-                <div class="section text-center">
-                    <h5>Tu presupuesto</h5>
+                
 
-                    <div style="max-width: 300px; margin: auto;">
-                        <canvas id="chartPresupuesto"></canvas>
-                    </div>
-                </div>
-
+                {{--
                 <!-- GRÁFICOS -->
                 <div class="row g-3 mb-4">
 
@@ -338,7 +427,9 @@
                     </div>
 
                 </div>
+                --}}
 
+                {{--
                 <!--  GRÁFICO SERVICIOS -->
                 <div class="section text-center">
                     <h5>🛠 Servicios contratados</h5>
@@ -347,39 +438,10 @@
                         <canvas id="chartServicios"></canvas>
                     </div>
                 </div>
+                --}}               
 
                 
 
-                <!-- TABLA SERVICIOS -->
-                <div class="section">
-                    <h5>🛠 Servicios contratados</h5>
-
-                    @if ($evento->servicios->count() > 0)
-                        <table class="table table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Servicio</th>
-                                    <th>Precio</th>
-                                    <th>Cantidad</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                @foreach ($evento->servicios as $servicio)
-                                    <tr>
-                                        <td>{{ $servicio->nombre }}</td>
-                                        <td>{{ $servicio->precio_unitario }} €</td>
-                                        <td>{{ $servicio->pivot->cantidad }}</td>
-                                        <td>{{ $servicio->precio_unitario * $servicio->pivot->cantidad }} €</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @else
-                        <p class="text-muted">No hay servicios</p>
-                    @endif
-                </div>
             </div>
     </div>
 
@@ -387,17 +449,20 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+
+        // INVITADOS
         new Chart(document.getElementById('chartInvitados'), {
             type: 'doughnut',
             data: {
                 labels: @json($labelsInvitados),
                 datasets: [{
                     data: @json($dataInvitados),
-                    backgroundColor: ['#A8D8FF', '#FFE5A8', '#FFB6C1']
+                    backgroundColor: ['#574E49', '#D8D5CF', '#FFB6C1']
                 }]
             }
         });
 
+        // MENUS
         new Chart(document.getElementById('chartMenus'), {
             type: 'bar',
             data: {
@@ -405,18 +470,19 @@
                 datasets: [{
                     label: 'Cantidad',
                     data: @json($dataMenus),
-                    backgroundColor: '#A8D8FF'
+                    backgroundColor: '#574E49'
                 }]
             }
         });
 
+        // PRESUPUESTO
         new Chart(document.getElementById('chartPresupuesto'), {
             type: 'doughnut',
             data: {
                 labels: ['Gastado', 'Restante'],
                 datasets: [{
                     data: [{{ $gastado ?? 0 }}, {{ $restante ?? 0 }}],
-                    backgroundColor: ['#FFB6C1', '#A8D8FF']
+                    backgroundColor: ['#D8D5CF', '#574E49']
                 }]
             }
         });
@@ -429,7 +495,7 @@
                 datasets: [{
                     label: 'Cantidad',
                     data: @json($dataServicios ?? []),
-                    backgroundColor: '#CDB4FF'
+                    backgroundColor: '#574E49'
                 }]
             }
         });
