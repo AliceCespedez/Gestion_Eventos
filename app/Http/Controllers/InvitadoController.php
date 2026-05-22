@@ -9,27 +9,20 @@ use App\Models\Invitado;
 class InvitadoController extends Controller
 {
     //Cambiar estado de confirmación de un invitado
-    public function cambiarEstado(Request $request, Invitado $inv)
+    public function cambiarEstado(Request $request, $id)
     {
-        $user = Auth::user();
-        // SOLO ADMIN Y EMPLEADO
-        if (!in_array($user->rol, ['admin', 'empleado'])) {
-            abort(403, 'No tienes permisos para realizar esta acción');
-        }
-
-        // VALIDACIÓN DE ESTADO
         $request->validate([
             'confirmacion' => 'required|in:pendiente,confirmado,rechazado'
         ]);
 
-        //  ACTUALIZAR INVITADO
+        $inv = \App\Models\Invitado::where('id_invitado', $id)->firstOrFail();
+
         $inv->update([
             'confirmacion' => $request->confirmacion
         ]);
 
-        return redirect()->back()->with('success', 'Estado actualizado correctamente');
+        return back()->with('success', 'Estado actualizado');
     }
-
     // Mostrar lista de invitados por evento
     public function index($eventoId)
     {

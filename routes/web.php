@@ -180,7 +180,7 @@ Route::get('/eventos/{evento}/invitados', function ($evento) {
 })->middleware('auth')
     ->name('invitados.lista');
 
-Route::post('/invitados/{inv}/estado', [InvitadoController::class, 'cambiarEstado'])
+Route::post('/invitados/{id}/estado', [InvitadoController::class, 'cambiarEstado'])
     ->middleware('auth')
     ->name('invitados.estado');
 

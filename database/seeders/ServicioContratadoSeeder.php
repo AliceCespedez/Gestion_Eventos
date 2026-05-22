@@ -13,7 +13,19 @@ class ServicioContratadoSeeder extends Seeder
         $servicios = range(1, 11);   // 11 servicios
 
         foreach ($eventos as $evento) {
-            foreach ($servicios as $servicio) {
+
+            // 1 a 3 servicios por evento
+            $cantidadServicios = rand(1, 3);
+
+            // elegir servicios aleatorios
+            $serviciosSeleccionados = array_rand(array_flip($servicios), $cantidadServicios);
+
+            // si solo devuelve 1 valor
+            if (!is_array($serviciosSeleccionados)) {
+                $serviciosSeleccionados = [$serviciosSeleccionados];
+            }
+
+            foreach ($serviciosSeleccionados as $servicio) {
 
                 $cantidad = rand(1, 5);
                 $precio_unitario = rand(50, 300);
