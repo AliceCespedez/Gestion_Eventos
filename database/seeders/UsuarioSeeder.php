@@ -30,8 +30,48 @@ class UsuarioSeeder extends Seeder
                 'rol' => 'empleado'
             ],
             [
+                'nombre' => 'Marta',
+                'email' => 'marta@test.com',
+                'rol' => 'empleado'
+            ],
+            [
+                'nombre' => 'David',
+                'email' => 'david@test.com',
+                'rol' => 'empleado'
+            ],
+            [
                 'nombre' => 'Carlos',
                 'email' => 'carlos@test.com',
+                'rol' => 'cliente'
+            ],
+            [
+                'nombre' => 'Pablo',
+                'email' => 'pablo@test.com',
+                'rol' => 'cliente'
+            ],
+            [
+                'nombre' => 'Andrea',
+                'email' => 'andrea@test.com',
+                'rol' => 'cliente'
+            ],
+            [
+                'nombre' => 'Miguel',
+                'email' => 'miguel@test.com',
+                'rol' => 'cliente'
+            ],
+            [
+                'nombre' => 'Sara',
+                'email' => 'sara@test.com',
+                'rol' => 'cliente'
+            ],
+            [
+                'nombre' => 'Javier',
+                'email' => 'javier@test.com',
+                'rol' => 'cliente'
+            ],
+            [
+                'nombre' => 'Elena',
+                'email' => 'elena@test.com',
                 'rol' => 'cliente'
             ],
         ];

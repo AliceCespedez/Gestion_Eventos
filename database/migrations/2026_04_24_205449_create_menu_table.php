@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->text('descripcion');
             $table->decimal('precio_unitario', 10);
-            $table->enum('tipo_menu', ['estandar', 'vegetariano', 'vegano', 'sin_gluten', 'sin_lactosa']);
+            $table->enum('tipo_menu', ['estandar', 'vegetariano', 'vegano', 'corporativo', 'premium', 'infantil']);
         });
     }
 

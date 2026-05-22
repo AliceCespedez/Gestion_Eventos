@@ -48,7 +48,6 @@
         }
 
         /* EMPLEADO */
-
         .admin-div-1 {
             display: flex;
             flex-direction: row;
@@ -67,7 +66,7 @@
         }
 
         .admin-carta:first-child {
-            heigth: 100%;
+            height: 100%;
         }
 
         .admin-carta:last-child {
@@ -213,18 +212,13 @@
                                             <button class="btn-eventea w-100">
                                                 Crear
                                             </button>
-
                                         </form>
                                     </div>
                                 </div> <!-- form -->
                             </div>
-
                         </div>
-
-
                     </div>
                 </div>
-
             @endif
 
         @endif

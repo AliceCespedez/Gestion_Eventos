@@ -103,7 +103,111 @@ class MenuSeeder extends Seeder
                 'precio_unitario' => '12.70',
                 'tipo_menu' => 'estandar'
             ],
-            
+            [
+                'nombre' => 'Menú 5 ',
+                'descripcion' => '  ##Entrantes##
+                        Hummus con crudités
+                        Mini wraps vegetales
+                        Brochetas caprese con pesto
+
+                        ##Plato principal##
+                        Lasaña vegetal de berenjena y calabacín
+                        Risotto de setas y parmesano
+
+                        ##Bebidas##
+                        Agua, refrescos y zumos naturales
+
+                        ##Postre##
+                        Brownie vegano
+                        Macedonia de frutas
+                    ',
+                'precio_unitario' => '18.90',
+                'tipo_menu' => 'vegetariano'
+            ],
+
+            [
+                'nombre' => 'Menú 6 Infantil',
+                'descripcion' => '  ##Entrantes##
+                        Nuggets de pollo
+                        Mini pizzas variadas
+                        Patatas fritas
+
+                        ##Plato principal##
+                        Hamburguesa infantil con queso
+                        Perrito caliente con patatas
+
+                        ##Bebidas##
+                        Refrescos y zumos
+
+                        ##Postre##
+                        Helado
+                        Mini donuts
+                    ',
+                'precio_unitario' => '9.50',
+                'tipo_menu' => 'infantil'
+            ],
+
+            [
+                'nombre' => 'Menú 7 Vegano Premium',
+                'descripcion' => '  ##Entrantes##
+                        Tartar de aguacate y mango
+                        Rollitos vietnamitas vegetales
+                        Crema fría de calabacín
+
+                        ##Plato principal##
+                        Curry rojo tailandés con tofu
+                        Arroz jazmín y verduras salteadas
+
+                        ##Bebidas##
+                        Kombucha artesanal
+                        Zumos detox y agua mineral
+
+                        ##Postre##
+                        Cheesecake vegano de frutos rojos
+                        Café o té
+                    ',
+                'precio_unitario' => '24.90',
+                'tipo_menu' => 'vegano'
+            ],
+            [
+                'nombre' => 'Menú 8 Buffet Corporativo',
+                'descripcion' => '  ##Buffet##
+                        Mini bocadillos gourmet
+                        Ensaladas variadas
+                        Pasta con diferentes salsas
+                        Tabla de quesos y embutidos
+
+                        ##Bebidas##
+                        Café, refrescos y agua
+
+                        ##Postre##
+                        Mini tartas y frutas variadas
+                    ',
+                'precio_unitario' => '16.80',
+                'tipo_menu' => 'corporativo'
+            ],
+            [
+                'nombre' => 'Menú 9 Boda Premium',
+                'descripcion' => '  ##Entrantes##
+                        Ostras frescas
+                        Foie con reducción de Pedro Ximénez
+                        Jamón ibérico y quesos curados
+
+                        ##Plato principal##
+                        Solomillo de ternera con gratín dauphinois
+                        Lubina salvaje con verduras asadas
+
+                        ##Bebidas##
+                        Barra libre premium
+                        Vinos reserva y cava
+
+                        ##Postre##
+                        Tarta nupcial personalizada
+                        Mesa dulce premium
+                    ',
+                'precio_unitario' => '39.90',
+                'tipo_menu' => 'premium'
+            ],
         ]);
     }
 }
