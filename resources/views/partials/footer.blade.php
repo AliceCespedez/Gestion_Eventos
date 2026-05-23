@@ -76,8 +76,8 @@
     <div class="footer-div" id="footer-left">
         <div>
             <a id="footer-logo" class="navbar-brand" href="{{ url('/') }}">
-                @if (file_exists(public_path('logo-EvenTeaPortal-PLACEHOLDER.svg')))
-                    <img src="{{ asset('logo-EvenTeaPortal-PLACEHOLDER.svg') }}" alt="Logo" height="70"
+                @if (file_exists(public_path('logo-3.svg')))
+                    <img src="{{ asset('logo-3.svg') }}" alt="Logo" height="100"
                         class="d-inline-block">
                 @else
                     <strong class="color-choco logo-placeholder">EvenTea</strong>
@@ -86,8 +86,8 @@
         </div>
 
         <div class="footer-left-down-div">
-            <a href="">Términos y condiciones</a>
-            <a href="">Preguntas frecuentes</a>
+            <a href="#" class="small pe-3">Términos y condiciones</a>
+            <a href="#" class="small">Preguntas frecuentes</a>
         </div>
 
     </div>

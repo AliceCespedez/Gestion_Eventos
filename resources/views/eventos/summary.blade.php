@@ -302,10 +302,10 @@
                     <p><b>Condiciones y forma de pago</b></p>
                     <p>
                         El presente resumen forma parte del compromiso entre el cliente y EvenTea. Para formalizar el encargo, se requiere el pago de una reserva del 30% del importe total. El resto se abonará 7 días antes del evento.
-
-                        Forma de pago: transferencia bancaria a la cuenta:
-                        ESXX XXXX XXXX XXXX XXXX (IBAN)
-                        En concepto: "Nombre del evento + fecha"
+                        <br><br>
+                        Forma de pago: transferencia bancaria a la <cuenta:br></cuenta:br>
+                        <b>ESXX XXXX XXXX XXXX XXXX (IBAN)</b><br>
+                        En concepto: <i>"Nombre del evento + fecha"</i>
                     </p>
                     <br>
                     <p><b>El servicio incluye:</b></p>
@@ -337,9 +337,9 @@
                         El cliente se compromete a proveer de suministro eléctrico suficiente y accesible para la correcta ejecución del evento (cocina caliente, iluminación extra, equipos de sonido, pirotecnia, hinchables...). EvenTea no se hace responsable de la falta de electricidad ni de los cortes de suministro ajenos a la organización.
                     </p>
                     <br>
-                    <p>
-                        Para cualquier duda o comentario contacta con nuestro equipo desde el <a href=""><i>formulario de contacto</i></a> a través de <i>eventea.com</i>. Estaremos encantados de ayudarte.
-                    </p>
+                    <p><b>
+                        Para cualquier duda o comentario contacta con nuestro equipo desde el <a href="{{ route('eventos.create') }}"><i>formulario de contacto</i></a> a través de <i>eventea.com</i>. Estaremos encantados de ayudarte.
+                    </b></p>
                 </div>
 
                 

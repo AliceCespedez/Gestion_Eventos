@@ -54,8 +54,8 @@
     <!-- LOGO -->
     <div class="logo-container">
         <a class="navbar-brand" href="{{ url('/') }}">
-            @if (file_exists(public_path('logo-EvenTeaPortal-PLACEHOLDER.svg')))
-                <img src="{{ asset('logo-EvenTeaPortal-PLACEHOLDER.svg') }}" alt="Logo" height="40"
+            @if (file_exists(public_path('logo-3.svg')))
+                <img src="{{ asset('logo-3.svg') }}" alt="Logo" height="55"
                     class="d-inline-block">
             @else
                 <strong class="color-choco logo-placeholder">EvenTea</strong>
@@ -77,7 +77,10 @@
                 EVENTOS
             </a>
             <a href="{{ route('clientes.index') }}">
-                USUARIOS
+                CLIENTES
+            </a>
+            <a href="{{ route('empleados.index') }}">
+                EMPLEADOS
             </a>
         @elseif ($rol === 'empleado')
             <a href="{{ route('eventos.index') }}">
