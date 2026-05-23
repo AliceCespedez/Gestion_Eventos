@@ -55,8 +55,7 @@
     <div class="logo-container">
         <a class="navbar-brand" href="{{ url('/') }}">
             @if (file_exists(public_path('logo-3.svg')))
-                <img src="{{ asset('logo-3.svg') }}" alt="Logo" height="55"
-                    class="d-inline-block">
+                <img src="{{ asset('logo-3.svg') }}" alt="Logo" height="55" class="d-inline-block">
             @else
                 <strong class="color-choco logo-placeholder">EvenTea</strong>
             @endif
@@ -89,7 +88,7 @@
             <a href="{{ route('clientes.index') }}">
                 CLIENTES
             </a>
-             <a href="{{ route('dashboard') }}" class="nav-pill">
+            <a href="{{ route('dashboard') }}" class="nav-pill">
                 DASHBOARD
             </a>
         @elseif ($rol === 'cliente' && $primerEvento)
@@ -123,9 +122,9 @@
                         </button>
                     </form>
 
-                
-                
-                {{--  NAV CLIENTE  --}}
+
+
+                    {{--  NAV CLIENTE  --}}
                 @else
                     <a href="{{ route('dashboard') }}" title="Mi cuenta" style="margin: 0px">
                         Hola, <strong>{{ auth()->user()->nombre }}</strong>
@@ -141,15 +140,13 @@
                         </button>
                     </form>
                 @endif
-
-            
             @else
                 <a href="{{ route('login') }}">
                     <i class="bi bi-person color-choco nav-pill fs-4"></i>
                 </a>
             @endauth
-            
-            {{-- 🔔 CAMPANA  --}}
+
+            {{--  CAMPANA  --}}
             @if (in_array($rol, ['empleado', 'admin']))
 
                 @php
@@ -182,25 +179,19 @@
                             @forelse($user->notifications as $noti)
                                 <li>
 
-                                    <form method="POST" action="{{ route('consultas.leer', $noti->id) }}">
+                                    <a href="{{ route('consultas.leer', $noti->data['id_consulta']) }}"
+                                        class="dropdown-item small text-start">
 
-                                        @csrf
-                                        @method('PATCH')
+                                        <i class="bi bi-bell-fill"></i>
+                                        {{ $noti->data['mensaje'] ?? 'Notificación' }}
 
-                                        <button type="submit"
-                                            class="dropdown-item small border-0 bg-transparent text-start w-100">
+                                        <br>
 
-                                            <i class="bi bi-bell-fill"></i> {{ $noti->data['mensaje'] ?? 'Notificación' }}
+                                        <small class="text-muted">
+                                            {{ $noti->read_at ? 'Leída' : 'Nueva' }}
+                                        </small>
 
-                                            <br>
-
-                                            <small class="text-muted">
-                                                {{ $noti->read_at ? 'Leída' : 'Nueva' }}
-                                            </small>
-
-                                        </button>
-
-                                    </form>
+                                    </a>
 
                                 </li>
 

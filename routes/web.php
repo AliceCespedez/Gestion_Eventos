@@ -112,6 +112,13 @@ Route::delete('/users/{id}', [AuthController::class, 'destroy'])
     ->middleware(['auth', 'role:admin,empleado'])
     ->name('users.destroy');
 
+//Editar empleados
+   Route::get('/usuarios/{id}/edit', [AuthController::class, 'edit'])
+    ->name('users.edit');
+
+Route::put('/usuarios/{id}', [AuthController::class, 'update'])
+    ->name('users.update');
+    
 // EVENTOS
 Route::get('/eventos/create', [EventoController::class, 'create'])
     ->middleware('auth')
@@ -180,7 +187,7 @@ Route::get('/eventos/{evento}/invitados', function ($evento) {
 })->middleware('auth')
     ->name('invitados.lista');
 
-Route::post('/invitados/{id}/estado', [InvitadoController::class, 'cambiarEstado'])
+Route::post('/invitados/{inv}/estado', [InvitadoController::class, 'cambiarEstado'])
     ->middleware('auth')
     ->name('invitados.estado');
 
