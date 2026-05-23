@@ -223,6 +223,9 @@ Route::get('/consultas', [ConsultaController::class, 'index'])->name('consultas.
 
 Route::patch('/consultas/{consulta}/leer', [ConsultaController::class, 'marcarLeido'])
     ->name('consultas.leer');
+    
+Route::patch('/consultas/{consulta}/toggle', [ConsultaController::class, 'toggle'])
+    ->name('consultas.toggle');
 
 Route::delete('/consultas/{consulta}', [ConsultaController::class, 'destroy'])
     ->name('consultas.destroy');

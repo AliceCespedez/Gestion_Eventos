@@ -190,7 +190,7 @@
                                         <button type="submit"
                                             class="dropdown-item small border-0 bg-transparent text-start w-100">
 
-                                            🔔 {{ $noti->data['mensaje'] ?? 'Notificación' }}
+                                            <i class="bi bi-bell-fill"></i> {{ $noti->data['mensaje'] ?? 'Notificación' }}
 
                                             <br>
 

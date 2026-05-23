@@ -14,13 +14,14 @@
 .bg-white{ background-color: white; }
 .color-white{ color: white; }
 .bg-claro{ background-color: var(--color-beige-claro) !important; }
-.color-claro{ color: var(--color-beige-claro); }
+.color-claro{ color: var(--color-beige-claro) !important; }
 .bg-medio{ background-color: var(--color-beige-medio); }
-.color-medio{ color: var(--color-beige-medio); }
+.color-medio{ color: var(--color-beige-medio) !important; }
 .bg-choco{ background-color: var(--color-chocolate); }
 .color-choco{ color: var(--color-chocolate); }
 .bg-negro{ background-color: black; }
 .color-negro{ color: black; }
+
 
 .detalles{
     font-family: var(--font-primary);

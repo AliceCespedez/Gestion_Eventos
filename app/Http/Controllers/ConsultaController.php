@@ -60,6 +60,17 @@ class ConsultaController extends Controller
         return back()->with('success', 'Consulta marcada como leída');
     }
 
+    public function toggle($id)
+    {
+        $consulta = Consulta::findOrFail($id);
+
+        $consulta->leido = !$consulta->leido;
+        
+        $consulta->save();
+        
+        return back()->with('success', 'Estado actualizado');
+    }
+
     public function destroy($id)
     {
         $consulta = Consulta::findOrFail($id);
