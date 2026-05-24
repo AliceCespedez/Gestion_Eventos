@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Usuario;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
@@ -36,12 +37,43 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function register(Request $request)
+    /* public function register(Request $request)
     {
         $request->validate([
             'nombre' => 'required|string|max:100',
-            'email' => 'required|email|unique:usuarios,email',
-            'password' => 'required|string|min:8'
+
+            'email' => [
+                'required',
+                'email:rfc,dns',
+                'max:150',
+                'unique:usuarios,email'
+            ],
+
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#_-])[A-Za-z\d@$!%*?&.#_-]+$/'
+            ]
+
+        ], [
+
+            // NOMBRE
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.max' => 'El nombre no puede superar los 100 caracteres.',
+
+            // EMAIL
+            'email.required' => 'El correo es obligatorio.',
+            'email.email' => 'El formato del correo no es válido.',
+            'email.unique' => 'Este correo ya está registrado.',
+            'email.max' => 'El correo es demasiado largo.',
+
+            // CONTRASEÑA
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+
+            'password.regex' =>
+            'La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial.'
         ]);
 
         Usuario::create([
@@ -53,7 +85,7 @@ class AuthController extends Controller
 
         return redirect('/login')
             ->with('success', 'Usuario registrado correctamente');
-    }
+    }*/
 
     public function login(Request $request)
     {
@@ -82,12 +114,56 @@ class AuthController extends Controller
     public function createUserByRole(Request $request)
     {
         $request->validate([
-            'nombre' => 'required|string|max:100',
-            'email' => 'required|email|unique:usuarios,email',
-            'password' => 'required|string|min:8',
-            'rol' => 'required|in:cliente,empleado'
-        ]);
 
+            'nombre' => 'required|string|max:100',
+
+            'email' => [
+                'required',
+                'email' => [
+                    'required',
+                    'email',
+                    'max:150',
+                    'regex:/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/',
+                    'unique:usuarios,email'
+                ],
+                'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
+                'max:150',
+                'unique:usuarios,email'
+            ],
+
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).+$/'
+            ],
+
+            'rol' => 'required|in:cliente,empleado'
+
+        ], [
+
+            // NOMBRE
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.max' => 'El nombre no puede superar los 100 caracteres.',
+
+            // EMAIL
+            'email.required' => 'El correo es obligatorio.',
+            'email.email' => 'El formato del correo no es válido.',
+            'email.regex' => 'El correo debe terminar en un dominio válido como .com, .es, .net...',
+            'email.unique' => 'Este correo ya está registrado.',
+            'email.max' => 'El correo es demasiado largo.',
+
+            // PASSWORD
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+
+            'password.regex' =>
+            'La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial.',
+
+            // ROL
+            'rol.required' => 'El rol es obligatorio.',
+            'rol.in' => 'El rol seleccionado no es válido.',
+        ]);
         $authUser = Auth::user();
 
         if (!in_array($authUser->rol, ['admin', 'empleado'])) {
@@ -137,8 +213,27 @@ class AuthController extends Controller
 
         $request->validate([
             'nombre' => 'required|string|max:100',
-            'email' => 'required|email|unique:usuarios,email,' . $id . ',id_usuario',
+            'email' => [
+                'required',
+                'email:rfc,dns',
+                'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
+                'max:150',
+                Rule::unique('usuarios', 'email')->ignore($id, 'id_usuario'),
+            ],
+            'password' => [
+                'nullable',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).+$/'
+            ]
+        ], [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'email.required' => 'El correo es obligatorio.',
+            'email.email' => 'El formato del correo no es válido.',
+            'email.max' => 'El correo es demasiado largo.',
+            'email.unique' => 'Este correo ya está registrado.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres, una mayuscula, una minúscula, un número y un carácter especial.',
         ]);
+
 
         $usuario->nombre = $request->nombre;
         $usuario->email = $request->email;
