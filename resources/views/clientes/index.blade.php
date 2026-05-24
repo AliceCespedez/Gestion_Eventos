@@ -277,19 +277,17 @@
 
                         fetch(`/users/${clienteId}`, {
                                 method: 'DELETE',
+                                credentials: 'same-origin',
                                 headers: {
                                     'X-CSRF-TOKEN': document.querySelector(
                                         'meta[name="csrf-token"]').content,
-                                    'Content-Type': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest',
                                     'Accept': 'application/json'
                                 }
                             })
-
                             .then(response => response.json())
-
                             .then(data => {
 
-                                // ERROR → TIENE EVENTOS
                                 if (!data.success) {
 
                                     Swal.fire({
@@ -302,7 +300,6 @@
                                     return;
                                 }
 
-                                // ÉXITO
                                 Swal.fire({
                                     title: 'Cliente eliminado',
                                     text: data.message,
@@ -311,11 +308,8 @@
                                     showConfirmButton: false
                                 });
 
-                                // eliminar fila visualmente
                                 button.closest('tr').remove();
-
                             })
-
                             .catch(error => {
 
                                 Swal.fire({
@@ -326,7 +320,6 @@
                                 });
 
                                 console.error(error);
-
                             });
                     }
 

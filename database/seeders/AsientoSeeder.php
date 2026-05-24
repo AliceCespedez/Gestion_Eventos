@@ -11,7 +11,6 @@ class AsientoSeeder extends Seeder
     {
         $asientos = [];
         $idAsiento = 1;
-        $idInvitado = 1;
 
         // 32 mesas
         for ($mesa = 1; $mesa <= 32; $mesa++) {
@@ -23,16 +22,10 @@ class AsientoSeeder extends Seeder
                     'id_asiento' => $idAsiento,
                     'id_mesa' => $mesa,
                     'numero_asiento' => $numAsiento,
-                    'id_invitado' => $idInvitado
+                    'id_invitado' => null
                 ];
 
                 $idAsiento++;
-                $idInvitado++;
-
-                // Si tienes menos invitados, vuelve a empezar
-                if ($idInvitado > 20) {
-                    $idInvitado = 1;
-                }
             }
         }
 

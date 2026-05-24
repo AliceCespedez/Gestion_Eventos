@@ -247,38 +247,36 @@ class AuthController extends Controller
 
         return back()->with('success', 'Usuario actualizado correctamente.');
     }
-
     public function destroy($id)
     {
-        $user = auth()->user();
-        $target = Usuario::findOrFail($id);
+        $user = Usuario::findOrFail($id);
 
-        if ($target->rol === 'empleado') {
+        if ($user->eventos()->count() > 0) {
 
-            if ($user->rol !== 'admin') {
-                return back()->with('error', 'Solo el administrador puede eliminar empleados.');
+            $message = 'No se puede eliminar porque tiene eventos asociados.';
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message
+                ], 400);
             }
 
-            if ($target->eventos()->exists()) {
-                return back()->with('error', 'No se puede eliminar este empleado porque tiene eventos asociados.');
-            }
-
-            $target->delete();
-
-            return back()->with('success', 'Empleado eliminado correctamente.');
+            return back()->with('error', $message);
         }
 
-        if (in_array($user->rol, ['admin', 'empleado'])) {
+        $user->delete();
 
-            if ($target->eventos()->exists()) {
-                return back()->with('error', 'No puedes eliminar este cliente porque tiene eventos asociados.');
-            }
+        $message = 'Usuario eliminado correctamente.';
 
-            $target->delete();
+        if (request()->ajax()) {
 
-            return back()->with('success', 'Cliente eliminado correctamente.');
+            return response()->json([
+                'success' => true,
+                'message' => $message
+            ]);
         }
 
-        return back()->with('error', 'No tienes permisos para realizar esta acción.');
+        return redirect()->back()->with('success', $message);
     }
 }

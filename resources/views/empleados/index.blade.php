@@ -134,7 +134,10 @@
                 }).then((result) => {
 
                     if (result.isConfirmed) {
-                        form.submit();
+
+                        // ENVÍO NORMAL DEL FORMULARIO
+                        HTMLFormElement.prototype.submit.call(form);
+
                     }
 
                 });
@@ -143,7 +146,6 @@
 
         });
     </script>
-
     {{-- Bootstrap JS --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
