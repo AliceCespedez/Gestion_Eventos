@@ -20,7 +20,7 @@
     <div class="section-1">
 
         <div class="normal-header">
-                <h2 class="color-choco">Empleados</h2>
+            <h2 class="color-choco">Empleados</h2>
         </div>
 
         <div class="container mt-5">
@@ -39,7 +39,7 @@
                     {{ session('error') }}
                 </div>
             @endif
-                
+
             {{-- BUSCADOR --}}
             <div class="bg-medio color-choco p-4 mb-4">
                 <div class="card-body">
@@ -64,7 +64,7 @@
             </div>
 
             {{-- EMPLEADOS --}}
-             <table class="table table-choco mt-3">
+            <table class="table table-choco mt-3">
 
                 <thead>
                     <tr>
@@ -82,13 +82,26 @@
                             <td>{{ $emp->nombre }}</td>
                             <td>{{ $emp->email }}</td>
 
+
                             <td>
+                                <a href="{{ route('users.edit', $emp->id_usuario) }}" class="btn btn-success btn-sm">
+                                    <i class="bi bi-pencil-square"></i>
+                                    Editar
+                                </a>
                                 @if (Auth::user()->rol === 'admin')
-                                    <!-- Botón eliminar -->
-                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal{{ $emp->id_usuario }}">
-                                        <i class="bi bi-trash3 color-white pe-1"></i> Eliminar
-                                    </button>
+                                    {{-- BOTÓN ELIMINAR --}}
+                                    <form action="{{ route('users.destroy', $emp->id_usuario) }}" method="POST"
+                                        class="delete-form d-inline">
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash3 color-white pe-1"></i>
+                                            Eliminar
+                                        </button>
+
+                                    </form>
                                 @endif
                             </td>
                         </tr>
@@ -99,47 +112,41 @@
         </div>
     </div>
 
-    {{-- MODALES DE ELIMINACIÓN --}}
-    @foreach ($empleados as $emp)
-        <div class="modal fade" id="deleteModal{{ $emp->id_usuario }}" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content bg-medio text-white">
-
-                    <div class="modal-header">
-                        <h5 class="modal-title"><i class="bi bi-exclamation-triangle"></i> Confirmar la eliminación</h5>
-
-                        <button type="button" class="btn-close" data-bs-dismiss="modal">
-                        </button>
-                    </div>
-
-                    <div class="modal-body">
-                        <p>
-                            ¿Estás seguro de que quieres eliminar al empleado
-                            <strong>{{ $emp->nombre }}</strong>?
-                        </p>
-
-                        <form method="POST" action="{{ route('users.destroy', $emp->id_usuario) }}" class="pt-3 text-end">
-
-                            @csrf
-                            @method('DELETE')
-
-                            <button class="btn btn-danger">
-                                Eliminar
-                            </button>
-                        </form>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    @endforeach
-
     @include('partials.footer')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.querySelectorAll('.delete-form').forEach(form => {
+
+            form.addEventListener('submit', function(e) {
+
+                e.preventDefault();
+
+                Swal.fire({
+                    title: '¿Eliminar empleado?',
+                    text: 'Esta acción no se puede deshacer',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#7b2d26',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+
+                });
+
+            });
+
+        });
+    </script>
 
     {{-- Bootstrap JS --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
 </body>
 
 </html>

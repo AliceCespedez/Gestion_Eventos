@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Usuario;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
@@ -36,12 +37,43 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function register(Request $request)
+    /* public function register(Request $request)
     {
         $request->validate([
             'nombre' => 'required|string|max:100',
-            'email' => 'required|email|unique:usuarios,email',
-            'password' => 'required|string|min:8'
+
+            'email' => [
+                'required',
+                'email:rfc,dns',
+                'max:150',
+                'unique:usuarios,email'
+            ],
+
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#_-])[A-Za-z\d@$!%*?&.#_-]+$/'
+            ]
+
+        ], [
+
+            // NOMBRE
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.max' => 'El nombre no puede superar los 100 caracteres.',
+
+            // EMAIL
+            'email.required' => 'El correo es obligatorio.',
+            'email.email' => 'El formato del correo no es válido.',
+            'email.unique' => 'Este correo ya está registrado.',
+            'email.max' => 'El correo es demasiado largo.',
+
+            // CONTRASEÑA
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+
+            'password.regex' =>
+            'La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial.'
         ]);
 
         Usuario::create([
@@ -53,7 +85,7 @@ class AuthController extends Controller
 
         return redirect('/login')
             ->with('success', 'Usuario registrado correctamente');
-    }
+    }*/
 
     public function login(Request $request)
     {
@@ -63,9 +95,7 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-
             $request->session()->regenerate();
-
             return $this->redirectByRole(Auth::user());
         }
 
@@ -75,23 +105,65 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect('/login');
     }
 
-    // CREAR USUARIOS
     public function createUserByRole(Request $request)
     {
         $request->validate([
-            'nombre' => 'required|string|max:100',
-            'email' => 'required|email|unique:usuarios,email',
-            'password' => 'required|string|min:8',
-            'rol' => 'required|in:cliente,empleado'
-        ]);
 
+            'nombre' => 'required|string|max:100',
+
+            'email' => [
+                'required',
+                'email' => [
+                    'required',
+                    'email',
+                    'max:150',
+                    'regex:/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/',
+                    'unique:usuarios,email'
+                ],
+                'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
+                'max:150',
+                'unique:usuarios,email'
+            ],
+
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).+$/'
+            ],
+
+            'rol' => 'required|in:cliente,empleado'
+
+        ], [
+
+            // NOMBRE
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.max' => 'El nombre no puede superar los 100 caracteres.',
+
+            // EMAIL
+            'email.required' => 'El correo es obligatorio.',
+            'email.email' => 'El formato del correo no es válido.',
+            'email.regex' => 'El correo debe terminar en un dominio válido como .com, .es, .net...',
+            'email.unique' => 'Este correo ya está registrado.',
+            'email.max' => 'El correo es demasiado largo.',
+
+            // PASSWORD
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+
+            'password.regex' =>
+            'La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial.',
+
+            // ROL
+            'rol.required' => 'El rol es obligatorio.',
+            'rol.in' => 'El rol seleccionado no es válido.',
+        ]);
         $authUser = Auth::user();
 
         if (!in_array($authUser->rol, ['admin', 'empleado'])) {
@@ -109,83 +181,104 @@ class AuthController extends Controller
             'rol' => $request->rol
         ]);
 
-        if ($request->rol === 'cliente') {
-            return redirect('/clientes')
-                ->with('success', 'Cliente creado correctamente');
-        }
-
-        if ($request->rol === 'empleado') {
-            return redirect('/empleados')
-                ->with('success', 'Empleado creado correctamente');
-        }
-
         return back()->with('success', 'Usuario creado correctamente');
     }
 
-    // ELIMINAR USUARIOS
+    public function editEmpleado($id)
+    {
+        $empleado = Usuario::findOrFail($id);
+        return view('empleados.edit', compact('empleado'));
+    }
+
+    public function edit($id)
+    {
+        $usuario = Usuario::findOrFail($id);
+        $authUser = auth()->user();
+
+        if ($authUser->rol === 'empleado' && $usuario->rol !== 'cliente') {
+            return back()->with('error', 'No tienes permisos.');
+        }
+
+        return view('usuarios.edit', compact('usuario'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $usuario = Usuario::findOrFail($id);
+        $authUser = auth()->user();
+
+        if ($authUser->rol === 'empleado' && $usuario->rol !== 'cliente') {
+            return back()->with('error', 'No tienes permisos.');
+        }
+
+        $request->validate([
+            'nombre' => 'required|string|max:100',
+            'email' => [
+                'required',
+                'email:rfc,dns',
+                'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
+                'max:150',
+                Rule::unique('usuarios', 'email')->ignore($id, 'id_usuario'),
+            ],
+            'password' => [
+                'nullable',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).+$/'
+            ]
+        ], [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'email.required' => 'El correo es obligatorio.',
+            'email.email' => 'El formato del correo no es válido.',
+            'email.max' => 'El correo es demasiado largo.',
+            'email.unique' => 'Este correo ya está registrado.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres, una mayuscula, una minúscula, un número y un carácter especial.',
+        ]);
+
+
+        $usuario->nombre = $request->nombre;
+        $usuario->email = $request->email;
+
+        if ($request->filled('password')) {
+            $request->validate(['password' => 'min:8']);
+            $usuario->password = Hash::make($request->password);
+        }
+
+        $usuario->save();
+
+        return back()->with('success', 'Usuario actualizado correctamente.');
+    }
+
     public function destroy($id)
     {
         $user = auth()->user();
-
-        // Buscar usuario
         $target = Usuario::findOrFail($id);
 
-        //  ELIMINAR EMPLEADOS
         if ($target->rol === 'empleado') {
 
-            // Solo admin puede eliminar empleados
             if ($user->rol !== 'admin') {
-                $message = 'Solo el administrador puede eliminar empleados.';
-                if (request()->expectsJson()) {
-                    return response()->json(['success' => false, 'message' => $message], 403);
-                }
-                return back()->with('error', $message);
+                return back()->with('error', 'Solo el administrador puede eliminar empleados.');
             }
 
-            // No permitir eliminar empleados con eventos
             if ($target->eventos()->exists()) {
-                $message = 'No se puede eliminar este empleado porque tiene eventos asociados.';
-                if (request()->expectsJson()) {
-                    return response()->json(['success' => false, 'message' => $message], 400);
-                }
-                return back()->with('error', $message);
+                return back()->with('error', 'No se puede eliminar este empleado porque tiene eventos asociados.');
             }
 
             $target->delete();
-            
-            $message = 'Empleado eliminado correctamente.';
-            if (request()->expectsJson()) {
-                return response()->json(['success' => true, 'message' => $message]);
-            }
-            return back()->with('success', $message);
+
+            return back()->with('success', 'Empleado eliminado correctamente.');
         }
 
-        // ELIMINAR CLIENTES
         if (in_array($user->rol, ['admin', 'empleado'])) {
 
-            // No permitir eliminar clientes con eventos
             if ($target->eventos()->exists()) {
-                $message = 'No puedes eliminar este cliente porque tiene eventos asociados.';
-                if (request()->expectsJson()) {
-                    return response()->json(['success' => false, 'message' => $message], 400);
-                }
-                return back()->with('error', $message);
+                return back()->with('error', 'No puedes eliminar este cliente porque tiene eventos asociados.');
             }
 
             $target->delete();
 
-            $message = 'Cliente eliminado correctamente.';
-            if (request()->expectsJson()) {
-                return response()->json(['success' => true, 'message' => $message]);
-            }
-            return back()->with('success', $message);
+            return back()->with('success', 'Cliente eliminado correctamente.');
         }
 
-        //  SIN PERMISOS
-        $message = 'No tienes permisos para realizar esta acción.';
-        if (request()->expectsJson()) {
-            return response()->json(['success' => false, 'message' => $message], 403);
-        }
-        return back()->with('error', $message);
+        return back()->with('error', 'No tienes permisos para realizar esta acción.');
     }
 }

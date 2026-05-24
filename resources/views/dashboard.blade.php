@@ -78,6 +78,31 @@
             height: 100%;
             width: 100%;
         }
+
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-container input {
+            padding-right: 45px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #6b5d55;
+            font-size: 1.1rem;
+        }
+
+        .toggle-password:focus {
+            outline: none;
+        }
     </style>
 </head>
 
@@ -200,6 +225,23 @@
                                 <div class="bg-claro p-4 mt-4 w-100">
                                     <div class="border-eventea p-4">
                                         <h5 class="mb-4"><i class="bi bi-plus fs-4"></i>Nuevo cliente</h5>
+                                        @if (session('success'))
+                                            <div class="alert alert-success mb-3">
+                                                {{ session('success') }}
+                                            </div>
+                                        @endif
+                                        {{-- ERRORES --}}
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger">
+
+                                                <ul class="mb-0">
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+
+                                            </div>
+                                        @endif
 
                                         <form method="POST" action="{{ route('users.store') }}">
                                             @csrf
@@ -208,8 +250,19 @@
                                                 placeholder="Nombre" required>
                                             <input type="email" name="email" class="form-control mb-2"
                                                 placeholder="Email" required>
-                                            <input type="password" name="password" class="form-control mb-2"
-                                                placeholder="Contraseña" required>
+                                            <div class="password-container">
+
+                                                <input type="password" name="password" id="password"
+                                                    class="form-control" placeholder="Contraseña" required>
+
+                                                <button type="button" class="toggle-password"
+                                                    onclick="togglePassword()">
+
+                                                    <i id="eyeIcon" class="bi bi-eye"></i>
+
+                                                </button>
+
+                                            </div>
 
                                             <input type="hidden" name="rol" value="cliente">
 
@@ -231,6 +284,28 @@
 
     <!-- Footer -->
     @include('partials.footer')
+    <script>
+        function togglePassword() {
+
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+
+            if (passwordInput.type === 'password') {
+
+                passwordInput.type = 'text';
+
+                eyeIcon.classList.remove('bi-eye');
+                eyeIcon.classList.add('bi-eye-slash');
+
+            } else {
+
+                passwordInput.type = 'password';
+
+                eyeIcon.classList.remove('bi-eye-slash');
+                eyeIcon.classList.add('bi-eye');
+            }
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

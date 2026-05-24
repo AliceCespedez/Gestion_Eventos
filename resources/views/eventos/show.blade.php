@@ -48,10 +48,6 @@
             z-index: 0;
         }
 
-        #evento-title-div{
-            width: 25%;
-        }
-
 
         #event-section{
             width: 100%;
@@ -73,7 +69,7 @@
         .sidebar {
             position: sticky;
             top: calc(var(--nav-height) + 160px);
-            z-index: 0;
+            z-index: 1;
 
             background: white;
             padding: 2rem 1rem 1rem 1rem;
@@ -107,9 +103,6 @@
             padding: 30px;
         }
 
-        #event-section h4{
-            margin-bottom: 2rem;
-        }
 
         html {
             scroll-behavior: smooth;
@@ -129,7 +122,8 @@
 
             <div id="evento-title-div" class="color-white">
                 <a href="{{ url()->previous() }}" class="d-inline-block a-white">🡠 Volver</a>
-                <h2 style="font-size: 2vw !important;">{{ $evento->nombre_evento }}</h2>
+                <!--<a href="{{ route('dashboard') }}" class="a-white" style="font-weight: 300">< Volver</a>-->
+                <h2>{{ $evento->nombre_evento }}</h2>
             </div>
         </div>
     </div>
@@ -147,7 +141,7 @@
                     <a href="#localizacion" class="menu-link">LOCALIZACIÓN</a>
                     <a href="#invitados" class="menu-link">INVITADOS</a>
                     <a href="#sitting" class="menu-link">SITTING</a>
-                    <a href="{{ route('eventos.summary', $evento->id_evento) }}" class="btn-eventea">RESUMEN <i class="bi bi-chevron-right"></i></a>
+                    <a href="{{ route('eventos.summary', $evento->id_evento) }}" class="btn-eventea">RESUMEN ></a>
                 </div>
             </div>
 
@@ -260,7 +254,7 @@
                                         @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
                                             <td class="d-flex gap-2">
 
-                                                <button class="btn btn-sm btn-success" type="submit">
+                                                <button class="btn btn-sm btn-primary" type="submit">
                                                     Guardar
                                                 </button>
                                                 </form>
@@ -270,7 +264,9 @@
                                                     @csrf
                                                     @method('DELETE')
 
-                                                    <button class="btn btn-sm btn-danger">Eliminar</button>
+                                                    <button class="btn btn-sm btn-danger">
+                                                        Eliminar
+                                                    </button>
                                                 </form>
 
                                             </td>
@@ -405,11 +401,11 @@
                             </tbody>
                         </table>
                     @else
-                        <p class="text-muted"><i>No hay servicios contratados</i></p>
+                        <p class="text-muted">No hay servicios contratados</p>
                     @endif
 
                     @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
-                        <button class="btn btn-claro mt-3" data-bs-toggle="modal"
+                        <button class="btn btn-success mt-3" data-bs-toggle="modal"
                             data-bs-target="#addServicioModal">
                             <i class="bi bi-plus-lg"></i> Añadir servicio
                         </button>
@@ -472,17 +468,16 @@
                     <h4>Localización</h4>
 
                     @if ($evento->local)
-                        <h6>{{ $evento->local->nombre }}</h6>
-                        <p><i class="bi bi-geo-alt"></i> {{ $evento->local->direccion }}</p>
-                        <a href="tel: {{ $evento->local->telefono}}">
-                            <p><i class="bi bi-telephone"></i> {{ $evento->local->telefono }}</p>
-                        </a>
+                        <p><strong>Nombre:</strong> {{ $evento->local->nombre }}</p>
 
-                        <br>
+                        <p><strong>Dirección:</strong> {{ $evento->local->direccion }}</p>
 
-                        <h5>Descripcción</h5>
-                        <p>{{ $evento->local->descripcion }}</p>
                         <p><strong>Capacidad:</strong> {{ $evento->local->capacidad }} personas</p>
+
+                        <p><strong>Teléfono:</strong> {{ $evento->local->telefono }}</p>
+
+                        <p><strong>Descripción:</strong></p>
+                        <p>{{ $evento->local->descripcion }}</p>
                     @else
                         <p class="text-muted">No hay local asignado a este evento</p>
                     @endif
@@ -524,12 +519,11 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('invitados.lista', $evento->id_evento) }}" class="btn btn-claro mt-3">
-                        Ver lista de invitados <i class="bi bi-chevron-right"></i>
+                    <a href="{{ route('invitados.lista', $evento->id_evento) }}" class="btn btn-dark mt-3">
+                        Ver lista de invitados
                     </a>
                 </div>
                 </div>
-
 
                 <!-- SITTING -->
                 <div id="sitting" class="section bg-medio">
@@ -540,13 +534,11 @@
                 </div>
                 </div>
 
-
                 <!-- RESUMEN -->
                 <div id="resumen" class="section bg-claro">
                 <div class="section-inside">
                     <h4>Resumen</h4>
                     <p>Estado general del evento, presupuesto, etc...</p>
-
 
                     <a href="{{ route('eventos.summary', $evento->id_evento) }}" class="btn btn-light w-100">
                         Ir a resumen completo

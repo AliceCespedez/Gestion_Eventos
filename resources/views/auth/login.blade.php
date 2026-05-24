@@ -14,31 +14,57 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 </head>
 <style>
-    
-    #login-div{
+    #login-div {
         display: flex;
         width: 100%;
         align-items: center;
         justify-content: center;
         min-height: calc(100vh - var(--nav-height));
     }
-    #login-form-card{
+
+    #login-form-card {
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
     }
-    #login-card-body{
+
+    #login-card-body {
         width: 30%;
         min-width: 400px;
         border: solid 1px var(--color-chocolate);
         padding: 2rem;
     }
 
-    #login-form input{
+    #login-form input {
         border-radius: 0%;
         background-color: var(--color-beige-claro);
+    }
+
+    .password-container {
+        position: relative;
+        width: 100%;
+    }
+
+    .password-container input {
+        padding-right: 45px;
+    }
+
+    .toggle-password {
+        position: absolute;
+        top: 70%;
+        right: 10px;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: #6b5d55;
+        font-size: 1.1rem;
+    }
+
+    .toggle-password:focus {
+        outline: none;
     }
 </style>
 
@@ -50,69 +76,73 @@
     <!-- Login form -->
     <div id="login-div">
 
-            <div id="login-form-card">
+        <div id="login-form-card">
 
-                    <!-- Título -->
-                    <div class="login-card-header text-center col gap-5">
-                        <h2 class="color-choco" style="font-style: italic; font-size: 4rem;">¡Bienvenido de vuelta!</h2>
-                        <h3 class="color-choco pt-1 pb-2">Inicia sesión</h3>
+            <!-- Título -->
+            <div class="login-card-header text-center col gap-5">
+                <h2 class="color-choco" style="font-style: italic; font-size: 4rem;">¡Bienvenido de vuelta!</h2>
+                <h3 class="color-choco pt-1 pb-2">Inicia sesión</h3>
+            </div>
+
+            <!-- Body -->
+            <div id="login-card-body" class="card-body">
+
+                {{-- ERRORES --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+                @if (session('success'))
+                    <div class="alert alert-success text-center">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                {{-- FORMULARIO --}}
+                <form id="login-form" method="POST" action="/login">
+
+                    @csrf
+
+                    <div class="mb-3">
+                        <label>Email</label>
+                        <input type="email" name="email" class="form-control" placeholder="Introduce tu email">
                     </div>
 
-                    <!-- Body -->
-                    <div id="login-card-body" class="card-body">
+                    <div class="mb-3 password-container">
+                        <label>Contraseña</label>
 
-                        {{-- ERRORES --}}
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul class="mb-0">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+                        <input type="password" name="password" id="password" class="form-control"
+                            placeholder="Introduce tu contraseña">
 
-                        @if (session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
-                            </div>
-                        @endif
-                        @if (session('success'))
-                            <div class="alert alert-success text-center">
-                                {{ session('success') }}
-                            </div>
-                        @endif
-
-                        {{-- FORMULARIO --}}
-                        <form id="login-form" method="POST" action="/login">
-
-                            @csrf
-
-                            <div class="mb-3">
-                                <label>Email</label>
-                                <input type="email" name="email" class="form-control"
-                                    placeholder="Introduce tu email">
-                            </div>
-
-                            <div class="mb-3">
-                                <label>Contraseña</label>
-                                <input type="password" name="password" class="form-control"
-                                    placeholder="Introduce tu contraseña">
-                            </div>
-
-                            <div class="text-center">
-                                <button class="btn-eventea">
-                                    Entrar
-                                </button>
-                            </div>
-                            
-                        </form>
-
+                        <button type="button" class="toggle-password" onclick="togglePassword()">
+                            <i id="eyeIcon" class="bi bi-eye"></i>
+                        </button>
                     </div>
-                </div>
+
+                    <div class="text-center">
+                        <button class="btn-eventea">
+                            Entrar
+                        </button>
+                    </div>
+
+                </form>
 
             </div>
         </div>
+
+    </div>
+    </div>
 
     </div>
 
@@ -125,6 +155,21 @@
                 window.location.reload();
             }
         });
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('bi-eye');
+                eyeIcon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('bi-eye-slash');
+                eyeIcon.classList.add('bi-eye');
+            }
+        }
     </script>
 
 </body>

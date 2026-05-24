@@ -12,26 +12,28 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
-        .btn-search{
+        .btn-search {
             text-transform: uppercase !important;
             background-color: var(--color-beige-claro);
             color: var(--color-chocolate);
             font-family: 'BeVietnam';
             border-radius: 0;
         }
-        .btn-search:hover{
+
+        .btn-search:hover {
             background-color: var(--color-beige-medio);
         }
-        
+
         /* DESPLEGABLE */
         .eventos-dropdown {
             position: relative;
             display: inline-block;
         }
+
         .eventos-dropdown:hover .dropdown-content {
             display: block;
         }
-        
+
         .dropdown-content {
             display: none;
             position: absolute;
@@ -41,8 +43,8 @@
             overflow-y: auto;
             z-index: 1000;
             border: 1px solid var(--color-chocolate);
-        }        
-        
+        }
+
         .dropdown-item {
             display: flex;
             justify-content: space-between;
@@ -51,14 +53,16 @@
             border-bottom: 1px solid var(--color-chocolate);
             gap: 10px;
         }
+
         .dropdown-item:last-child {
             border-bottom: none;
         }
+
         .dropdown-item span {
             font-size: 0.9rem;
             color: var(--color-chocolate);
         }
-        
+
         .btn-ver-evento {
             background-color: var(--color-chocolate);
             color: white !important;
@@ -68,11 +72,12 @@
             transition: all 0.3s;
             white-space: nowrap;
         }
+
         .btn-ver-evento:hover {
             background-color: var(--color-beige-medio);
             color: var(--color-chocolate);
         }
-        
+
         .eventos-count {
             display: inline-block;
             background-color: var(--color-chocolate);
@@ -81,26 +86,25 @@
             font-size: 0.8rem;
             margin-left: 5px;
         }
-        
+
         .eventos-link {
             color: var(--color-chocolate);
             text-decoration: none;
             cursor: pointer;
             font-weight: 500;
         }
-
     </style>
 </head>
 
 <body class="bg-white normal-body text-white">
 
-    @include('partials.header')            
-        
+    @include('partials.header')
+
 
     <div class="section-1">
 
         <div class="normal-header">
-                <h2 class="color-choco">Clientes registrados</h2>
+            <h2 class="color-choco">Clientes registrados</h2>
         </div>
 
         <div class="mt-5 container">
@@ -147,7 +151,8 @@
 
             {{-- CREAR USUARIO --}}
             <div>
-                <a href="{{ route('dashboard') }}" class="btn-claro" title="Nuevo usuario"><i class="bi bi-plus-lg"></i></a>
+                <a href="{{ route('dashboard') }}" class="btn-claro" title="Nuevo usuario"><i
+                        class="bi bi-plus-lg"></i></a>
             </div>
 
 
@@ -168,29 +173,30 @@
                             $eventosCliente = $cliente->eventos ?? collect();
                             $totalEventos = $eventosCliente->count();
                         @endphp
-                        
+
                         <tr>
                             <td>{{ $cliente->id_usuario }}</td>
                             <td>{{ $cliente->nombre }}</td>
                             <td>{{ $cliente->email }}</td>
-                            
+
                             {{-- COLUMNA DE EVENTOS --}}
                             <td>
-                                @if($totalEventos > 0)
+                                @if ($totalEventos > 0)
                                     <div class="eventos-dropdown">
                                         <span class="eventos-link">
                                             <span class="eventos-count">🡣</span>
                                             {{ $totalEventos }}
                                         </span>
-                                        
+
                                         <div class="dropdown-content">
-                                            @foreach($eventosCliente as $evento)
+                                            @foreach ($eventosCliente as $evento)
                                                 <div class="dropdown-item">
                                                     <span>
                                                         <strong>{{ $evento->nombre_evento }}</strong><br>
                                                         <small>{{ \Carbon\Carbon::parse($evento->fecha)->format('d/m/Y') }}</small>
                                                     </span>
-                                                    <a href="{{ route('eventos.show', $evento->id_evento) }}" class="btn-ver-evento">
+                                                    <a href="{{ route('eventos.show', $evento->id_evento) }}"
+                                                        class="btn-ver-evento">
                                                         VER
                                                     </a>
                                                 </div>
@@ -201,19 +207,26 @@
                                     <span style="color: var(--color-beige-medio);">Sin eventos</span>
                                 @endif
                             </td>
-                            
+
                             <td>
                                 {{-- BOTÓN CREAR EVENTO --}}
                                 <a href="{{ route('eventos.admin_create', ['cliente' => $cliente->id_usuario]) }}"
                                     class="btn btn-success btn-sm">
                                     <i class="bi bi-plus-lg"></i> Crear evento
                                 </a>
+                                <a href="{{ route('users.edit', $cliente->id_usuario) }}"
+                                    class="btn btn-success btn-sm">
+                                    <i class="bi bi-pencil-square"></i>
+                                    Editar
+                                </a>
 
                                 {{-- BOTÓN ELIMINAR --}}
                                 @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
-                                    <button type="button" class="btn btn-danger btn-sm"
-                                        onclick="eliminarCliente({{ $cliente->id_usuario }}, '{{ $cliente->nombre }}')">
-                                        <i class="bi bi-trash3 color-white pe-1"></i> Eliminar
+                                    <button type="button" class="btn btn-danger btn-sm delete-btn"
+                                        data-id="{{ $cliente->id_usuario }}" data-nombre="{{ $cliente->nombre }}">
+
+                                        <i class="bi bi-trash3 color-white pe-1"></i>
+                                        Eliminar
                                     </button>
                                 @endif
                             </td>
@@ -224,125 +237,105 @@
 
         </div>
 
-        <!-- MODAL DE ERROR -->
-        <div class="modal fade" id="errorModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content bg-white text-white">
-                    <div class="modal-header">
-                        <h5 class="modal-title"><i class="bi bi-x-lg"></i>Error al eliminar</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p id="errorMessage"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- MODAL DE CONFIRMACIÓN -->
-        <div class="modal fade" id="confirmModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content bg-white text-white">
-                    <div class="modal-header">
-                        <h5 class="modal-title"><i class="bi bi-exclamation-triangle"></i> Confirmar eliminación</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>¿Estás seguro de que quieres eliminar al cliente <strong id="clienteNombre"></strong>?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
 
-    @include('partials.footer')        
+    @include('partials.footer')
 
 
     <!--  SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        let clienteIdAEliminar = null;
+        document.querySelectorAll('.delete-btn').forEach(button => {
 
-        function eliminarCliente(id, nombre) {
-            clienteIdAEliminar = id;
-            document.getElementById('clienteNombre').textContent = nombre;
-            new bootstrap.Modal(document.getElementById('confirmModal')).show();
-        }
+            button.addEventListener('click', function() {
 
-        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
-            if (!clienteIdAEliminar) return;
+                const clienteId = this.dataset.id;
+                const nombre = this.dataset.nombre;
 
-            fetch(`/users/${clienteIdAEliminar}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                Swal.fire({
+                    title: '¿Eliminar cliente?',
+                    html: `
+                <p>
+                    Vas a eliminar a 
+                    <strong>${nombre}</strong>.
+                </p>
+                <small>Esta acción no se puede deshacer.</small>
+            `,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#7b2d26',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+
+                        fetch(`/users/${clienteId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').content,
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json'
+                                }
+                            })
+
+                            .then(response => response.json())
+
+                            .then(data => {
+
+                                // ERROR → TIENE EVENTOS
+                                if (!data.success) {
+
+                                    Swal.fire({
+                                        title: 'No se puede eliminar',
+                                        text: data.message,
+                                        icon: 'error',
+                                        confirmButtonColor: '#7b2d26'
+                                    });
+
+                                    return;
+                                }
+
+                                // ÉXITO
+                                Swal.fire({
+                                    title: 'Cliente eliminado',
+                                    text: data.message,
+                                    icon: 'success',
+                                    timer: 1800,
+                                    showConfirmButton: false
+                                });
+
+                                // eliminar fila visualmente
+                                button.closest('tr').remove();
+
+                            })
+
+                            .catch(error => {
+
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'Ha ocurrido un error inesperado.',
+                                    icon: 'error',
+                                    confirmButtonColor: '#7b2d26'
+                                });
+
+                                console.error(error);
+
+                            });
                     }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
 
-                        // cerrar modal
-                        bootstrap.Modal.getInstance(document.getElementById('confirmModal')).hide();
-
-                        // crear alerta dinámica
-                        const alert = document.createElement('div');
-                        alert.className = 'alert alert-success mt-3';
-                        alert.textContent = data.message;
-
-                        document.querySelector('.container').prepend(alert);
-
-                        // 👇 desaparece en 3 segundos
-                        setTimeout(() => {
-                            alert.style.transition = 'opacity 0.5s ease';
-                            alert.style.opacity = '0';
-
-                            setTimeout(() => {
-                                alert.remove();
-                            }, 500);
-                        }, 3000);
-
-                        // eliminar fila de la tabla sin recargar
-                        document.querySelector(`button[onclick*="${clienteIdAEliminar}"]`)
-                            .closest('tr')
-                            .remove();
-                    } else {
-                        document.getElementById('errorMessage').textContent = data.message;
-                        bootstrap.Modal.getInstance(document.getElementById('confirmModal')).hide();
-                        new bootstrap.Modal(document.getElementById('errorModal')).show();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('errorMessage').textContent =
-                        'Error inesperado al eliminar el cliente.';
-                    new bootstrap.Modal(document.getElementById('errorModal')).show();
                 });
-        });
 
-        // Ocultar alertas de éxito del servidor después de unos segundos
-        document.querySelectorAll('.alert-success').forEach(successAlert => {
-            setTimeout(() => {
-                successAlert.style.transition = 'opacity 0.5s ease';
-                successAlert.style.opacity = '0';
-                setTimeout(() => {
-                    successAlert.remove();
-                }, 500);
-            }, 3000);
+            });
+
         });
     </script>
-    
 
 </body>
 
