@@ -69,14 +69,14 @@
         #event-content-right{
             margin-top: -3vw;
         }
-        #event-sidebar{
-
+        #event-section h4{
+            margin-bottom: 2rem;
         }
 
         .sidebar {
             position: sticky;
             top: calc(var(--nav-height) + 160px);
-            z-index: 1;
+            z-index: 0;
 
             background: white;
             padding: 2rem 1rem 1rem 1rem;
@@ -158,7 +158,9 @@
                     <a href="#localizacion" class="menu-link">LOCALIZACIÓN</a>
                     <a href="#invitados" class="menu-link">INVITADOS</a>
                     <a href="#sitting" class="menu-link">SITTING</a>
-                    <a href="{{ route('eventos.summary', $evento->id_evento) }}" class="btn-eventea">RESUMEN ></a>
+                    <a href="{{ route('eventos.summary', $evento->id_evento) }}" class="btn-eventea">
+                        RESUMEN <i class="bi bi-chevron-right ms-2"></i>
+                    </a>
                 </div>
             </div>
 
@@ -189,7 +191,7 @@
                             Quedan {{ $dias }} días
                         @endif
                     </p>
-                    <h6 class="pb-3">{{ $evento->local->nombre ?? ''}}</h6>
+                    <h6 class="my-3"><i class="bi bi-geo-alt me-1"></i>{{ $evento->local->nombre ?? ''}}</h6>
                     <p><strong>Estado:</strong> {{ $evento->estado }}</p>
                 
 
@@ -199,23 +201,23 @@
                         <div class="col-md-4">
                             <div class="border-eventea p-2 text-center">
                                 <strong>PRESUPUESTO</strong>
-                                <h5>{{ $evento->presupuesto }} €</h5>
+                                <p>{{ $evento->presupuesto }} €</p>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="border-eventea p-2 text-center">
                                 <strong>Gastado</strong>
-                                <h5>{{ $costeTotal }} €</h5>
+                                <p>{{ $costeTotal }} €</p>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="border-eventea p-2 text-center">
                                 <strong>Restante</strong>
-                                <h5 class="{{ $presupuestoRestante < 0 ? 'text-danger' : 'text-success' }}">
+                                <p class="{{ $presupuestoRestante < 0 ? 'text-danger' : 'text-success' }}">
                                     {{ $presupuestoRestante }} €
-                                </h5>
+                                </p>
                             </div>
                         </div>
 
@@ -354,7 +356,7 @@
 
                                 <div class="modal-footer">
                                     <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <button class="btn btn-primary">Añadir</button>
+                                    <button class="btn btn-success">Añadir</button>
                                 </div>
 
                             </form>
@@ -371,7 +373,7 @@
 
                     @if ($evento->servicios->count())
 
-                        <table class="table table-bordered">
+                        <table class="table table-choco">
                             <thead>
                                 <tr>
                                     <th>Servicio</th>
@@ -410,7 +412,7 @@
 
                                         @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
                                             <td class="d-flex gap-2">
-                                                <button class="btn btn-primary btn-sm">Guardar</button>
+                                                <button class="btn btn-success btn-sm">Guardar</button>
                                                 </form>
 
                                                 <form method="POST"
@@ -427,7 +429,7 @@
                             </tbody>
                         </table>
                     @else
-                        <p class="text-muted">No hay servicios contratados</p>
+                        <p class="text-muted"><i>No hay servicios contratados</i></p>
                     @endif
 
                     @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
@@ -478,7 +480,7 @@
 
                                 <div class="modal-footer">
                                     <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <button class="btn btn-primary">Añadir</button>
+                                    <button class="btn btn-success">Añadir</button>
                                 </div>
 
                             </form>
@@ -494,15 +496,11 @@
                     <h4>Localización</h4>
 
                     @if ($evento->local)
-                        <p><strong>Nombre:</strong> {{ $evento->local->nombre }}</p>
-
-                        <p><strong>Dirección:</strong> {{ $evento->local->direccion }}</p>
-
-                        <p><strong>Capacidad:</strong> {{ $evento->local->capacidad }} personas</p>
-
-                        <p><strong>Teléfono:</strong> {{ $evento->local->telefono }}</p>
-
-                        <p><strong>Descripción:</strong></p>
+                        <h6>{{ $evento->local->nombre }}</h6>
+                        <p><a href="#"><i class="bi bi-geo-alt me-2"></i>{{ $evento->local->direccion }}</a></p>
+                        <p><a href="#"><i class="bi bi-telephone me-2"></i>{{ $evento->local->telefono }}</a></p>
+                        <p>Capacidad: {{ $evento->local->capacidad }} personas</p>
+                        <br>
                         <p>{{ $evento->local->descripcion }}</p>
                     @else
                         <p class="text-muted">No hay local asignado a este evento</p>
@@ -545,32 +543,21 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('invitados.lista', $evento->id_evento) }}" class="btn btn-dark mt-3">
-                        Ver lista de invitados
+                    <a href="{{ route('invitados.lista', $evento->id_evento) }}" class="btn btn-small mt-3">
+                        Ver lista de invitados <i class="bi bi-chevron-right ms-2"></i>
                     </a>
                 </div>
                 </div>
 
                 <!-- SITTING -->
                 <div id="sitting" class="section bg-medio">
-                <div class="section-inside">
-                    <h4>Seating plan</h4>
+                    <div class="section-inside">
+                        <h4>Seating plan</h4>
 
-                    @include('eventos.seating')
-                </div>
+                        @include('eventos.seating')
+                    </div>
                 </div>
 
-                <!-- RESUMEN -->
-                <div id="resumen" class="section bg-claro">
-                <div class="section-inside">
-                    <h4>Resumen</h4>
-                    <p>Estado general del evento, presupuesto, etc...</p>
-
-                    <a href="{{ route('eventos.summary', $evento->id_evento) }}" class="btn btn-light w-100">
-                        Ir a resumen completo
-                    </a>
-                </div>
-                </div>
 
             </div>
 
