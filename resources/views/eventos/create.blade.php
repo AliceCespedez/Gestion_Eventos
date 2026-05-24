@@ -48,6 +48,15 @@
             background-color: #2c2c2c;
             color: #fff;
         }
+
+        .form-check-input {
+            accent-color: var(--color-chocolate);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--color-chocolate) !important;
+            border-color: var(--color-chocolate);
+        }
     </style>
 </head>
 
@@ -56,15 +65,15 @@
     @include('partials.header')
 
     <div class="container py-5">
-        <div class="row align-items-center">
+        <div class="row align-items-stretch">
 
             <!-- IZQUIERDA -->
-            <div class="col-md-6">
+            <div class="col-md-6 d-flex">
+                <div class="contact-box w-100">
 
-                <p class="subtitulo">¿Alguna duda? ¿Un nuevo evento?</p>
-                <h1 class="titulo-principal mb-4">Ponte en contacto</h1>
+                    <p class="subtitulo">¿Alguna duda? ¿Un nuevo evento?</p>
+                    <h1 class="titulo-principal mb-4">Ponte en contacto</h1>
 
-                <div class="contact-box">
 
                     {{-- ✅ MENSAJE DE ÉXITO --}}
                     @if (session('success'))
@@ -73,6 +82,7 @@
                         </div>
                     @endif
 
+                    {{-- FORMULARIO --}}
                     <form method="POST" action="{{ route('consulta.store') }}">
                         @csrf
 
@@ -143,22 +153,32 @@
                 </div>
             </div>
 
+
+
+
             <!-- DERECHA -->
-            <div class="col-md-6 text-end" style="height: 100%;">
-                <div style="background: url('/images/flores-1.jpg') center/cover no-repeat; height: 100%;" class="" alt="Imagen flores"></div>
+            <div class="col-md-6 d-flex">
+                <div class="d-flex flex-column w-100">
 
-                <a href="{{ route('dashboard') }}" class="btn btn-back">
-                    <i class="bi bi-arrow-left"></i> Volver
-                </a>
+                    <div class="flex-grow-1" 
+                        style="background: url('{{ asset('images/flores-1.jpg') }}') center/cover no-repeat; min-height: 200px;">
+                    </div>
 
-                <!-- <img src="/images/flores-1.jpg" class="img-fluid mb-4"> -->
-
+                    {{--
+                    <div class="mt-3">
+                        <a href="{{ route('dashboard') }}" class="btn d-inline-block">
+                            <i class="bi bi-arrow-left"></i> Volver
+                        </a>
+                    </div>
+                    --}}
+                </div>
             </div>
 
         </div>
     </div>
 
     @include('partials.footer')
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

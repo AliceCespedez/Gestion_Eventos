@@ -130,7 +130,11 @@
                             </div>
 
                         @empty
-                            <p>No tienes eventos todavía.</p>
+                            <p class="pb-3"><i>No tienes eventos todavía</i></p>
+                            
+                            <a href="{{ route('eventos.create') }}" class="btn-eventea">
+                                Solicitar un evento <i class="bi bi-chevron-right ps-2"></i>
+                            </a>
                         @endforelse
                     </div>
 

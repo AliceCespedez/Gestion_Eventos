@@ -76,8 +76,8 @@
     <div class="footer-div" id="footer-left">
         <div>
             <a id="footer-logo" class="navbar-brand" href="{{ url('/') }}">
-                @if (file_exists(public_path('logo-3.svg')))
-                    <img src="{{ asset('logo-3.svg') }}" alt="Logo" height="100"
+                @if (file_exists(public_path('logo-4.svg')))
+                    <img src="{{ asset('logo-4.svg') }}" alt="Logo" height="100"
                         class="d-inline-block">
                 @else
                     <strong class="color-choco logo-placeholder">EvenTea</strong>
@@ -138,13 +138,7 @@
                             CONTACTO
                         </a>
                     </div>
-
-                    {{-- CUENTA --}}
-                    <div>
-                        <a href="">
-                            CUENTA
-                        </a>
-                    </div>
+                    <br>
 
             </div>
 

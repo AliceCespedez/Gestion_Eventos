@@ -131,6 +131,15 @@
         }
 
 
+        /* PASOS */
+        .pasos-titulo h3{
+            font-size: 2rem !important;
+        }
+        .pasos-titulo h2{
+            font-size: clamp(5rem, calc(4rem + 7vw), 11rem ) !important;
+            line-height: 0.3;
+        }
+
         #welcome-section-6{
             display: flex;
             flex-direction: row;
@@ -283,8 +292,35 @@
     </div>
 
     <!-- CÓMO FUNCIONA -->
-    <div>
+    <div class="bg-claro m-4 p-4 w-100">
 
+        <div class="border-eventea p-5 d-flex flex-column gap-2 text-center">
+            <h3>¿Quieres organizar un evento?</h3>
+            <p>Boda, comida de empresa, cena familiar, coffee break, cóctel…<br>Sea lo que sea, estamos aquí para ayudarte.</p>
+            <h2>Cómo funciona</h2>
+        </div>
+
+        <div class="d-flex flex-row">
+            <!-- Barra progreso -->
+            <div class="home-barra">
+
+            </div>
+
+            <!-- Numeros -->
+            <div class="d-flex flex-column pasos-titulo">
+
+                {{-- 01 --}}
+                <div class="d-flex flex-row">
+                    <h2 class="home-number">01</h2>
+                    <div>
+                        <h3>Descubre lo que podemos ofrecerte</h3>
+                        <p>Visita nuestra web principal <a href="#"><i>www.eventea.com</i></a></p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
     </div>
 
     <!-- TIENES CUENTA? -->
@@ -297,7 +333,7 @@
         <div class="welcome-block border-eventea flex-fill">
             <h3>¿Aun no tienes unevento dado de alta?</h3>
             <p class="mb-4 mt-2">No te preocupes. Contáctanos primero<br>y nosotros preparamos todo para ti.</p>
-            <a href="/login" class="btn-eventea align-self-center">CONTACTO</a>
+            <a href="{{ route('eventos.create') }}" class="btn-eventea align-self-center">CONTACTO</a>
         </div>
     </div>
 
