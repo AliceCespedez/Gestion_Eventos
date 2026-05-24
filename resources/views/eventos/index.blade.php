@@ -91,23 +91,24 @@
                             <td>{{ $evento->nombre_evento }}</td>
                             <td>{{ $evento->tipo->nombre_tipo ?? 'Sin tipo' }}</td>
                             <td>{{ $evento->fecha }}</td>
-                            <td>{{ $evento->estado }}</td>
+                            <td class="text-uppercase detalles">{{ $evento->estado }}</td>
 
                             {{--  Cliente visible para admin y empleado --}}
                             @if (in_array($rol, ['empleado', 'admin']))
                                 <td>{{ $evento->usuario->nombre ?? 'Sin cliente' }}</td>
                             @endif
 
-                            <td class="d-flex gap-2">
+                            
+                            <td class="text-end text-nowrap w-1">
 
                                 <a href="{{ route('eventos.show', $evento->id_evento) }}"
-                                    class="btn btn-success btn-sm">
+                                    class="btn btn-success btn-sm d-inline-block">
                                     Gestionar
                                 </a>
 
                                 @if (in_array($rol, ['admin', 'empleado']))
                                     <form action="{{ route('eventos.destroy', $evento->id_evento) }}" method="POST"
-                                        class="delete-form">
+                                        class="delete-form d-inline-block">
 
                                         @csrf
                                         @method('DELETE')
