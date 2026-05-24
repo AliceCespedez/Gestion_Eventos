@@ -29,7 +29,7 @@
             height: 160px;
             color: white;
             display: flex;
-            padding: 2rem 5rem 2rem 5rem;
+            padding: 2rem 5rem 1rem 5rem;
             background-size: cover;
             background-position: center;
             position: relative;
@@ -46,6 +46,13 @@
         .event-header>* {
             position: relative;
             z-index: 0;
+        }
+
+        #evento-title-div{
+            max-width: 27%;
+        }
+        #evento-title-div h2{
+            font-size: 2vw !important;
         }
 
 
@@ -103,6 +110,10 @@
             padding: 30px;
         }
 
+        #catering table td{
+            background-color: transparent !important;
+        }
+
 
         html {
             scroll-behavior: smooth;
@@ -117,15 +128,21 @@
 
     <!-- SECTION HEADER -->
     <div id="event-header-sticky">
+
         <div class="event-header d-flex justify-content-start align-items-end"
-        style="background-image: url('{{ asset('images/tipo-' . $evento->id_tipo . '.jpg') }}');">
+            style="background-image: url('{{ 
+                file_exists(public_path('images/tipo-' . $evento->id_tipo . '.jpg')) 
+                    ? asset('images/tipo-' . $evento->id_tipo . '.jpg') 
+                    : asset('images/tipo-0.jpg') 
+            }}'); background-size: cover; background-position: center;">
 
             <div id="evento-title-div" class="color-white">
                 <a href="{{ url()->previous() }}" class="d-inline-block a-white">🡠 Volver</a>
-                <!--<a href="{{ route('dashboard') }}" class="a-white" style="font-weight: 300">< Volver</a>-->
                 <h2>{{ $evento->nombre_evento }}</h2>
             </div>
+
         </div>
+
     </div>
     
 
@@ -213,7 +230,7 @@
 
                     @if ($evento->menus->count() > 0)
 
-                        <table class="table table-bordered">
+                        <table class="table table-choco">
                             <thead>
                                 <tr>
                                     <th>Menú</th>
@@ -231,10 +248,23 @@
                             <tbody>
                                 @foreach ($evento->menus as $menu)
                                     <tr>
-                                        <td>{{ $menu->nombre }}</td>
-                                        <td>{{ $menu->descripcion }}</td>
-                                        <td>{{ $menu->tipo_menu }}</td>
-                                        <td>{{ $menu->precio_unitario }} €</td>
+                                        <td><b>{{ $menu->nombre }}</b></td>
+                                        <td style="width: 50%;">
+                                            @if(isset($menu->secciones_menu) && count($menu->secciones_menu) > 0)
+                                                @foreach($menu->secciones_menu as $seccion)
+                                                    <div class="mb-2">
+                                                        <h6 class="mb-1">{{ $seccion['titulo'] }}</h6>
+                                                        @foreach($seccion['items'] as $item)
+                                                            <p class="mb-1 ms-2 detalles">▪ {{ $item }}</p>
+                                                        @endforeach
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <p>{{ $menu->descripcion }}</p>
+                                            @endif
+                                        </td>
+                                        <td class="text-uppercase detalles">{{ $menu->tipo_menu }}</td>
+                                        <td class="text-nowrap">{{ $menu->precio_unitario }} €</td>
 
                                         <td>
                                             @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
@@ -247,16 +277,14 @@
                                                         value="{{ $menu->pivot->cantidad }}" min="1"
                                                         class="form-control form-control-sm" style="width: 80px;">
                                                 @else
-                                                    {{ $menu->pivot->cantidad }}
+                                                    {{ $menu->pivot->cantidad }} unidades
                                             @endif
                                         </td>
 
                                         @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
-                                            <td class="d-flex gap-2">
+                                            <td>
 
-                                                <button class="btn btn-sm btn-primary" type="submit">
-                                                    Guardar
-                                                </button>
+                                                <button class="btn btn-sm btn-success mb-2" type="submit">Guardar</button>
                                                 </form>
 
                                                 <form method="POST"
@@ -264,9 +292,7 @@
                                                     @csrf
                                                     @method('DELETE')
 
-                                                    <button class="btn btn-sm btn-danger">
-                                                        Eliminar
-                                                    </button>
+                                                    <button class="btn btn-sm btn-danger">Eliminar</button>
                                                 </form>
 
                                             </td>
