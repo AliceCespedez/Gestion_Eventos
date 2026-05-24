@@ -110,7 +110,7 @@
             padding: 30px;
         }
 
-        #catering table td{
+        #event-content-right table td{
             background-color: transparent !important;
         }
 
@@ -411,15 +411,13 @@
                                         <td>{{ $servicio->pivot->precio_total }} €</td>
 
                                         @if (in_array(Auth::user()->rol, ['admin', 'empleado']))
-                                            <td class="d-flex gap-2">
-                                                <button class="btn btn-success btn-sm">Guardar</button>
+                                            <td class="text-nowrap">
+                                                <button class="btn btn-success btn-sm d-inline-block">Guardar</button>
                                                 </form>
 
-                                                <form method="POST"
-                                                    action="{{ route('eventos.servicio.delete', [$evento->id_evento, $servicio->id_servicio]) }}">
+                                                <form method="POST" action="{{ route('eventos.servicio.delete', [$evento->id_evento, $servicio->id_servicio]) }}" class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')
-
                                                     <button class="btn btn-danger btn-sm">Eliminar</button>
                                                 </form>
                                             </td>

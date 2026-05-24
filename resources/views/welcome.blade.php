@@ -132,10 +132,35 @@
 
 
         /* PASOS */
+        .pasos-bg-div{
+            padding: 2rem 2rem 10rem 2rem;
+        }
+        .pasos-titulo{
+            display: flex;
+            flex-direction: column;
+            gap: 8rem;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .pasos-inside{
+            display: flex;
+            flex-direction: column;
+            gap: 8rem;
+            justify-content: start;
+            align-items: start;
+            width: 70%;
+        }
+        .pasos-inside > div {
+            width: 100%;
+            gap: 3rem;
+            justify-content: center;
+        }
+
         .pasos-titulo h3{
             font-size: 2rem !important;
         }
-        .pasos-titulo h2{
+        .home-number{
             font-size: clamp(5rem, calc(4rem + 7vw), 11rem ) !important;
             line-height: 0.3;
         }
@@ -292,7 +317,7 @@
     </div>
 
     <!-- CÓMO FUNCIONA -->
-    <div class="bg-claro m-4 p-4 w-100">
+    <div class="bg-claro m-4 w-100 pasos-bg-div">
 
         <div class="border-eventea p-5 d-flex flex-column gap-2 text-center">
             <h3>¿Quieres organizar un evento?</h3>
@@ -300,17 +325,12 @@
             <h2>Cómo funciona</h2>
         </div>
 
-        <div class="d-flex flex-row">
-            <!-- Barra progreso -->
-            <div class="home-barra">
+        <div class="pasos-titulo">
 
-            </div>
-
-            <!-- Numeros -->
-            <div class="d-flex flex-column pasos-titulo">
+            <div class="pasos-inside">
 
                 {{-- 01 --}}
-                <div class="d-flex flex-row">
+                <div class="d-flex flex-row mt-5">
                     <h2 class="home-number">01</h2>
                     <div>
                         <h3>Descubre lo que podemos ofrecerte</h3>
@@ -318,6 +338,32 @@
                     </div>
                 </div>
 
+                {{-- 02 --}}
+                <div class="d-flex flex-row">
+                    <h2 class="home-number">02</h2>
+                    <div>
+                        <h3>Ponte en contacto con nosotros</h3>
+                        <p>Cuéntanos qué necesitas y qué tipo de evento tienes en mente.</p>
+                    </div>
+                </div>
+
+                {{-- 03 --}}
+                <div class="d-flex flex-row">
+                    <h2 class="home-number">03</h2>
+                    <div>
+                        <h3>Nosotros te creamos una cuenta</h3>
+                        <p>El equipo de EvenTea dará de alta tu evento y te enviará por email tus credenciales de acceso.</p>
+                    </div>
+                </div>
+
+                {{-- 04 --}}
+                <div class="d-flex flex-row">
+                    <h2 class="home-number">04</h2>
+                    <div>
+                        <h3>Accede y gestiona todo</h3>
+                        <p>Una vez dentro de este portal, tendrás el control total de tu evento.</p>
+                    </div>
+                </div>
             </div>
 
         </div>
